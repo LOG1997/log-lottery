@@ -1,0 +1,50 @@
+@import "./default.scss"; //默认主题颜色
+@import "./dark_theme.scss"; // 红色主题颜色
+@import "./blue_theme.scss"; // 灰色主题颜色
+@import "./purple_theme.scss"; // 灰色主题颜色
+//生成对应元素的主题样式代码
+//主题参数
+$themes: (
+    default: $default,
+    blue_theme: $blue_theme,
+    dark_theme: $dark_theme,
+    purple_theme: $purple_theme,
+);
+// 生成body的主题样式
+@mixin themeify {
+    @each $themes-key, $themes-map in $themes {
+        $themes-map: $themes-map !global;
+        &[data-theme="#{$themes-key}"] {
+            @content;
+        }
+    }
+}
+// 生成子元素样式
+@mixin themeChildify {
+    @each $themes-key, $themes-map in $themes {
+        $themes-map: $themes-map !global;
+        [data-theme="#{$themes-key}"] & {
+            @content;
+        }
+    }
+}
+// 获取主题对应的theme-color
+@function getThemeColor($key) {
+    $currentTheme: map-get($themes, $key);
+    @return map-get($currentTheme, "theme-bg-color");
+}
+@function themed($key) {
+    @if map-get($themes-map, $key) {
+        @return map-get($themes-map, $key);
+    } @else {
+        @return $key;
+    }
+}
+// 随机数颜色
+@function themedRandom($key) {
+    @if map-get($themes-map, $key) {
+        @return map-get($themes-map, $key);
+    } @else {
+        @return $key;
+    }
+} ;

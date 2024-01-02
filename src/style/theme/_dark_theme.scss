@@ -1,0 +1,22 @@
+$theme-color: #1e1f25;
+$important-color: #ff864d;
+$font-color: #fbfbfb;
+$light-color: #00e6f6;
+$normal-color: #183561;
+$dark-card-color: #fbfbfb;
+
+$dark_theme: (
+    theme-bg-color: $theme-color,
+    font-color: $font-color,
+    font-color-second: darken($font-color, 20%),
+    light-bg-color: $light-color,
+    normal-color: $normal-color,
+    header-bg-color: lighten($theme-color, 10%),
+    header-bg-color-hover: lighten($theme-color, 20%),
+    shawdow-color: darken($theme-color, 5%),
+    shawdow-color-hover: darken($theme-color, 15%),
+    border-color: lighten($theme-color, 20%),
+    important-color: lighten($important-color, 20%),
+    important-bg-color: transparentize($important-color, 0.9),
+    dark-card-color: $dark-card-color,
+);
