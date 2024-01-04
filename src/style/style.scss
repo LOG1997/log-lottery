@@ -1,0 +1,41 @@
+.element-card {
+    width: 140px;
+    height: 200px;
+    cursor: default;
+    text-align: center;
+    border: 1px solid rgba(127, 255, 255, 0.25);
+    box-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
+
+    &:hover {
+        border: 1px solid rgba(127, 255, 255, 0.75);
+        box-shadow: 0 0 12px rgba(0, 255, 255, 0.75);
+    }
+
+    .card-id {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 12px;
+        color: rgba(127, 255, 255, 0.75);
+    }
+
+    .card-name {
+        position: absolute;
+        top: 40px;
+        left: 0px;
+        right: 0;
+        font-size: 30px;
+        font-weight: bold;
+        color: rgba(255, 255, 255, 0.75);
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.95);
+    }
+
+    .card-detail {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 15px;
+        font-size: 12px;
+        color: rgba(127, 255, 255, 0.75);
+    }
+}

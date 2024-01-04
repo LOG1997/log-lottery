@@ -17,11 +17,16 @@
     "@popperjs/core": "^2.11.8",
     "@vueuse/core": "^10.6.1",
     "axios": "^1.6.1",
+    "localforage": "^1.10.0",
     "pinia": "^2.1.7",
     "pinia-plugin-persist": "^1.0.0",
     "svg-sprite-loader": "^6.0.11",
+    "three": "^0.160.0",
+    "three-css2drender": "^1.0.0",
     "vue": "^3.3.8",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "xlsx": "^0.18.5",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@iconify-json/ep": "^1.1.12",
@@ -29,6 +34,7 @@
     "@tailwindcss/typography": "^0.5.10",
     "@testing-library/vue": "^8.0.0",
     "@types/node": "^20.9.0",
+    "@types/three": "^0.160.0",
     "@typescript-eslint/eslint-plugin": "^6.11.0",
     "@typescript-eslint/parser": "^6.11.0",
     "@vitejs/plugin-vue": "^4.4.1",

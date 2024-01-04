@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
 import './style.css';
-
+import './style/style.scss'
+import * as THREE from 'three';
 import App from './App.vue';
 
 const app = createApp(App);
@@ -15,5 +16,7 @@ import { createPinia } from 'pinia';
 import piniaPluginPersist from 'pinia-plugin-persist';
 const pinia = createPinia();
 pinia.use(piniaPluginPersist);
+
+app.config.globalProperties.$THREE = THREE; //挂载到原型
 app.component('svg-icon', svgIcon);
 app.use(router).use(pinia).mount('#app');

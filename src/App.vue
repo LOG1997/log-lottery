@@ -5,5 +5,4 @@
 </template>
 
 <style scoped lang="scss">
-@import "@/style/global.module.scss";
 </style>
