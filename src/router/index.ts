@@ -113,16 +113,6 @@ const routes = [
         component: Home,
       },
       configRoutes,
-      {
-        path: '/doc',
-        name: 'Doc',
-        component: () => import('@/views/Doc/index.vue'),
-      },
-      {
-        path: '/about',
-        name: 'About',
-        component: () => import('@/views/About/index.vue'),
-      },
     ],
   },
 ];
