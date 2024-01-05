@@ -4,6 +4,7 @@ import './style/style.scss'
 import * as THREE from 'three';
 import App from './App.vue';
 
+
 const app = createApp(App);
 // 全局svg组件
 import 'virtual:svg-icons-register';

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 // import { tableData2 as tableData } from './data'
+import {rgba} from '@/utils/color'
+import PlayMusic from './PlayMusic.vue'
 import * as THREE from 'three'
 import {
     CSS3DRenderer, CSS3DObject
@@ -10,7 +12,11 @@ import TWEEN from 'three/examples/jsm/libs/tween.module.js';
 import useStore from '@/store'
 
 const personConfig=useStore().personConfig
+const globalConfig=useStore().globalConfig
+// const globalConfig = useStore().globalConfig
+
 const {getAlreadyPersonList:alreadyPersonList,getNotPersonList:notPersonList,getTableRowCount:rowCount}=personConfig
+const {getCardColor:cardColor,getTextColor:textColor,getCardSize:cardSize,getTextSize:textSize} = globalConfig
 const tableData=ref(
     alreadyPersonList.concat(notPersonList)
 )
@@ -59,22 +65,42 @@ const init = () => {
     for (let i = 0; i < tableLen; i++) {
         const element = document.createElement('div');
         element.className = 'element-card';
-        element.style.backgroundColor = `rgba( 0, 127, 127, ${Math.random() * 0.5 + 0.25} )`;
+        // element.style.backgroundColor = `rgba( 0, 127, 127, ${Math.random() * 0.5 + 0.25} )`;
+        element.style.backgroundColor = rgba(cardColor,Math.random() * 0.5 + 0.25)
+        element.style.border=`1px solid ${rgba(cardColor,0.25)}`
+        element.style.boxShadow=`0 0 12px ${rgba(cardColor,0.5)}`
+        // hover style
+        element.addEventListener('mouseover', function () {
+            this.style.border=`1px solid ${rgba(cardColor,0.75)}`
+            this.style.boxShadow=`0 0 12px ${rgba(cardColor,0.75)}`
+        })
+        element.addEventListener('mouseout', function () {
+            this.style.border=`1px solid ${rgba(cardColor,0.25)}`
+            this.style.boxShadow=`0 0 12px ${rgba(cardColor,0.5)}`
+        })
+        element.style.width = `${cardSize.width}px`;
+        element.style.height = `${cardSize.height}px`;
+    
+        // element.style.color=localTheme.detail.primary
 
         const number = document.createElement('div');
         number.className = 'card-id';
         // number.textContent = (i / 5 + 1).toString();
         number.textContent = tableData.value[i].uid;
+        number.style.fontSize = `${textSize*0.5}px`;
         element.appendChild(number);
 
         const symbol = document.createElement('div');
         symbol.className = 'card-name';
         symbol.textContent = tableData.value[i].name;
+        symbol.style.textShadow=`0 0 12px ${rgba(cardColor,0.95)}`
+        symbol.style.fontSize = `${textSize}px`;
         element.appendChild(symbol);
 
         const detail = document.createElement('div');
         detail.className = 'card-detail';
         detail.innerHTML = `${tableData.value[i].department}<br/>${tableData.value[i].other}`;
+        detail.style.fontSize = `${textSize*0.5}px`;
         element.appendChild(detail);
 
         const object = new CSS3DObject(element);
@@ -96,8 +122,8 @@ const init = () => {
         for (let i = 0; i < tableLen; i++) {
             const object = new THREE.Object3D();
 
-            object.position.x = tableData.value[i].x * 180 - rowCount*90;
-            object.position.y = -tableData.value[i].y * 200 + 1000;
+            object.position.x = tableData.value[i].x * (cardSize.width+40) - rowCount*90;
+            object.position.y = -tableData.value[i].y *(cardSize.height+20) + 1000;
             object.position.z = 0;
 
             targets.table.push(object);
@@ -204,6 +230,7 @@ function render() {
 onMounted(() => {
     init();
     animation();
+    containerRef.value!.style.color=`${textColor}`
 });
 
 </script>
@@ -218,6 +245,7 @@ onMounted(() => {
         </div>
         <!-- end -->
     </div>
+    <PlayMusic class="absolute bottom-10 right-10"></PlayMusic>
 </template>
 
 <style scoped lang="scss">

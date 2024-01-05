@@ -20,6 +20,7 @@ const handleFileChange = async (e: any) => {
     imageDbStore.setItem(new Date().getTime().toString() + '+' + fileName, dataUrl)
         .then(() => {
             imgUploadToast.value = 1
+            getImageDbStore()
         })
         .catch(() => {
             imgUploadToast.value = 2
@@ -27,6 +28,7 @@ const handleFileChange = async (e: any) => {
 }
 
 const getImageDbStore =async () => {
+    imgList.value = []
     const keys =await imageDbStore.keys()
     if(keys.length>0){
         imageDbStore.iterate((value, key) => {
@@ -75,7 +77,7 @@ watch(() => imgUploadToast.value, (val) => {
             <li v-for="item in imgList" :key="item">
                 <div class="flex items-center gap-3">
                     <div class="avatar">
-                        <div class="mask mask-squircle w-12 h-12">
+                        <div class="w-12 h-12 mask mask-squircle">
                             <img :src="item.value" alt="Avatar Tailwind CSS Component" />
                         </div>
                     </div>

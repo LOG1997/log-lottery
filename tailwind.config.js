@@ -2,21 +2,19 @@
 module.exports = {
     darkMode: 'class',
     corePlugins: {
-      preflight: false
+        preflight: false
     },
     content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
-    plugins: [require('@tailwindcss/typography'),require('daisyui')],
-    theme: {
-      extend: {
-        colors: {
-          bg_color: 'var(--el-bg-color)',
-          primary: 'var(--el-color-primary)',
-          primary_light_9: 'var(--el-color-primary-light-9)',
-          text_color_primary: 'var(--el-text-color-primary)',
-          text_color_regular: 'var(--el-text-color-regular)',
-          text_color_disabled: 'var(--el-text-color-disabled)'
-        }
-      }
-    }
-  };
-  
+    plugins: [require('@tailwindcss/typography'), require('daisyui')],
+    daisyui: {
+        themes: true, // false: only light + dark | true: all themes | array: specific themes like this ["light", "dark", "cupcake"]
+        darkTheme: 'dark', // name of one of the included themes for dark mode
+        base: true, // applies background color and foreground color for root element by default
+        styled: true, // include daisyUI colors and design decisions for all components
+        utils: true, // adds responsive and modifier utility classes
+        prefix: '', // prefix for daisyUI classnames (components, modifiers and responsive class names. Not colors)
+        logs: true, // Shows info about daisyUI version and used config in the console when building your CSS
+        themeRoot: ':root', // The element that receives theme color CSS variables
+    },
+};
+

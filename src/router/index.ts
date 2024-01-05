@@ -87,6 +87,15 @@ export const configRoutes={
                     title:'图片配置',
                     icon:'image'
                 }
+            },
+            {
+                path:'/config/global/music',
+                name:'MusicConfig',
+                component:()=>import('@/views/Config/Global/MusicConfig.vue'),
+                meta:{
+                    title:'音乐配置',
+                    icon:'music'
+                }
             }
         ]
       }

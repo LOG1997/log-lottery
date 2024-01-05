@@ -1,9 +1,9 @@
 import { mapActions } from 'pinia';
 <script setup lang='ts'>
 import { computed } from 'vue';
-const props= defineProps({
+const props = defineProps({
     data: {
-        type: Array,
+        type: Array as any,
         default: [] as any[]
     },
     tableColumns: {
@@ -12,16 +12,16 @@ const props= defineProps({
     },
 })
 
-const dataColumns=computed(()=>{
+const dataColumns = computed<any[]>(() => {
     // 不带有actions的列
-    const columns= props.tableColumns.filter(item=>!item.actions)
+    const columns = props.tableColumns.filter((item: any) => !item.actions)
 
     return columns
 })
 
-const actionsColumns=computed(()=>{
+const actionsColumns = computed<any[]>(() => {
     // 带有actions的列
-    const columns= props.tableColumns.filter(item=>item.actions)
+    const columns = props.tableColumns.filter((item: any) => item.actions)
 
     return columns
 })
@@ -41,21 +41,22 @@ const actionsColumns=computed(()=>{
                 </tr>
             </thead>
             <tbody>
-      <!-- row  -->
-      <tr class="hover" v-for="item in data" :key="item.id">
-        <th>{{ item.id }}</th>
-        <td v-for="(column,index) in dataColumns" :key="index">
-            <span v-if="column.formatValue">{{ column.formatValue(item) }}</span>
-            <span v-else>{{ item[column.props] }}</span>
-        </td>
-        <!-- action -->
-        <td v-for="(column,index) in actionsColumns" :key="index" class="flex gap-2">
-            <button class="btn btn-xs"  v-for="action in column.actions" :key="action.name" :class="action.type" @click="action.onClick(item)">{{ action.label}}</button>
-        </td>
-      </tr>
-    </tbody>
+                <!-- row  -->
+                <tr class="hover" v-for="item in data" :key="item.id">
+                    <th>{{ item.id }}</th>
+                    <td v-for="(column, index) in dataColumns" :key="index">
+                        <span v-if="column.formatValue">{{ column.formatValue(item) }}</span>
+                        <span v-else>{{ item[column.props] }}</span>
+                    </td>
+                    <!-- action -->
+                    <td v-for="(column, index) in actionsColumns" :key="index" class="flex gap-2">
+                        <button class="btn btn-xs" v-for="action in column.actions" :key="action.name" :class="action.type"
+                            @click="action.onClick(item)">{{ action.label }}</button>
+                    </td>
+                </tr>
+            </tbody>
             <!-- foot -->
-           
+
 
         </table>
     </div>

@@ -52,7 +52,6 @@ onMounted(() => {
     getImageDbStore()
 })
 watch(()=>prizeList,()=>{
-    console.log('prizeList',prizeList.value)
     prizeConfig.setPrizeConfig(prizeList.value)
 },{deep:true})
 </script>
@@ -65,22 +64,22 @@ watch(()=>prizeList,()=>{
                 <label class="w-full max-w-xs mb-10 form-control">
                     <!-- 向上向下 -->
                     <div class="flex flex-col items-center gap-2 pt-5">
-                        <svg-icon class="hover:text-blue-400 cursor-pointer" :class="prizeList.indexOf(item)==0?'opacity-0 cursor-default':''" name="up" @click="sort(item,1)"></svg-icon>
-                        <svg-icon class="hover:text-blue-400 cursor-pointer" name="down" @click="sort(item,0)" :class="prizeList.indexOf(item)==prizeList.length-1?'opacity-0 cursor-default':''"></svg-icon>
+                        <svg-icon class="cursor-pointer hover:text-blue-400" :class="prizeList.indexOf(item)==0?'opacity-0 cursor-default':''" name="up" @click="sort(item,1)"></svg-icon>
+                        <svg-icon class="cursor-pointer hover:text-blue-400" name="down" @click="sort(item,0)" :class="prizeList.indexOf(item)==prizeList.length-1?'opacity-0 cursor-default':''"></svg-icon>
                     </div>
                 </label>
                 <label class="w-full max-w-xs mb-10 form-control">
                     <div class="label">
                         <span class="label-text">名称</span>
                     </div>
-                    <input type="text" v-model="item.name" placeholder="名称" class="w-full input-sm max-w-xs input input-bordered" />
+                    <input type="text" v-model="item.name" placeholder="名称" class="w-full max-w-xs input-sm input input-bordered" />
                 </label>
                 <label class="w-full max-w-xs mb-10 form-control">
                     <div class="label">
                         <span class="label-text">是否全员参加</span>
                     </div>
                     <input type="checkbox" :checked="item.isAll" @change="item.isAll =!item.isAll"
-                        class="checkbox checkbox-secondary border-1 border-solid mt-2" />
+                        class="mt-2 border-solid checkbox checkbox-secondary border-1" />
                 </label>
                 <label class="w-full max-w-xs mb-10 form-control">
                     <div class="label">
@@ -93,7 +92,7 @@ watch(()=>prizeList,()=>{
                     <div class="label">
                         <span class="label-text">图片</span>
                     </div>
-                    <select class="select select-warning w-full select-sm max-w-xs" v-model="item.picture">
+                    <select class="w-full max-w-xs select select-warning select-sm" v-model="item.picture">
                         <option disabled selected>选择一张图片</option>
                         <option v-for="picItem in imgList" :key="picItem.key">{{ picItem.key.split('+')[1] }}</option>
                     </select>
@@ -103,7 +102,7 @@ watch(()=>prizeList,()=>{
                         <span class="label-text">是否显示</span>
                     </div>
                     <input type="checkbox" :checked="item.isShow" @change="item.isShow =!item.isShow"
-                        class="checkbox checkbox-secondary border-1 border-solid mt-2" />
+                        class="mt-2 border-solid checkbox checkbox-secondary border-1" />
                 </label>
             </li>
         </ul>

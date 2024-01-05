@@ -8,7 +8,7 @@
     <!-- <header class="shadow-2xl head-container h-14">
       <Header></Header>
     </header> -->
-    <main class="box-content w-screen h-screen main-container">
+    <main class="box-content w-screen h-screen overflow-x-hidden overflow-y-auto main-container">
       <router-view class="main-container-content"></router-view>
     </main>
     <!-- <footer class="w-screen footer-container">

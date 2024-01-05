@@ -6,8 +6,6 @@ import * as XLSX from 'xlsx'
 import { readFile } from '@/utils/file'
 import DaiysuiTable from '@/components/DaiysuiTable/index.vue'
 
-import {extractFields} from '@/utils/store'
-
 const personConfig = useStore().personConfig
 
 const { getAlreadyPersonList: alreadyPersonList, getNotPersonList: notPersonList ,getTableRowCount:rowCount} = personConfig
@@ -23,9 +21,7 @@ const handleFileChange = async (e: any) => {
     excelData.value = XLSX.utils.sheet_to_json(workSheet)
     personList.value = filterData(excelData.value)
 
-    const keys=extractFields(personList.value)
     personConfig.resetPerson()
-    personConfig.setShowFields(keys)
     personConfig.addNotPersonList(personList.value)
 }
 
@@ -98,7 +94,7 @@ const tableColumns = [
 </script>
 
 <template>
-    <div class="overflow-y-auto">
+    <div class="">
         <div class="flex justify-center gap-3">
             <button class="btn btn-error btn-sm" @click="deleteAll">全部删除</button>
             <div class="">
