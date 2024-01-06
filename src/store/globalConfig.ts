@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { defaultMusicList } from './data'
+import { defaultMusicList,defaultImageList } from './data'
 // import { IPrizeConfig } from '@/types/prizeConfig';
 export const useGlobalConfig = defineStore('global', {
     state() {
@@ -16,6 +16,7 @@ export const useGlobalConfig = defineStore('global', {
                     textSize: 30
                 },
                 musicList: defaultMusicList,
+                imageList:defaultImageList,
             }
         };
     },
@@ -54,6 +55,10 @@ export const useGlobalConfig = defineStore('global', {
         // 获取音乐列表
         getMusicList(state) {
             return state.globalConfig.musicList;
+        },
+        // 获取图片列表
+        getImageList(state) {
+            return state.globalConfig.imageList;
         }
 
     },
@@ -112,6 +117,32 @@ export const useGlobalConfig = defineStore('global', {
         clearMusicList() {
             this.globalConfig.musicList = [];
         },
+        // 添加图片
+        addImage(image:any){
+            for (let i = 0; i < this.globalConfig.imageList.length; i++) {
+                if (this.globalConfig.imageList[i].name === image.name) {
+                    return;
+                }
+            }
+            this.globalConfig.imageList.push(image);
+        },
+        // 删除图片
+        removeImage(imageId: string) {
+            for (let i = 0; i < this.globalConfig.imageList.length; i++) {
+                if (this.globalConfig.imageList[i].id === imageId) {
+                    this.globalConfig.imageList.splice(i, 1);
+                    break;
+                }
+            }
+        },
+        // 重置图片列表
+        resetImageList() {
+            this.globalConfig.imageList = defaultImageList;
+        },
+        // 清空图片列表
+        clearImageList() {
+            this.globalConfig.imageList = [];
+        },
         // 重置所有配置
         reset() {
             this.globalConfig = {
@@ -126,7 +157,8 @@ export const useGlobalConfig = defineStore('global', {
                     textSize: 30
 
                 },
-                musicList: defaultMusicList
+                musicList: defaultMusicList,
+                imageList:defaultImageList,
             }
         }
     },

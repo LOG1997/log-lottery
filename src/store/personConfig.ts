@@ -24,6 +24,10 @@ export const usePersonConfig = defineStore('person', {
     getNotPersonList(state) {
       return state.personConfig.notPersonList;
     },
+    // 获取所有人员名单
+    getAllPersonList(state) {
+      return state.personConfig.alreadyPersonList.concat(state.personConfig.notPersonList);
+    },
     // 获取table列数
     getTableRowCount(state) {
       return state.personConfig.tableRowCount;
@@ -52,6 +56,14 @@ export const usePersonConfig = defineStore('person', {
           this.personConfig.alreadyPersonList.push(item);
           this.personConfig.notPersonList = this.personConfig.notPersonList.filter((item: IPersonConfig) => item.id!== item.id);
         });
+    },
+    // 删除指定人员
+    deletePerson(person:IPersonConfig){
+        console.log('delperson:',person);
+        if(person.id!=undefined||person.id!=null){
+            this.personConfig.alreadyPersonList = this.personConfig.alreadyPersonList.filter((item: IPersonConfig) => item.id!== person.id);
+            this.personConfig.notPersonList = this.personConfig.notPersonList.filter((item: IPersonConfig) => item.id!== person.id);
+        }
     },
     // 删除所有人员
     deleteAllPerson() {

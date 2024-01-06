@@ -1,5 +1,6 @@
 <script setup lang='ts'>
 import { ref, onMounted } from 'vue'
+import {storeToRefs } from 'pinia'
 import { readMusic } from '@/utils/file'
 import useStore from '@/store';
 
@@ -11,7 +12,7 @@ const audioDbStore = localforage.createInstance({
 })
 const globalConfig = useStore().globalConfig
 
-const { getMusicList: localMusicList } = globalConfig;
+const { getMusicList: localMusicList } = storeToRefs(globalConfig);
 const audio = ref(new Audio())
 const limitType = ref('audio/*')
 const localMusicListValue = ref(localMusicList)
@@ -49,7 +50,6 @@ const resetMusic = () => {
 const deleteAll = () => {
     globalConfig.clearMusicList()
     audioDbStore.clear()
-    localMusicListValue.value = []
 }
 const getMusicDbStore = async () => {
     const keys = await audioDbStore.keys()
@@ -90,17 +90,17 @@ onMounted(() => {
 <template>
     <div>
         <div class="flex gap-3">
-            <button class="btn btn-primary btn-xs" @click="resetMusic">重置音乐列表</button>
+            <button class="btn btn-primary btn-sm" @click="resetMusic">重置音乐列表</button>
             <label for="explore">
                 <input type="file" class="" id="explore" style="display: none" @change="handleFileChange"
                     :accept="limitType" />
                 <span class="btn btn-primary btn-sm">上传音乐</span>
             </label>
-            <button class="btn btn-primary btn-xs" @click="pausePlay">暂停播放</button>
-            <button class="btn btn-error btn-xs" @click="deleteAll">删除所有</button>
+            <button class="btn btn-primary btn-sm" @click="pausePlay">暂停播放</button>
+            <button class="btn btn-error btn-sm" @click="deleteAll">删除所有</button>
         </div>
         <div>
-            <ul>
+            <ul class="p-0">
                 <li v-for="item in localMusicListValue" :key="item.id" class="flex items-center gap-6 pb-2 mb-3 divide-y">
                     <div class="mr-12 overflow-hidden w-72 whitespace-nowrap text-ellipsis">
                         <span>

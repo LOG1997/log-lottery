@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import { ref, onMounted,watch } from 'vue'
 import useStore from '@/store'
-
+import {storeToRefs } from 'pinia'
 import localforage from 'localforage'
 import { IPrizeConfig } from '@/types/prizeConfig';
 
@@ -9,21 +9,32 @@ const imageDbStore = localforage.createInstance({
     name: 'imgStore'
 })
 const prizeConfig = useStore().prizeConfig
-const { getPrizeConfig } = prizeConfig
-const prizeList = ref(getPrizeConfig)
+const globalConfig = useStore().globalConfig
+const { getPrizeConfig:localPrizeList} = storeToRefs(prizeConfig)
+
+const { getImageList:localImageList} = storeToRefs(globalConfig)
+const prizeList = ref(localPrizeList)
 const imgList = ref<any[]>([])
 const addPrize = () => {
     const defaultPrizeCOnfig: IPrizeConfig = {
         id: new Date().getTime().toString(),
         name: '奖项',
         sort: 0,
-        isAll: false,
+        isAll: true,
         count: 1,
-        picture: [''],
+        picture: {
+            id:'',
+            name:'',
+            url:''
+        },
         desc: '',
-        isShow: true
+        isShow: true,
+        frequency: 1,
     }
     prizeConfig.addPrizeConfig(defaultPrizeCOnfig)
+}
+const resetDefault=()=>{
+    prizeConfig.resetDefault()
 }
 
 const getImageDbStore = async () => {
@@ -48,6 +59,13 @@ const sort = (item:any,isUp:number) => {
         prizeList.value.splice(itemIndex+1,0,item)
     }
 }
+const delItem=(item:IPrizeConfig)=>{
+    prizeConfig.deletePrizeConfig(item.id)
+    // 更新奖项列表
+}
+const delAll=async ()=>{
+  await prizeConfig.deleteAllPrizeConfig()
+}
 onMounted(() => {
     getImageDbStore()
 })
@@ -59,9 +77,15 @@ watch(()=>prizeList,()=>{
 <template>
     <div>
         <h2>奖项配置</h2>
+        <div class="flex w-full gap-3">
+        <button class="btn btn-info btn-sm" @click="addPrize">添加</button>
+        <button class="btn btn-info btn-sm" @click="resetDefault">默认列表</button>
+        <button class="btn btn-error btn-sm" @click="delAll">全部删除</button>
+        
+    </div>
         <ul>
             <li v-for="item in prizeList" :key="item.id" class="flex gap-10">
-                <label class="w-full max-w-xs mb-10 form-control">
+                <label class="max-w-xs mb-10 form-control">
                     <!-- 向上向下 -->
                     <div class="flex flex-col items-center gap-2 pt-5">
                         <svg-icon class="cursor-pointer hover:text-blue-400" :class="prizeList.indexOf(item)==0?'opacity-0 cursor-default':''" name="up" @click="sort(item,1)"></svg-icon>
@@ -92,21 +116,34 @@ watch(()=>prizeList,()=>{
                     <div class="label">
                         <span class="label-text">图片</span>
                     </div>
-                    <select class="w-full max-w-xs select select-warning select-sm" v-model="item.picture">
+                    <select class="w-full max-w-xs select select-warning select-sm"  v-model="item.picture">
                         <option disabled selected>选择一张图片</option>
-                        <option v-for="picItem in imgList" :key="picItem.key">{{ picItem.key.split('+')[1] }}</option>
+                        <option v-for="picItem in localImageList" :key="picItem.id" :value="picItem">{{ picItem.name }}</option>
                     </select>
                 </label>
                 <label class="w-full max-w-xs mb-10 form-control">
                     <div class="label">
-                        <span class="label-text">是否显示</span>
+                        <span class="label-text">展示在主界面</span>
                     </div>
                     <input type="checkbox" :checked="item.isShow" @change="item.isShow =!item.isShow"
                         class="mt-2 border-solid checkbox checkbox-secondary border-1" />
                 </label>
+                <label class="w-full max-w-xs mb-10 form-control">
+                    <div class="label">
+                        <span class="label-text">抽取次数</span>
+                    </div>
+                    <input type="text" v-model="item.frequency" placeholder="抽取次数" class="w-full max-w-xs input-sm input input-bordered" />
+                </label>
+                <label class="w-full max-w-xs mb-10 form-control">
+                    <div class="label">
+                        <span class="label-text">操作</span>
+                    </div>
+                    <div class="flex gap-2">
+                    <button class="btn btn-error btn-sm" @click="delItem(item)">删除</button>
+                </div>
+                </label>
             </li>
         </ul>
-        <button class="btn btn-info" @click="addPrize">添加</button>
     </div>
 </template>
 

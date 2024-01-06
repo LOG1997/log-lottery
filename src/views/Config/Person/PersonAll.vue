@@ -1,49 +1,52 @@
 <!-- eslint-disable vue/no-parsing-error -->
 <script setup lang='ts'>
-import { ref } from 'vue';
+import { ref,onMounted } from 'vue';
 import useStore from '@/store'
+import {storeToRefs } from 'pinia'
 import * as XLSX from 'xlsx'
 import { readFile } from '@/utils/file'
 import DaiysuiTable from '@/components/DaiysuiTable/index.vue'
 
 const personConfig = useStore().personConfig
 
-const { getAlreadyPersonList: alreadyPersonList, getNotPersonList: notPersonList ,getTableRowCount:rowCount} = personConfig
+const { getAllPersonList:allPersonList,getTableRowCount:rowCount} = storeToRefs(personConfig)
 const limitType = '.xlsx,.xls'
 const excelData = ref<any[]>([])
-const personList = ref<any[]>(
-    notPersonList.concat(alreadyPersonList)
-)
+// const personList = ref<any[]>([])
+
+
 const handleFileChange = async (e: any) => {
     let dataBinary = await readFile(e.target.files[0])
     let workBook = XLSX.read(dataBinary, { type: 'binary', cellDates: true })
     let workSheet = workBook.Sheets[workBook.SheetNames[0]]
     excelData.value = XLSX.utils.sheet_to_json(workSheet)
-    personList.value = filterData(excelData.value)
+    const uploadData = filterData(excelData.value,rowCount.value)
 
     personConfig.resetPerson()
-    personConfig.addNotPersonList(personList.value)
+    personConfig.addNotPersonList(uploadData)
 }
 
-const filterData = (tableData: any[]) => {
+const filterData = (tableData: any[],localRowCount: number) => {
     const dataLength = tableData.length
     let j = 0;
     for (let i = 0; i < dataLength; i++) {
-        if (i % rowCount === 0) {
+        if (i % localRowCount === 0) {
             j++;
         }
-        tableData[i].x = i % rowCount + 1;
+        tableData[i].x = i % localRowCount + 1;
         tableData[i].y = j;
         tableData[i].id = i;
         // 是否中奖
         tableData[i].isWin = false
     }
     
-return personList.value = tableData
+return tableData
 }
 const deleteAll = () => {
     personConfig.deleteAllPerson()
-    personList.value = notPersonList.concat(alreadyPersonList)
+}
+const delPersonItem = (row: any) => {
+    personConfig.deletePerson(row)
 }
 
 const tableColumns = [
@@ -73,28 +76,30 @@ const tableColumns = [
     {
         label: '操作',
         actions: [
-            {
-                label: '编辑',
-                type: 'btn-info',
-                onClick: (row: any) => {
-                    console.log('编辑:', row)
-                }
-            },
+            // {
+            //     label: '编辑',
+            //     type: 'btn-info',
+            //     onClick: (row: any) => {
+            //         delPersonItem(row)
+            //     }
+            // },
             {
                 label: '删除',
                 type: 'btn-error',
                 onClick: (row: any) => {
-                    console.log('删除:', row)
+                    delPersonItem(row)
                 }
             },
 
         ]
     },
 ]
+onMounted(() => {
+})
 </script>
 
 <template>
-    <div class="">
+    <div class="min-w-1000px">
         <div class="flex justify-center gap-3">
             <button class="btn btn-error btn-sm" @click="deleteAll">全部删除</button>
             <div class="">
@@ -110,7 +115,7 @@ const tableColumns = [
 
             </div>
         </div>
-        <DaiysuiTable :tableColumns="tableColumns" :data="personList"></DaiysuiTable>
+        <DaiysuiTable :tableColumns="tableColumns" :data="allPersonList"></DaiysuiTable>
     </div>
 </template>
 

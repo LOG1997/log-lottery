@@ -112,6 +112,11 @@ const routes = [
         name: 'Home',
         component: Home,
       },
+      {
+        path:'/demo',
+        name:'Demo',
+        component:()=>import('@/views/Demo/index.vue')
+      },
       configRoutes,
     ],
   },

@@ -9,7 +9,7 @@
       <Header></Header>
     </header> -->
     <main class="box-content w-screen h-screen overflow-x-hidden overflow-y-auto main-container">
-      <router-view class="main-container-content"></router-view>
+      <router-view class="h-full main-container-content"></router-view>
     </main>
     <!-- <footer class="w-screen footer-container">
       <Footer></Footer>

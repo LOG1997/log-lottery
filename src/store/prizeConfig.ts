@@ -1,15 +1,20 @@
 import { defineStore } from 'pinia';
 import { IPrizeConfig } from '@/types/prizeConfig';
+import {defaultPrizeList} from './data';
 export const usePrizeConfig = defineStore('prize', {
   state() {
     return {
       prizeConfig:{
-        prizeList:[] as IPrizeConfig[],
+        prizeList:defaultPrizeList,
       }
     };  
   },
   getters: {
     // 获取全部配置
+    getPrizeConfigAll(state) {
+      return state.prizeConfig;
+    },
+    // 获取奖品列表
     getPrizeConfig(state) {
       return state.prizeConfig.prizeList;
     },
@@ -39,10 +44,14 @@ export const usePrizeConfig = defineStore('prize', {
         const index = this.prizeConfig.prizeList.findIndex(item => item.id === prizeConfigItem.id);
         this.prizeConfig.prizeList[index] = prizeConfigItem;
     },
+    // 删除全部奖项
+    deleteAllPrizeConfig() {
+        this.prizeConfig.prizeList = [];
+    },
     // 重置所有配置
-    reset() {
+    resetDefault() {
         this.prizeConfig = {
-            prizeList:[] as IPrizeConfig[],
+            prizeList:defaultPrizeList,
         }
     },
   },

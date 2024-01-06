@@ -1,6 +1,8 @@
 <script setup lang='ts'>
 import { ref, watch, onMounted } from 'vue'
 import useStore from '@/store'
+
+import {storeToRefs } from 'pinia'
 import { themeChange } from 'theme-change';
 import zod from 'zod';
 import daisyuiThemes from 'daisyui/src/theming/themes'
@@ -10,18 +12,18 @@ import {isRgbOrRgba,isHex} from '@/utils/color'
 
 const personConfig = useStore().personConfig
 const globalConfig = useStore().globalConfig
-const { getTheme: localTheme, getCardColor: cardColor,getTextColor:textColor,getCardSize:cardSize,getTextSize: textSize} = globalConfig
-const { getTableRowCount: tableRowCount, getShowField } = personConfig
+const { getTheme: localTheme, getCardColor: cardColor,getTextColor:textColor,getCardSize:cardSize,getTextSize: textSize} = storeToRefs(globalConfig)
+const { getTableRowCount: tableRowCount, getShowField } = storeToRefs(personConfig)
 const colorPickerRef = ref()
 
 interface ThemeDaType {
     [key: string]: any
 }
-const themeValue = ref(localTheme.name)
-const cardColorValue = ref(cardColor)
-const textColorValue = ref(textColor)
-const cardSizeValue = ref(cardSize)
-const textSizeValue = ref(textSize)
+const themeValue = ref(localTheme.value.name)
+const cardColorValue = ref(structuredClone(cardColor.value))
+const textColorValue = ref(structuredClone(textColor.value))
+const cardSizeValue = ref(structuredClone(cardSize.value))
+const textSizeValue = ref(structuredClone(textSize.value))
 const themeList = ref(Object.keys(daisyuiThemes))
 const daisyuiThemeList = ref<ThemeDaType>(daisyuiThemes)
 const formData = ref({
@@ -81,7 +83,6 @@ watch(themeValue, (val: any) => {
     themeChange(val)
     if(selectedThemeDetail.primary&&(isHex(selectedThemeDetail.primary)||isRgbOrRgba(selectedThemeDetail.primary))){
         globalConfig.setCardColor(selectedThemeDetail.primary)
-        cardColorValue.value=selectedThemeDetail.primary
     }
 }, { deep: true })
 
@@ -114,18 +115,6 @@ onMounted(() => {
                 </span>
             </div>
         </label>
-        <!-- <label class="w-full max-w-xs form-control">
-            <div class="label">
-                <span class="label-text">展示字段</span>
-            </div>
-            <ul class="flex gap-6 pl-0">
-                <li v-for="item in formData.showField" :key="item" class="flex items-center gap-1">
-                    <input type="checkbox" :checked="item.value" class="border-solid checkbox checkbox-primary border-1"
-                        @change="handleChangeShowFields(item)" />
-                    <span class="label-text">{{ item.label }}</span>
-                </li>
-            </ul>
-        </label> -->
         <label class="w-full max-w-xs form-control">
             <div class="label">
                 <span class="label-text">选择主题</span>

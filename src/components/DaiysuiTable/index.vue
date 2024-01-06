@@ -30,7 +30,7 @@ const actionsColumns = computed<any[]>(() => {
 
 <template>
     <div class="overflow-x-auto">
-        <table class="table">
+        <table class="table min-w-[600px]">
             <!-- head -->
             <thead>
                 <tr>
@@ -40,7 +40,7 @@ const actionsColumns = computed<any[]>(() => {
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody v-if="data.length > 0">
                 <!-- row  -->
                 <tr class="hover" v-for="item in data" :key="item.id">
                     <th>{{ item.id }}</th>
@@ -53,6 +53,11 @@ const actionsColumns = computed<any[]>(() => {
                         <button class="btn btn-xs" v-for="action in column.actions" :key="action.name" :class="action.type"
                             @click="action.onClick(item)">{{ action.label }}</button>
                     </td>
+                </tr>
+            </tbody>
+            <tbody v-else>
+                <tr>
+                    <td colspan="5" class="text-center">暂无数据</td>
                 </tr>
             </tbody>
             <!-- foot -->

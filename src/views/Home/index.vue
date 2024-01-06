@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 // import { tableData2 as tableData } from './data'
-import {rgba} from '@/utils/color'
+import { rgba } from '@/utils/color'
 import PlayMusic from './PlayMusic.vue'
+import PrizeList from './PrizeList.vue'
+import StarsBackground from '@/components/StarsBackground/index.vue'
 import * as THREE from 'three'
 import {
     CSS3DRenderer, CSS3DObject
@@ -11,13 +13,13 @@ import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls
 import TWEEN from 'three/examples/jsm/libs/tween.module.js';
 import useStore from '@/store'
 
-const personConfig=useStore().personConfig
-const globalConfig=useStore().globalConfig
+const personConfig = useStore().personConfig
+const globalConfig = useStore().globalConfig
 // const globalConfig = useStore().globalConfig
 
-const {getAlreadyPersonList:alreadyPersonList,getNotPersonList:notPersonList,getTableRowCount:rowCount}=personConfig
-const {getCardColor:cardColor,getTextColor:textColor,getCardSize:cardSize,getTextSize:textSize} = globalConfig
-const tableData=ref(
+const { getAlreadyPersonList: alreadyPersonList, getNotPersonList: notPersonList, getTableRowCount: rowCount } = personConfig
+const { getCardColor: cardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize } = globalConfig
+const tableData = ref(
     alreadyPersonList.concat(notPersonList)
 )
 
@@ -66,41 +68,41 @@ const init = () => {
         const element = document.createElement('div');
         element.className = 'element-card';
         // element.style.backgroundColor = `rgba( 0, 127, 127, ${Math.random() * 0.5 + 0.25} )`;
-        element.style.backgroundColor = rgba(cardColor,Math.random() * 0.5 + 0.25)
-        element.style.border=`1px solid ${rgba(cardColor,0.25)}`
-        element.style.boxShadow=`0 0 12px ${rgba(cardColor,0.5)}`
+        element.style.backgroundColor = rgba(cardColor, Math.random() * 0.5 + 0.25)
+        element.style.border = `1px solid ${rgba(cardColor, 0.25)}`
+        element.style.boxShadow = `0 0 12px ${rgba(cardColor, 0.5)}`
         // hover style
         element.addEventListener('mouseover', function () {
-            this.style.border=`1px solid ${rgba(cardColor,0.75)}`
-            this.style.boxShadow=`0 0 12px ${rgba(cardColor,0.75)}`
+            this.style.border = `1px solid ${rgba(cardColor, 0.75)}`
+            this.style.boxShadow = `0 0 12px ${rgba(cardColor, 0.75)}`
         })
         element.addEventListener('mouseout', function () {
-            this.style.border=`1px solid ${rgba(cardColor,0.25)}`
-            this.style.boxShadow=`0 0 12px ${rgba(cardColor,0.5)}`
+            this.style.border = `1px solid ${rgba(cardColor, 0.25)}`
+            this.style.boxShadow = `0 0 12px ${rgba(cardColor, 0.5)}`
         })
         element.style.width = `${cardSize.width}px`;
         element.style.height = `${cardSize.height}px`;
-    
+
         // element.style.color=localTheme.detail.primary
 
         const number = document.createElement('div');
         number.className = 'card-id';
         // number.textContent = (i / 5 + 1).toString();
         number.textContent = tableData.value[i].uid;
-        number.style.fontSize = `${textSize*0.5}px`;
+        number.style.fontSize = `${textSize * 0.5}px`;
         element.appendChild(number);
 
         const symbol = document.createElement('div');
         symbol.className = 'card-name';
         symbol.textContent = tableData.value[i].name;
-        symbol.style.textShadow=`0 0 12px ${rgba(cardColor,0.95)}`
+        symbol.style.textShadow = `0 0 12px ${rgba(cardColor, 0.95)}`
         symbol.style.fontSize = `${textSize}px`;
         element.appendChild(symbol);
 
         const detail = document.createElement('div');
         detail.className = 'card-detail';
         detail.innerHTML = `${tableData.value[i].department}<br/>${tableData.value[i].other}`;
-        detail.style.fontSize = `${textSize*0.5}px`;
+        detail.style.fontSize = `${textSize * 0.5}px`;
         element.appendChild(detail);
 
         const object = new CSS3DObject(element);
@@ -122,8 +124,8 @@ const init = () => {
         for (let i = 0; i < tableLen; i++) {
             const object = new THREE.Object3D();
 
-            object.position.x = tableData.value[i].x * (cardSize.width+40) - rowCount*90;
-            object.position.y = -tableData.value[i].y *(cardSize.height+20) + 1000;
+            object.position.x = tableData.value[i].x * (cardSize.width + 40) - rowCount * 90;
+            object.position.y = -tableData.value[i].y * (cardSize.height + 20) + 1000;
             object.position.z = 0;
 
             targets.table.push(object);
@@ -181,7 +183,7 @@ const init = () => {
 }
 
 const transform = (targets: any[], duration: number) => {
-    // TWEEN.removeAll();
+    TWEEN.removeAll();
     const objLength = objects.value.length;
     for (let i = 0; i < objLength; ++i) {
         let object = objects.value[i];
@@ -204,6 +206,7 @@ const transform = (targets: any[], duration: number) => {
         .to({}, duration * 2)
         .onUpdate(render)
         .start();
+    // 整体自动旋转
 }
 function onWindowResize() {
     camera.value.aspect = window.innerWidth / window.innerHeight
@@ -219,7 +222,25 @@ function onWindowResize() {
 function animation() {
     TWEEN.update();
     controls.value.update();
+    // 设置自动旋转
+    // console.log('animation',controls.value.target);
+    // 设置相机位置
     requestAnimationFrame(animation);
+}
+
+// // 自动旋转的动画
+function autoRotate() {
+   const rotateObj= new TWEEN.Tween(scene.value.rotation);
+   rotateObj
+      .to(
+        {
+          y: Math.PI * Math.random() * 1000,
+          x:Math.PI*Math.random()*1000,
+        },
+        3000 * 1000
+      )
+      .onUpdate(render)
+     .start();
 }
 
 
@@ -230,7 +251,7 @@ function render() {
 onMounted(() => {
     init();
     animation();
-    containerRef.value!.style.color=`${textColor}`
+    containerRef.value!.style.color = `${textColor}`
 });
 
 </script>
@@ -242,10 +263,15 @@ onMounted(() => {
             <button id="table" @click="transform(targets.table, 2000)">TABLE</button>
             <button id="sphere" @click="transform(targets.sphere, 2000)">SPHERE</button>
             <button id="helix" @click="transform(targets.helix, 2000)">HELIX</button>
+
+            <button  @click="autoRotate">旋转</button>
         </div>
         <!-- end -->
     </div>
+
+    <StarsBackground></StarsBackground>
     <PlayMusic class="absolute bottom-10 right-10"></PlayMusic>
+    <PrizeList class="absolute bottom-20 right-10"></PrizeList>
 </template>
 
 <style scoped lang="scss">
@@ -274,6 +300,4 @@ button:hover {
 button:active {
     background-color: rgba(127, 255, 255, 0.75);
 }
-
-
 </style>
