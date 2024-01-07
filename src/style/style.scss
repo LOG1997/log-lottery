@@ -26,3 +26,32 @@
         bottom: 15px;
     }
 }
+
+.lucky-element-card {
+    cursor: default;
+    text-align: center;
+
+    .lucky-card-id {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+    }
+
+    .lucky-card-name {
+        position: absolute;
+        top: 40px;
+        left: 0px;
+        right: 0;
+        font-weight: bold;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .lucky-card-detail {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 15px;
+    }
+}

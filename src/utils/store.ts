@@ -8,3 +8,4 @@ export const extractFields = (data: any) => {
         return keys.map(key => ({label:key,value:true}));
     }
 };
+

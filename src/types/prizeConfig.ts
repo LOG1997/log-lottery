@@ -11,5 +11,6 @@ export interface IPrizeConfig {
     };
     desc:string;
     isShow:boolean;
+    isUsed:boolean,
     frequency:number;
 }

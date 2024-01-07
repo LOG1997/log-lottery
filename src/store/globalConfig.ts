@@ -6,6 +6,7 @@ export const useGlobalConfig = defineStore('global', {
         return {
             globalConfig: {
                 rowCount: 12,
+                isSHowPrizeList:true,
                 theme: {
                     name: 'dark',
                     detail: { primary: '#0f5fd3' },
@@ -13,6 +14,7 @@ export const useGlobalConfig = defineStore('global', {
                     cardWidth: 140,
                     cardHeight: 200,
                     textColor: '#ffffff',
+                    luckyCardColor:'#ECB1AC',
                     textSize: 30
                 },
                 musicList: defaultMusicList,
@@ -37,6 +39,10 @@ export const useGlobalConfig = defineStore('global', {
         getCardColor(state) {
             return state.globalConfig.theme.cardColor;
         },
+        // 获取中奖颜色
+        getLuckyColor(state) {
+            return state.globalConfig.theme.luckyCardColor;
+        },
         // 获取文字颜色
         getTextColor(state) {
             return state.globalConfig.theme.textColor;
@@ -59,6 +65,10 @@ export const useGlobalConfig = defineStore('global', {
         // 获取图片列表
         getImageList(state) {
             return state.globalConfig.imageList;
+        },
+        // 获取是否显示奖品列表
+        getIsShowPrizeList(state) {
+            return state.globalConfig.isSHowPrizeList;
         }
 
     },
@@ -76,6 +86,10 @@ export const useGlobalConfig = defineStore('global', {
         // 设置卡片颜色
         setCardColor(cardColor: string) {
             this.globalConfig.theme.cardColor = cardColor;
+        },
+        // 设置中奖颜色
+        setLuckyCardColor(luckyCardColor: string) {
+            this.globalConfig.theme.luckyCardColor = luckyCardColor;
         },
         // 设置文字颜色
         setTextColor(textColor: string) {
@@ -143,14 +157,20 @@ export const useGlobalConfig = defineStore('global', {
         clearImageList() {
             this.globalConfig.imageList = [];
         },
+        // 设置是否显示奖品列表
+        setIsShowPrizeList(isShowPrizeList: boolean) {
+            this.globalConfig.isSHowPrizeList = isShowPrizeList;
+        },
         // 重置所有配置
         reset() {
             this.globalConfig = {
                 rowCount: 12,
+                isSHowPrizeList:true,
                 theme: {
                     name: 'dark',
                     detail: { primary: '#0f5fd3' },
                     cardColor: 'rgba(0, 255, 255)',
+                    luckyCardColor:'#ECB1AC',
                     cardWidth: 200,
                     cardHeight: 140,
                     textColor: '#ffffff',

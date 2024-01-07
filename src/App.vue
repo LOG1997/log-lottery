@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import useStore from '@/store'
+import PlayMusic from '@/components/PlayMusic/index.vue'
 
 import { themeChange } from 'theme-change'
 
@@ -16,6 +17,7 @@ onMounted(() => {
 
 <template>
   <router-view></router-view>
+  <PlayMusic class="absolute right-0 bottom-1/2"></PlayMusic>
 </template>
 
 <style scoped lang="scss">

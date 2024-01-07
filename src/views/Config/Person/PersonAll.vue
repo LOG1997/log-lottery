@@ -5,11 +5,13 @@ import useStore from '@/store'
 import {storeToRefs } from 'pinia'
 import * as XLSX from 'xlsx'
 import { readFile } from '@/utils/file'
+import {filterData} from '@/utils'
 import DaiysuiTable from '@/components/DaiysuiTable/index.vue'
 
 const personConfig = useStore().personConfig
-
-const { getAllPersonList:allPersonList,getTableRowCount:rowCount} = storeToRefs(personConfig)
+const globalConfig = useStore().globalConfig
+const { getAllPersonList:allPersonList} = storeToRefs(personConfig)
+const {getRowCount:rowCount}=storeToRefs(globalConfig)
 const limitType = '.xlsx,.xls'
 const excelData = ref<any[]>([])
 // const personList = ref<any[]>([])
@@ -26,22 +28,6 @@ const handleFileChange = async (e: any) => {
     personConfig.addNotPersonList(uploadData)
 }
 
-const filterData = (tableData: any[],localRowCount: number) => {
-    const dataLength = tableData.length
-    let j = 0;
-    for (let i = 0; i < dataLength; i++) {
-        if (i % localRowCount === 0) {
-            j++;
-        }
-        tableData[i].x = i % localRowCount + 1;
-        tableData[i].y = j;
-        tableData[i].id = i;
-        // 是否中奖
-        tableData[i].isWin = false
-    }
-    
-return tableData
-}
 const deleteAll = () => {
     personConfig.deleteAllPerson()
 }

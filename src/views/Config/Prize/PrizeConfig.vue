@@ -28,6 +28,7 @@ const addPrize = () => {
             url:''
         },
         desc: '',
+        isUsed: false,
         isShow: true,
         frequency: 1,
     }

@@ -72,6 +72,7 @@ export const defaultPrizeList=<IPrizeConfig[]>[
         },
         desc:'一等奖',
         isShow:true,
+        isUsed:false,
         frequency:1,
     },
     {
@@ -87,6 +88,7 @@ export const defaultPrizeList=<IPrizeConfig[]>[
         },
         desc:'二等奖',
         isShow:true,
+        isUsed:false,
         frequency:1,
     },
     {
@@ -102,6 +104,7 @@ export const defaultPrizeList=<IPrizeConfig[]>[
         },
         desc:'三等奖',
         isShow:true,
+        isUsed:false,
         frequency:1,
     },
     {
@@ -117,6 +120,7 @@ export const defaultPrizeList=<IPrizeConfig[]>[
         },
         desc:'超级大奖',
         isShow:true,
+        isUsed:false,
         frequency:1,
     },
     {
@@ -132,6 +136,7 @@ export const defaultPrizeList=<IPrizeConfig[]>[
         },
         desc:'特别奖',
         isShow:true,
+        isUsed:false,
         frequency:1,
     }
 ]
