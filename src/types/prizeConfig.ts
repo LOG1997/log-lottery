@@ -4,6 +4,7 @@ export interface IPrizeConfig {
     sort:number;
     isAll:boolean;
     count:number;
+    isUsedCount:number,
     picture:{
         id:string|number,
         name:string,

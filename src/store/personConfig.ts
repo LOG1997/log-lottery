@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { IPersonConfig } from '@/types/personConfig';
+import { IPrizeConfig } from '@/types/prizeConfig';
 export const usePersonConfig = defineStore('person', {
     state() {
         return {
@@ -48,15 +49,30 @@ export const usePersonConfig = defineStore('person', {
             });
         },
         // 添加已中奖人员
-        addAlreadyPersonList(personList: IPersonConfig[]) {
+        addAlreadyPersonList(personList: IPersonConfig[], prize: IPrizeConfig | null) {
             if (personList.length <= 0) {
                 return
             }
             personList.forEach((person: IPersonConfig) => {
                 this.personConfig.notPersonList = this.personConfig.notPersonList.filter((item: IPersonConfig) =>
                     item.id !== person.id)
+                if (prize != null) {
+                    person.isWin = true
+                    person.prizeName = prize.name
+                    person.prizeTime = new Date().toString()
+                }
                 this.personConfig.alreadyPersonList.push(person);
             });
+        },
+        // 从已中奖移动到未中奖
+        moveAlreadyToNot(person: IPersonConfig) {
+            if (person.id != undefined || person.id != null) {
+                this.personConfig.alreadyPersonList = this.personConfig.alreadyPersonList.filter((item: IPersonConfig) => item.id !== person.id);
+                person.isWin = false
+                person.prizeTime = ''
+                person.prizeName = ''
+                this.personConfig.notPersonList.push(person);
+            }
         },
         // 删除指定人员
         deletePerson(person: IPersonConfig) {
@@ -70,14 +86,7 @@ export const usePersonConfig = defineStore('person', {
             this.personConfig.alreadyPersonList = [];
             this.personConfig.notPersonList = [];
         },
-        // 设置table列数
-        setTableRowCount(tableRowCount: number) {
-            this.personConfig.tableRowCount = tableRowCount;
-        },
-        // 设置要展示那些字段
-        setShowFields(showField: any[]) {
-            this.personConfig.showField = showField;
-        },
+
         // 重置所有人员
         resetPerson() {
             this.personConfig.alreadyPersonList = [];

@@ -21,6 +21,7 @@
     "@tsparticles/vue3": "^3.0.0",
     "@vueuse/core": "^10.6.1",
     "axios": "^1.6.1",
+    "canvas-confetti": "^1.9.2",
     "localforage": "^1.10.0",
     "particles.vue3": "^2.12.0",
     "pinia": "^2.1.7",
@@ -36,6 +37,7 @@
     "vue": "^3.3.8",
     "vue-accessible-color-picker": "^5.0.1",
     "vue-router": "^4.2.5",
+    "vue-toast-notification": "^3",
     "vue3-colorpicker": "^2.2.3",
     "xlsx": "^0.18.5",
     "zod": "^3.22.4"
@@ -45,6 +47,7 @@
     "@iconify-json/fluent": "^1.1.40",
     "@tailwindcss/typography": "^0.5.10",
     "@testing-library/vue": "^8.0.0",
+    "@types/canvas-confetti": "^1.6.4",
     "@types/node": "^20.9.0",
     "@types/three": "^0.160.0",
     "@typescript-eslint/eslint-plugin": "^6.11.0",

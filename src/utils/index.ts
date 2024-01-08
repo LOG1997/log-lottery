@@ -15,3 +15,15 @@ export const filterData = (tableData: any[],localRowCount: number) => {
     
 return tableData
 }
+
+export const addOtherInfo=(personList:any[])=>{
+    const len=personList.length;
+    for(let i=0;i<len;i++){
+        personList[i].createTime=new Date().toString();
+        personList[i].updateTime=new Date().toString();
+        personList[i].prizeName='';
+        personList[i].prizeTime='';
+    }
+
+    return personList
+}

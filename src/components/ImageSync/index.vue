@@ -14,9 +14,9 @@ const imageDbStore = localforage.createInstance({
 const imgUrl=ref('')
 
 
-const getImageStoreItem=async (item:any)=>{
+const getImageStoreItem=async (item:any):Promise<string>=>{
     const key=item.id;
-     const image=await imageDbStore.getItem(key)
+     const image=await imageDbStore.getItem(key) as string
      
 return image
 }

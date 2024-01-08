@@ -12,7 +12,7 @@ import { isRgbOrRgba, isHex } from '@/utils/color'
 
 const globalConfig = useStore().globalConfig
 const personConfig = useStore().personConfig
-const { getTheme: localTheme, getCardColor: cardColor,getLuckyColor:luckyCardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount,getIsShowPrizeList:isShowPrizeList } = storeToRefs(globalConfig)
+const {getTopTitle:topTitle, getTheme: localTheme, getCardColor: cardColor,getLuckyColor:luckyCardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount,getIsShowPrizeList:isShowPrizeList } = storeToRefs(globalConfig)
 const { getAlreadyPersonList: alreadyPersonList, getNotPersonList: notPersonList } = storeToRefs(personConfig)
 const colorPickerRef = ref()
 
@@ -21,6 +21,7 @@ interface ThemeDaType {
 }
 const isRowCountChange = ref(0) //0未改变，1改变,2加载中
 const themeValue = ref(localTheme.value.name)
+const topTitleValue= ref(structuredClone(topTitle.value))
 const cardColorValue = ref(structuredClone(cardColor.value))
 const luckyCardColorValue = ref(structuredClone(luckyCardColor.value))
 const textColorValue = ref(structuredClone(textColor.value))
@@ -71,7 +72,7 @@ const resetPersonLayout = () => {
         const newNotPersonList = newList.slice(alreadyLen, notLen + alreadyLen)
         personConfig.deleteAllPerson()
         personConfig.addNotPersonList(newNotPersonList)
-        personConfig.addAlreadyPersonList(newAlreadyPersonList)
+        personConfig.addAlreadyPersonList(newAlreadyPersonList,null)
         
     isRowCountChange.value = 0
     }, 1000)
@@ -130,6 +131,15 @@ onMounted(() => {
 
 <template>
     <div>
+        <label class="flex flex-row items-center w-full gap-24 mb-10 form-control">
+            <div class="">
+                <div class="label">
+                    <span class="label-text">标题</span>
+                </div>
+                <input type="text" v-model="topTitleValue" placeholder="输入标题"
+                    class="w-full max-w-xs input input-bordered" />
+            </div>
+        </label>
         <label class="flex flex-row items-center w-full gap-24 mb-10 form-control">
             <div class="">
                 <div class="label">

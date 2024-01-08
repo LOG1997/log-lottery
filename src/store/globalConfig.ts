@@ -7,6 +7,7 @@ export const useGlobalConfig = defineStore('global', {
             globalConfig: {
                 rowCount: 12,
                 isSHowPrizeList:true,
+                topTitle:'大明内阁六部御前奏对',
                 theme: {
                     name: 'dark',
                     detail: { primary: '#0f5fd3' },
@@ -26,6 +27,10 @@ export const useGlobalConfig = defineStore('global', {
         // 获取全部配置
         getGlobalConfig(state) {
             return state.globalConfig;
+        },
+        // 获取标题
+        getTopTitle(state) {
+            return state.globalConfig.topTitle;
         },
         // 获取行数
         getRowCount(state) {
@@ -76,6 +81,10 @@ export const useGlobalConfig = defineStore('global', {
         // 设置rowCount
         setRowCount(rowCount: number) {
             this.globalConfig.rowCount = rowCount;
+        },
+        // 设置标题
+        setTopTitle(topTitle: string) {
+            this.globalConfig.topTitle = topTitle;
         },
         // 设置主题
         setTheme(theme: any) {
@@ -165,6 +174,7 @@ export const useGlobalConfig = defineStore('global', {
         reset() {
             this.globalConfig = {
                 rowCount: 12,
+                topTitle:'大明内阁六部御前奏对',
                 isSHowPrizeList:true,
                 theme: {
                     name: 'dark',

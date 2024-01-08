@@ -5,7 +5,7 @@ import useStore from '@/store'
 import {storeToRefs } from 'pinia'
 import * as XLSX from 'xlsx'
 import { readFile } from '@/utils/file'
-import {filterData} from '@/utils'
+import {filterData,addOtherInfo} from '@/utils'
 import DaiysuiTable from '@/components/DaiysuiTable/index.vue'
 
 const personConfig = useStore().personConfig
@@ -23,9 +23,9 @@ const handleFileChange = async (e: any) => {
     let workSheet = workBook.Sheets[workBook.SheetNames[0]]
     excelData.value = XLSX.utils.sheet_to_json(workSheet)
     const uploadData = filterData(excelData.value,rowCount.value)
-
+    const allData=addOtherInfo(uploadData);
     personConfig.resetPerson()
-    personConfig.addNotPersonList(uploadData)
+    personConfig.addNotPersonList(allData)
 }
 
 const deleteAll = () => {

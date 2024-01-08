@@ -67,6 +67,7 @@ const enterHome = () => {
 onMounted(() => {
     currentMusic.value = localMusicListValue.value[0]
     onPlayEnd()
+    // 不使用空格控制audio
 })
 onUnmounted(() => {
     audio.value.removeEventListener('ended', nextPlay)

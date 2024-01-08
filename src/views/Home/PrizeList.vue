@@ -19,17 +19,6 @@ const getPrizeListHeight = () => {
 }
 const prizeShow = ref(structuredClone(isShowPrizeList.value))
 
-const delAll = () => {
-    prizeConfig.deleteAllPrizeConfig()
-}
-
-const resetDefault = () => {
-    prizeConfig.resetDefault()
-}
-
-const print = () => {
-    console.log(prizeConfig)
-}
 const addTemporaryPrize = () => {
     console.log('addTemporaryPrize')
 }
@@ -44,23 +33,25 @@ onMounted(() => {
             <transition name="prize-list" :appear="true">
                 <div v-if="prizeShow" class="flex items-center">
                     <ul class="flex flex-col gap-1 p-2 rounded-xl bg-slate-500/50" ref="prizeListRef">
-
                         <li v-for="item in localPrizeList" :key="item.id"
                             :class="currentPrize.id == item.id ? 'current-prize' : ''">
                             <div
-                                class="relative flex flex-row items-center justify-between w-64 h-20 shadow-xl card bg-base-100">
-                                <div v-if="item.isUsed" class="absolute w-full h-full bg-gray-800/90 item-mask z-200 rounded-xl"></div>
+                                class="relative flex flex-row items-center justify-between w-64 h-20 shadow-xl card bg-base-100" v-if="item.isShow">
+                                <div v-if="item.isUsed" class="absolute z-50 w-full h-full bg-gray-800/70 item-mask rounded-xl"></div>
                                 <figure class="w-10 h-10 rounded-xl">
                                     <img :src="item.picture.url" alt="Shoes" class="object-cover h-full rounded-xl" />
                                 </figure>
-                                <div class="items-center text-center card-body">
-                                    <h2 class="card-title">{{ item.name }}</h2>
+                                <div class="items-center p-0 text-center card-body">
+                                    <h2 class="p-0 m-0 card-title">{{ item.name }}</h2>
+                                    <p class="absolute z-40 p-0 m-0 text-gray-300/80 pt-9">{{ item.isUsedCount }}/{{ item.count }}</p>
+                                    <progress class="w-3/4 h-6 progress progress-primary" :value="item.isUsedCount" :max="item.count"></progress>
+                                    <!-- <p class="p-0 m-0">{{ item.isUsedCount }}/{{ item.count }}</p> -->
                                 </div>
                             </div>
                         </li>
                     </ul>
                     <div class="flex flex-col gap-3">
-                        <div class="tooltip" data-tip="抽奖">
+                        <div class="tooltip" data-tip="奖项列表">
                             <div class="flex items-center w-6 h-8 rounded-r-lg cursor-pointer prize-option bg-slate-500/50"
                                 @click="prizeShow = !prizeShow">
                                 <svg-icon name="arrow_left" class="w-full h-full"></svg-icon>
@@ -78,7 +69,7 @@ onMounted(() => {
         </div>
 
         <transition name="prize-operate" :appear="true">
-            <div class="tooltip" data-tip="抽奖" v-show="!prizeShow">
+            <div class="tooltip" data-tip="奖项列表" v-show="!prizeShow">
                 <div class="flex items-center w-6 h-8 rounded-r-lg cursor-pointer prize-option bg-slate-500/50"
                     @click="prizeShow = !prizeShow">
                     <svg-icon name="arrow_right" class="w-full h-full"></svg-icon>

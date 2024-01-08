@@ -2,19 +2,22 @@
 <script setup lang='ts'>
 import { ref } from 'vue';
 import useStore from '@/store'
+import { storeToRefs } from 'pinia';
 import DaiysuiTable from '@/components/DaiysuiTable/index.vue'
 
 const personConfig = useStore().personConfig
 
-const { getAlreadyPersonList: alreadyPersonList } = personConfig
-const personList = ref<any[]>(
-    alreadyPersonList
-)
+const { getAlreadyPersonList: alreadyPersonList } = storeToRefs(personConfig)
+// const personList = ref<any[]>(
+//     alreadyPersonList
+// )
 
 
 const deleteAll = () => {
     personConfig.deleteAllPerson()
-    personList.value = alreadyPersonList
+}
+const handleMoveNotPerson=(row:any)=>{
+    personConfig.moveAlreadyToNot(row)
 }
 
 const tableColumns = [
@@ -35,13 +38,22 @@ const tableColumns = [
         props: 'other',
     },
     {
+        label:'奖品',
+        props:'prizeName'
+    },
+    {
+        label: '中奖时间',
+        props: 'prizeTime',
+
+    },
+    {
         label: '操作',
         actions: [
             {
-                label: '编辑',
+                label: '移入未中奖名单',
                 type: 'btn-info',
                 onClick: (row: any) => {
-                    console.log('编辑:', row)
+                    handleMoveNotPerson(row)
                 }
             },
             {
@@ -63,7 +75,7 @@ const tableColumns = [
             <button class="btn btn-error btn-sm" @click="deleteAll">全部删除</button>
            
         </div>
-        <DaiysuiTable :tableColumns="tableColumns" :data="personList"></DaiysuiTable>
+        <DaiysuiTable :tableColumns="tableColumns" :data="alreadyPersonList"></DaiysuiTable>
     </div>
 </template>
 

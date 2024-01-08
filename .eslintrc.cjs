@@ -38,7 +38,7 @@ module.exports = {
     ],
     "no-console": "warn",
     "no-debugger": "warn",
-    complexity: ["warn", { max: 5 }],
+    // complexity: ["warn", { max: 5 }],
     // 禁止使用多个空格
     "no-multi-spaces": "error",
     // 最大连续空行数

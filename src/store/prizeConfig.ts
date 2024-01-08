@@ -12,6 +12,7 @@ export const usePrizeConfig = defineStore('prize', {
                     sort: 1,
                     isAll: true,
                     count: 1,
+                    isUsedCount:0,
                     picture: {
                         id: '0',
                         name: '一等奖',
@@ -63,6 +64,10 @@ export const usePrizeConfig = defineStore('prize', {
         updatePrizeConfig(prizeConfigItem: IPrizeConfig) {
             const index = this.prizeConfig.prizeList.findIndex(item => item.id === prizeConfigItem.id);
             this.prizeConfig.prizeList[index] = prizeConfigItem;
+            if(prizeConfigItem.isUsed&&index+1<this.prizeConfig.prizeList.length){
+                // 设置下一个为currentPrize
+                this.setCurrentPrize(this.prizeConfig.prizeList[index+1]);
+            }
         },
         // 删除全部奖项
         deleteAllPrizeConfig() {
@@ -82,6 +87,7 @@ export const usePrizeConfig = defineStore('prize', {
                     sort: 1,
                     isAll: true,
                     count: 1,
+                    isUsedCount:0,
                     picture: {
                         id: '0',
                         name: '一等奖',
@@ -101,7 +107,7 @@ export const usePrizeConfig = defineStore('prize', {
             {
                 // 如果要存储在localStorage中
                 storage: localStorage,
-                key: 'personConfig',
+                key: 'prizeConfig',
             },
         ],
     },

@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-// import { tableData2 as tableData } from './data'
-import { rgba } from '@/utils/color'
-// import PlayMusic from './PlayMusic.vue'
+import { ref, onMounted,onUnmounted, watch } from 'vue'
 import PrizeList from './PrizeList.vue'
-import { useElementStyle } from '@/hooks/useElement'
+import { useElementStyle, useElementPosition } from '@/hooks/useElement'
 import StarsBackground from '@/components/StarsBackground/index.vue'
-import LuckyView from './LuckyThree.vue'
+import confetti from 'canvas-confetti'
 import * as THREE from 'three'
 import {
     CSS3DRenderer, CSS3DObject
@@ -14,23 +11,26 @@ import {
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
 import TWEEN from 'three/examples/jsm/libs/tween.module.js';
 import useStore from '@/store'
+import { storeToRefs } from 'pinia'
+import { useToast } from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-sugar.css';
 
-
+const toast = useToast();
 const personConfig = useStore().personConfig
 const globalConfig = useStore().globalConfig
 const prizeConfig = useStore().prizeConfig
 
-const { getAlreadyPersonList: alreadyPersonList, getNotPersonList: notPersonList } = personConfig
-const { getCurrentPrize: currentPrize } = prizeConfig
-const { getCardColor: cardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount } = globalConfig
-const tableData = ref(
-    alreadyPersonList.concat(notPersonList)
-)
+const { getAlreadyPersonList: alreadyPersonList, getNotPersonList: notPersonList } = storeToRefs(personConfig)
+const { getCurrentPrize: currentPrize } = storeToRefs(prizeConfig)
+const {getTopTitle:topTitle, getCardColor: cardColor, getTextColor: textColor, getLuckyColor: luckyColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount } = storeToRefs(globalConfig)
+const tableData = ref(JSON.parse(JSON.stringify(alreadyPersonList.value)).concat(JSON.parse(JSON.stringify(notPersonList.value))))
 
 const currentStatus = ref(0) // 0为初始状态， 1为抽奖准备状态，2为抽奖中状态，3为抽奖结束状态
 const ballRotationY = ref(0)
 const containerRef = ref<HTMLElement>()
 // const LuckyViewRef= ref()
+const canOperate = ref(true)
+const cameraZ = ref(3000)
 
 const scene = ref()
 const camera = ref()
@@ -47,6 +47,7 @@ const targets = {
 
 const luckyTargets = ref<any[]>([])
 const luckyCardList = ref<any[]>([])
+const currentPrizeValue=ref(JSON.parse(JSON.stringify(currentPrize.value)))
 const init = () => {
     const felidView = 40;
     const width = window.innerWidth;
@@ -58,11 +59,27 @@ const init = () => {
 
     scene.value = new THREE.Scene();
     camera.value = new THREE.PerspectiveCamera(felidView, aspect, nearPlane, farPlane);
-    camera.value.position.z = 3000;
+    camera.value.position.z = cameraZ.value
+    // 侦听camera position变化
+    // watch(() => camera.value.position.z, (value) => {
+    //     console.log('code line-63 \n\r😍 camara posi:\n\r',value);
+    //     console.log('code line-63 \n\r😍 camara rrrr:\n\r',camera.value.rotation);
 
+    //     cameraZ.value = value
+    // })
+    // watch(() => camera.value.rotation.z, (value) => {
+    //     console.log('code line-68 \n\r😁 camraea rotation:\n\r',value);
+
+    //     // cameraZ.value = value
+    // })
     renderer.value = new CSS3DRenderer()
-    renderer.value.setSize(width, height)
+    renderer.value.setSize(width, height*0.9)
     renderer.value.domElement.style.position = 'absolute';
+    // 垂直居中
+    renderer.value.domElement.style.paddingTop = '50px'
+    renderer.value.domElement.style.top = '50%';
+    renderer.value.domElement.style.left = '50%';
+    renderer.value.domElement.style.transform = 'translate(-50%, -50%)';
     WebGLoutput!.appendChild(renderer.value.domElement);
 
     controls.value = new TrackballControls(camera.value, renderer.value.domElement);
@@ -76,25 +93,6 @@ const init = () => {
     for (let i = 0; i < tableLen; i++) {
         let element = document.createElement('div');
         element.className = 'element-card';
-        // element.style.backgroundColor = `rgba( 0, 127, 127, ${Math.random() * 0.5 + 0.25} )`;
-        // element.style.backgroundColor = rgba(cardColor, Math.random() * 0.5 + 0.25)
-        // element.style.border = `1px solid ${rgba(cardColor, 0.25)}`
-        // element.style.boxShadow = `0 0 12px ${rgba(cardColor, 0.5)}`
-        // element.style.width = `${cardSize.width}px`;
-        // element.style.height = `${cardSize.height}px`;
-        // element.addEventListener('mouseover', function () {
-        //     console.log(this)
-        //     this.style.border = `1px solid ${rgba(cardColor, 0.75)}`
-        //     this.style.boxShadow = `0 0 12px ${rgba(cardColor, 0.75)}`
-        // })
-        // element.addEventListener('mouseout', function () {
-        //     this.style.border = `1px solid ${rgba(cardColor, 0.25)}`
-        //     this.style.boxShadow = `0 0 12px ${rgba(cardColor, 0.5)}`
-        // })
-        // hover style
-
-
-        // element.style.color=localTheme.detail.primary
 
         const number = document.createElement('div');
         number.className = 'card-id';
@@ -116,7 +114,7 @@ const init = () => {
         // detail.style.fontSize = `${textSize * 0.5}px`;
         element.appendChild(detail);
 
-        element = useElementStyle(element, cardColor, cardSize, textSize)
+        element = useElementStyle(element, cardColor.value, cardSize.value, textSize.value)
         const object = new CSS3DObject(element);
         object.position.x = Math.random() * 4000 - 2000;
         object.position.y = Math.random() * 4000 - 2000;
@@ -136,8 +134,8 @@ const init = () => {
         for (let i = 0; i < tableLen; i++) {
             const object = new THREE.Object3D();
 
-            object.position.x = tableData.value[i].x * (cardSize.width + 40) - rowCount * 90;
-            object.position.y = -tableData.value[i].y * (cardSize.height + 20) + 1000;
+            object.position.x = tableData.value[i].x * (cardSize.value.width + 40) - rowCount.value * 90;
+            object.position.y = -tableData.value[i].y * (cardSize.value.height + 20) + 1000;
             object.position.z = 0;
 
             targets.table.push(object);
@@ -214,10 +212,12 @@ const transform = (targets: any[], duration: number) => {
             .onComplete(() => {
                 if (luckyCardList.value.length) {
                     luckyCardList.value.forEach((item: any) => {
-                        return useElementStyle(item.element, cardColor, { width: cardSize.width, height: cardSize.height }, textSize)
+                        return useElementStyle(item.element, cardColor.value, cardSize.value, textSize.value)
                     })
                 }
                 luckyCardList.value = [];
+
+                canOperate.value = true
             });
     }
 
@@ -248,11 +248,11 @@ function animation() {
     requestAnimationFrame(animation);
 }
 
-// // 自动旋转的动画
-function rollBall(rotateY: number, duration: number, mod: 'default' | 'restore' = 'default') {
+// // 旋转的动画
+function rollBall(rotateY: number, duration: number) {
     TWEEN.removeAll();
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         scene.value.rotation.y = 0;
         ballRotationY.value = Math.PI * rotateY * 1000
         const rotateObj = new TWEEN.Tween(scene.value.rotation);
@@ -270,85 +270,240 @@ function rollBall(rotateY: number, duration: number, mod: 'default' | 'restore' 
             .onUpdate(render)
             .start()
             .onStop(() => {
-                scene.value.rotation.y = 0;
                 resolve('')
             })
             .onComplete(() => {
                 resolve('')
+                canOperate.value = true
             })
     })
 }
-
+// 将视野转回正面
+function resetCamera() {
+    new TWEEN.Tween(camera.value.position)
+        .to(
+            {
+                x: 0,
+                y: 0,
+                z: 3000
+            },
+            1000
+        )
+        .onUpdate(render)
+        .start()
+        .onComplete(() => {
+            new TWEEN.Tween(camera.value.rotation)
+                .to(
+                    {
+                        x: 0,
+                        y: 0,
+                        z: 0
+                    },
+                    1000
+                )
+                .onUpdate(render)
+                .start()
+                .onComplete(() => {
+                    canOperate.value = true // 相机恢复原位
+                    // camera.value.lookAt(scene.value.position)
+                    camera.value.position.y = 0
+                    camera.value.position.x = 0
+                    camera.value.position.z = 3000
+                    camera.value.rotation.x = 0
+                    camera.value.rotation.y = 0
+                    camera.value.rotation.z = -0
+                    controls.value.reset()
+                })
+        })
+}
 
 function render() {
     renderer.value.render(scene.value, camera.value);
 }
 const enterLottery = async () => {
+    if (!canOperate.value) {
+        return
+    }
+    canOperate.value = false
     transform(targets.sphere, 1000)
     currentStatus.value = 1
-    // setTimeout(() => {
-    //     rollBall(0.1,3000)
-    // }, 3000)
+    setTimeout(() => {
+        rollBall(0.1, 2000)
+    }, 2000)
 }
 // 开始抽奖
 const startLottery = () => {
+    if (!canOperate.value) {
+        return
+    }
     currentStatus.value = 2
     rollBall(10, 3000)
 }
 
 const stopLottery = async () => {
+    if (!canOperate.value) {
+        return
+    }
+    canOperate.value = false
     TWEEN.removeAll();
     rollBall(0, 1)
-    // scene正面
     currentStatus.value = 0
-    // 从notPersonList随机抽取currentPrize.count个
-    const notPersonListLength = notPersonList.length;
-    for (let i = 0; i < currentPrize.count; i++) {
+    const notPersonListLength = notPersonList.value.length;
+    
+    // 每次最多抽十个
+    let luckyCount = 10
+    const leftover = currentPrize.value.count - currentPrize.value.isUsedCount
+    leftover < luckyCount ? luckyCount = leftover : luckyCount
+    if (notPersonListLength < luckyCount) {
+        toast.open({
+            message: '抽奖人数不够',
+            type: 'warning',
+            position: 'top-right',
+            duration: 10000
+        })
+
+        return;
+    }
+
+    
+    for (let i = 0; i < luckyCount; i++) {
         if (notPersonListLength > 0) {
             const randomIndex = Math.floor(Math.random() * notPersonListLength);
-            luckyTargets.value.push(notPersonList[randomIndex])
+            luckyTargets.value.push(notPersonList.value[randomIndex])
 
             let LuckyCard = objects.value[randomIndex]
-            console.log(LuckyCard)
-            LuckyCard.element = useElementStyle(LuckyCard.element, '#ffd700', { width: cardSize.width * 2, height: cardSize.height * 2 }, textSize * 2, 'lucky')
-            // 重新设置位置
-            LuckyCard.position.x = 100
-            LuckyCard.position.y = 300
-            LuckyCard.position.z = 0
-            // LuckyCard.rotation.x = 0
-            // LuckyCard.rotation.y = 0
-            // LuckyCard.rotation.z = 0
-            new TWEEN.Tween(LuckyCard.position)
-                .to({
-                    x: LuckyCard.x,
-                    y: LuckyCard.y,
-                    z: 1200
-                }, 1000)
-                .start()
-            new TWEEN.Tween(LuckyCard.rotation)
-                .to({
-                    x: 0,
-                    y: 0,
-                    z: 0
-                }, 1000)
-                .start()
             luckyCardList.value.push(LuckyCard)
         }
     }
-
-    personConfig.addAlreadyPersonList(luckyTargets.value)
+    const luckyCardListLength = luckyCardList.value.length;
+    const windowSize = { width: window.innerWidth, height: window.innerHeight }
+    luckyCardListLength && luckyCardList.value.forEach((item: any, index: number) => {
+        item.element = useElementStyle(item.element, luckyColor.value, { width: cardSize.value.width * 2, height: cardSize.value.height * 2 }, textSize.value * 2, 'lucky')
+        item = useElementPosition(item, rowCount.value, { width: cardSize.value.width * 2, height: cardSize.value.height * 2 }, windowSize, index)
+        new TWEEN.Tween(item.position)
+            .to({
+                x: item.x,
+                y: item.y,
+                z: 1000
+            }, 700)
+            .start()
+        new TWEEN.Tween(item.rotation)
+            .to({
+                x: 0,
+                y: 0,
+                z: 0
+            }, 600)
+            .start()
+            .onComplete(() => {
+                confettiFire()
+                resetCamera()
+            })
+    })
+    currentPrizeValue.value.isUsedCount += luckyCount
+    if(currentPrizeValue.value.isUsedCount>=currentPrizeValue.value.count){
+        currentPrizeValue.value.isUsed=true
+    }
+    prizeConfig.setCurrentPrize(currentPrizeValue.value)
+    prizeConfig.updatePrizeConfig(currentPrizeValue.value)
+    personConfig.addAlreadyPersonList(luckyTargets.value, currentPrize.value)
 }
+// 庆祝动画
+const confettiFire = () => {
+    var duration = 3 * 1000;
+    var end = Date.now() + duration;
+    (function frame() {
+        // launch a few confetti from the left edge
+        confetti({
+            particleCount: 2,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 }
+        });
+        // and launch a few from the right edge
+        confetti({
+            particleCount: 2,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 }
+        });
 
+        // keep going until we are out of time
+        if (Date.now() < end) {
+            requestAnimationFrame(frame);
+        }
+    }());
+    centerFire(0.25, {
+        spread: 26,
+        startVelocity: 55,
+    });
+    centerFire(0.2, {
+        spread: 60,
+    });
+    centerFire(0.35, {
+        spread: 100,
+        decay: 0.91,
+        scalar: 0.8
+    });
+    centerFire(0.1, {
+        spread: 120,
+        startVelocity: 25,
+        decay: 0.92,
+        scalar: 1.2
+    });
+    centerFire(0.1, {
+        spread: 120,
+        startVelocity: 45,
+    });
+}
+const centerFire = (particleRatio: number, opts: any) => {
+    const count = 200
+    confetti({
+        origin: { y: 0.7 },
+        ...opts,
+        particleCount: Math.floor(count * particleRatio)
+    });
+}
+// 监听空格键
+const listenSpaceKey=()=>{
+    window.addEventListener('keydown', (e) => {
+        console.log('code line-468 \n\r😒 e:\n\r',e);
+        // 
+        
+        if (e.code !== 'Space') {
+            return
+        }
+        if(currentStatus.value==0){
+            enterLottery()
+        }
+        else if(currentStatus.value==1){
+            startLottery()
+        }
+        else if(currentStatus.value==2){
+            stopLottery()
+        }
+    })
+}
 onMounted(() => {
     init();
     animation();
     containerRef.value!.style.color = `${textColor}`
+    listenSpaceKey()
 });
-
+onUnmounted(() => {
+    window.removeEventListener('keydown', listenSpaceKey)
+})
+watch(()=>currentPrizeValue.value.isUsed,(val)=>{
+    if(val){
+        currentPrizeValue.value=JSON.parse(JSON.stringify(currentPrize.value))
+    }
+})
 </script>
 
 <template>
-    <div id="container" ref="containerRef">
+    
+    <h2 class="absolute w-full pt-12 m-0 font-mono tracking-wide text-center leading-12" :style="{fontSize:textSize*1.5+'px',color:textColor}">{{ topTitle }}</h2>
+    <div id="container" ref="containerRef" class="3dContainer">
+        
         <!-- 选中菜单结构 start-->
         <div id="menu">
             <button class="btn glass" @click="enterLottery" v-if="currentStatus == 0">进入抽奖</button>
@@ -356,8 +511,10 @@ onMounted(() => {
             <button class="btn glass" @click="startLottery" v-if="currentStatus == 1">开始</button>
 
             <button class="btn glass" @click="stopLottery" v-if="currentStatus == 2">结束</button>
-            <button id="table" @click="transform(targets.table, 2000)">TABLE</button>
-            <button id="helix" @click="transform(targets.helix, 2000)">HELIX</button>
+
+
+            <!--   <button id="table" @click="transform(targets.table, 2000)">TABLE</button> -->
+            <!--  <button id="helix" @click="transform(targets.helix, 2000)">HELIX</button> -->
 
         </div>
         <!-- end -->

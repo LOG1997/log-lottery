@@ -65,6 +65,7 @@ export const defaultPrizeList=<IPrizeConfig[]>[
         sort:1,
         isAll:true,
         count:1,
+        isUsedCount:0,
         picture:{
             id:'0',
             name:'一等奖',
@@ -81,6 +82,7 @@ export const defaultPrizeList=<IPrizeConfig[]>[
         sort:2,
         isAll:true,
         count:1,
+        isUsedCount:0,
         picture: {
             id:'1',
             name:'二等奖',
@@ -97,6 +99,7 @@ export const defaultPrizeList=<IPrizeConfig[]>[
         sort:3,
         isAll:true,
         count:1,
+        isUsedCount:0,
         picture: {
             id:'2',
             name:'三等奖',
@@ -113,6 +116,7 @@ export const defaultPrizeList=<IPrizeConfig[]>[
         sort:4,
         isAll:true,
         count:1,
+        isUsedCount:0,
         picture: {
             id:'3',
             name:'超级奖',
@@ -129,6 +133,7 @@ export const defaultPrizeList=<IPrizeConfig[]>[
         sort:5,
         isAll:true,
         count:1,
+        isUsedCount:0,
         picture:{
             id:'4',
             name:'特别奖',

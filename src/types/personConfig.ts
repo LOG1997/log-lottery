@@ -3,8 +3,11 @@ export interface IPersonConfig {
     uid: string;
     name: string;
     department:string;
-    other:string;
     isWin:boolean;
     x:number;
     y:number
+    createTime: string;
+    updateTime: string;
+    prizeName: string;
+    prizeTime: string;
 }

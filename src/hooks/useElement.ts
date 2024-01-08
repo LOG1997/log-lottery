@@ -33,6 +33,23 @@ export const useElementStyle=(element:any,cardColor:string,cardSize:{width:numbe
     return element
 }
 
-export const useElementPosition=(element:any,count:number,cardSize:{width:number,height:number},containerSize:{width:number,height:number})=>{
-    
+export const useElementPosition=(element:any,count:number,cardSize:{width:number,height:number},windowSize:{width:number,height:number},cardIndex:number)=>{
+    const rowCount=Math.floor(windowSize.width/(cardSize.width+100))
+    const colCount=Math.ceil(count/rowCount)
+    const centerPosition={
+        x:0,
+        y:windowSize.height/2-cardSize.height/2
+    }
+  const index =cardIndex%5
+    if(index==0){
+        element.position.x=centerPosition.x
+        element.position.y=centerPosition.y-Math.floor(cardIndex/5)*(cardSize.height+60)
+    }
+    else{
+        element.position.x=index%2===0?Math.ceil(index/2)*(cardSize.width+100):-Math.ceil(index/2)*(cardSize.width+100)
+        element.position.y=centerPosition.y-Math.floor(cardIndex/5)*(cardSize.height+60)
+    }
+
+
+    return element
 }
