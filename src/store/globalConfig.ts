@@ -20,7 +20,11 @@ export const useGlobalConfig = defineStore('global', {
                 },
                 musicList: defaultMusicList,
                 imageList:defaultImageList,
-            }
+            },
+            currentMusic: {
+                item:defaultMusicList[0],
+                paused:true,
+            },
         };
     },
     getters: {
@@ -66,6 +70,10 @@ export const useGlobalConfig = defineStore('global', {
         // 获取音乐列表
         getMusicList(state) {
             return state.globalConfig.musicList;
+        },
+        // 获取当前音乐
+        getCurrentMusic(state) {
+            return state.currentMusic;
         },
         // 获取图片列表
         getImageList(state) {
@@ -132,6 +140,13 @@ export const useGlobalConfig = defineStore('global', {
                 }
             }
         },
+        // 设置当前播放音乐
+        setCurrentMusic(musicItem: any,paused:boolean=true) {
+            this.currentMusic={
+                item:musicItem,
+                paused:paused,
+            }
+        },
         // 重置音乐列表
         resetMusicList() {
             this.globalConfig.musicList = defaultMusicList;
@@ -189,6 +204,10 @@ export const useGlobalConfig = defineStore('global', {
                 },
                 musicList: defaultMusicList,
                 imageList:defaultImageList,
+            },
+            this.currentMusic= {
+                item:defaultMusicList[0],
+                paused:true,
             }
         }
     },
@@ -199,6 +218,7 @@ export const useGlobalConfig = defineStore('global', {
                 // 如果要存储在localStorage中
                 storage: localStorage,
                 key: 'globalConfig',
+                paths: ['globalConfig'],
             },
         ],
     },

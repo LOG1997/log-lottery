@@ -1,30 +1,27 @@
 <script setup lang='ts'>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted,watch } from 'vue'
 import useStore from '@/store';
+import { storeToRefs } from 'pinia';
 import localforage from 'localforage'
 import { useRouter, useRoute } from 'vue-router';
-import { useAudio } from '@/hooks/useAudio'
 const router = useRouter()
 const route = useRoute()
 const audioDbStore = localforage.createInstance({
     name: 'audioStore'
 })
-
-const audioHook = useAudio()
-const { audio, audioPaused } = audioHook
+const audio=ref(new Audio())
 const settingRef = ref()
 // const audio = ref(new Audio())
-const currentMusic = ref<any>()
 const globalConfig = useStore().globalConfig
-const { getMusicList: localMusicList } = globalConfig;
+const { getMusicList: localMusicList,getCurrentMusic:currentMusic } = storeToRefs(globalConfig);
 const localMusicListValue = ref(localMusicList)
 
-const play = async (item: any, skip = false) => {
-    if (!audio.value.paused && !skip) {
-        audioHook.pause()
+const play = async (item: any) => {
+    // if (!audio.value.paused && !skip) {
+    //     audio.value.pause()
 
-        return
-    }
+    //     return
+    // }
     let audioUrl = ''
     if (!item.url) {
         return
@@ -35,21 +32,27 @@ const play = async (item: any, skip = false) => {
     else {
         audioUrl = item.url
     }
-    audioHook.pause()
-    audioHook.setAudioSrc(audioUrl)
-    audioHook.play()
+    audio.value.pause()
+    audio.value.src = audioUrl
+    audio.value.play()
 }
-
+const playMusic=(item:any,skip = false)=>{
+    if(!currentMusic.value.paused&&!skip){
+        globalConfig.setCurrentMusic(item,true)
+        
+return
+    }
+    globalConfig.setCurrentMusic(item,false)
+}
 const nextPlay = () => {
     // 播放下一首
     if (localMusicListValue.value.length > 1) {
-        let index = localMusicListValue.value.findIndex((item: any) => item.name == currentMusic.value.name)
+        let index = localMusicListValue.value.findIndex((item: any) => item.name == currentMusic.value.item.name)
         index++
         if (index >= localMusicListValue.value.length) {
             index = 0
         }
-        currentMusic.value = localMusicListValue.value[index]
-        play(currentMusic.value, true)
+        globalConfig.setCurrentMusic(localMusicListValue.value[index],false)
     }
 }
 // 监听播放成后开始下一首
@@ -58,20 +61,28 @@ const onPlayEnd = () => {
 }
 
 const enterConfig = () => {
-    router.push('/config')
+    router.push('/log-lottery/config')
 }
 const enterHome = () => {
-    router.push('/')
+    router.push('/log-lottery')
 }
 
 onMounted(() => {
-    currentMusic.value = localMusicListValue.value[0]
+    globalConfig.setCurrentMusic(localMusicListValue.value[0],true)
     onPlayEnd()
     // 不使用空格控制audio
 })
 onUnmounted(() => {
     audio.value.removeEventListener('ended', nextPlay)
 })
+watch(currentMusic, (val: any) => {
+    if(!val.paused&&audio.value){
+        play(val.item)
+    }
+    else{
+        audio.value.pause()
+    }
+},{deep:true})
 
 </script>
 
@@ -90,10 +101,10 @@ onUnmounted(() => {
             </div>
         </div>
 
-        <div class="tooltip tooltip-left" :data-tip="currentMusic ? currentMusic.name+'\n\r &nbsp; 右键下一曲' : '播放/暂停'">
+        <div class="tooltip tooltip-left" :data-tip="currentMusic ? currentMusic.item.name+'\n\r &nbsp; 右键下一曲' : '播放/暂停'">
             <div class="flex items-center justify-center w-10 h-10 p-0 m-0 cursor-pointer setting-container bg-slate-500/50 rounded-l-xl hover:bg-slate-500/80 hover:text-blue-400/90"
-                @click="play(currentMusic)" @click.right.prevent="nextPlay">
-                <svg-icon :name="audioPaused ? 'play' : 'pause'"></svg-icon>
+                @click="playMusic(currentMusic.item)" @click.right.prevent="nextPlay">
+                <svg-icon :name="currentMusic.paused ? 'play' : 'pause'"></svg-icon>
             </div>
         </div>
         <!-- <div class="bg-blue-300 cursor-pointer" @click="nextPlay">下一首</div> -->

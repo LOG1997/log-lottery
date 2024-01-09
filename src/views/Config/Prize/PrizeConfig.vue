@@ -63,7 +63,6 @@ const sort = (item: any, isUp: number) => {
 }
 const delItem = (item: IPrizeConfig) => {
     prizeConfig.deletePrizeConfig(item.id)
-    // 更新奖项列表
 }
 const delAll = async () => {
     await prizeConfig.deleteAllPrizeConfig()
@@ -71,8 +70,8 @@ const delAll = async () => {
 onMounted(() => {
     getImageDbStore()
 })
-watch(() => prizeList, () => {
-    prizeConfig.setPrizeConfig(prizeList.value)
+watch(() => prizeList, (val:any) => {
+    prizeConfig.setPrizeConfig(val)
 }, { deep: true })
 </script>
 
@@ -127,6 +126,13 @@ watch(() => prizeList, () => {
                 </label>
                 <label class="w-full max-w-xs mb-10 form-control">
                     <div class="label">
+                        <span class="label-text">已抽取</span>
+                    </div>
+                    <input type="checkbox" :checked="item.isUsed"  @change="item.isUsed?(()=>{item.isUsed=false;item.isUsedCount=0})():(()=>{item.isUsed=true;item.isUsedCount=item.count})()"
+                        class="mt-2 border-solid checkbox checkbox-secondary border-1" />
+                </label>
+                <label class="w-full max-w-xs mb-10 form-control">
+                    <div class="label">
                         <span class="label-text">图片</span>
                     </div>
                     <select class="w-full max-w-xs select select-warning select-sm" v-model="item.picture">
@@ -142,13 +148,13 @@ watch(() => prizeList, () => {
                     <input type="checkbox" :checked="item.isShow" @change="item.isShow = !item.isShow"
                         class="mt-2 border-solid checkbox checkbox-secondary border-1" />
                 </label>
-                <label class="w-full max-w-xs mb-10 form-control">
+                <!-- <label class="w-full max-w-xs mb-10 form-control">
                     <div class="label">
                         <span class="label-text">抽取次数</span>
                     </div>
                     <input type="text" v-model="item.frequency" placeholder="抽取次数"
                         class="w-full max-w-xs input-sm input input-bordered" />
-                </label>
+                </label> -->
                 <label class="w-full max-w-xs mb-10 form-control">
                     <div class="label">
                         <span class="label-text">操作</span>

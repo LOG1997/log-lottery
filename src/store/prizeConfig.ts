@@ -33,7 +33,7 @@ export const usePrizeConfig = defineStore('prize', {
         },
         // 获取奖品列表
         getPrizeConfig(state) {
-            return state.prizeConfig.prizeList;
+return state.prizeConfig.prizeList;
         },
         // 根据id获取配置
         getPrizeConfigById(state) {

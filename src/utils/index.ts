@@ -1,5 +1,5 @@
 // 筛选人员数据
-export const filterData = (tableData: any[],localRowCount: number) => {
+export const filterData = (tableData: any[],localRowCount: number,startIndex=0) => {
     const dataLength = tableData.length
     let j = 0;
     for (let i = 0; i < dataLength; i++) {

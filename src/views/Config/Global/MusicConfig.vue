@@ -13,29 +13,12 @@ const audioDbStore = localforage.createInstance({
 const globalConfig = useStore().globalConfig
 
 const { getMusicList: localMusicList } = storeToRefs(globalConfig);
-const audio = ref(new Audio())
 const limitType = ref('audio/*')
 const localMusicListValue = ref(localMusicList)
 const play = async (item: any) => {
-    let audioUrl = ''
-    if (!item.url) {
-        return
-    }
-    if (item.url == 'Storage') {
-        audioUrl = await audioDbStore.getItem(item.name) as string
-    }
-    else {
-        audioUrl = item.url
-    }
-    audio.value.pause()
-    audio.value.src = audioUrl
+    globalConfig.setCurrentMusic(item,false)
+}
 
-    audio.value.currentTime = 0
-    audio.value.play()
-}
-const pausePlay = () => {
-    audio.value.pause()
-}
 const deleteMusic = (item: any) => {
     globalConfig.removeMusic(item.id)
     audioDbStore.removeItem(item.name)
@@ -96,7 +79,6 @@ onMounted(() => {
                     :accept="limitType" />
                 <span class="btn btn-primary btn-sm">上传音乐</span>
             </label>
-            <button class="btn btn-primary btn-sm" @click="pausePlay">暂停播放</button>
             <button class="btn btn-error btn-sm" @click="deleteAll">删除所有</button>
         </div>
         <div>

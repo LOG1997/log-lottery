@@ -1,7 +1,7 @@
 import { rgba } from '@/utils/color'
 
 export const useElementStyle=(element:any,cardColor:string,cardSize:{width:number,height:number},textSize:number,mod:'default'|'lucky'='default')=>{
-    element.style.backgroundColor = rgba(cardColor, Math.random() * 0.5 + 0.25)
+    element.style.backgroundColor = rgba(cardColor, mod=='default'?Math.random() * 0.5 + 0.25:0.8)
     element.style.border = `1px solid ${rgba(cardColor, 0.25)}`
     element.style.boxShadow = `0 0 12px ${rgba(cardColor, 0.5)}`
     element.style.width = `${cardSize.width}px`;
@@ -34,8 +34,6 @@ export const useElementStyle=(element:any,cardColor:string,cardSize:{width:numbe
 }
 
 export const useElementPosition=(element:any,count:number,cardSize:{width:number,height:number},windowSize:{width:number,height:number},cardIndex:number)=>{
-    const rowCount=Math.floor(windowSize.width/(cardSize.width+100))
-    const colCount=Math.ceil(count/rowCount)
     const centerPosition={
         x:0,
         y:windowSize.height/2-cardSize.height/2

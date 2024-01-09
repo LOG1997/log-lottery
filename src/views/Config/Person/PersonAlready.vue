@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/no-parsing-error -->
 <script setup lang='ts'>
-import { ref } from 'vue';
+// import { ref } from 'vue';
 import useStore from '@/store'
 import { storeToRefs } from 'pinia';
 import DaiysuiTable from '@/components/DaiysuiTable/index.vue'
@@ -13,9 +13,9 @@ const { getAlreadyPersonList: alreadyPersonList } = storeToRefs(personConfig)
 // )
 
 
-const deleteAll = () => {
-    personConfig.deleteAllPerson()
-}
+// const deleteAll = () => {
+//     personConfig.deleteAllPerson()
+// }
 const handleMoveNotPerson=(row:any)=>{
     personConfig.moveAlreadyToNot(row)
 }
@@ -24,6 +24,7 @@ const tableColumns = [
     {
         label: '编号',
         props: 'uid',
+        sort:true
     },
     {
         label: '姓名',
@@ -34,12 +35,13 @@ const tableColumns = [
         props: 'department',
     },
     {
-        label: '职位',
-        props: 'other',
+        label: '身份',
+        props: 'identity',
     },
     {
         label:'奖品',
-        props:'prizeName'
+        props:'prizeName',
+        sort:true
     },
     {
         label: '中奖时间',
@@ -71,9 +73,12 @@ const tableColumns = [
 
 <template>
     <div class="overflow-y-auto">
-        <div class="flex justify-center gap-3">
-            <button class="btn btn-error btn-sm" @click="deleteAll">全部删除</button>
-           
+        <div class="flex justify-start gap-3">
+            <!-- <button class="btn btn-error btn-sm" @click="deleteAll">全部删除</button> -->
+            <div>
+                <span>中奖人数：</span>
+                <span>{{ alreadyPersonList.length }}</span>
+            </div>
         </div>
         <DaiysuiTable :tableColumns="tableColumns" :data="alreadyPersonList"></DaiysuiTable>
     </div>
