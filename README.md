@@ -4,13 +4,31 @@
     </a>
 </p>
 
-# log-lottery
+# log-lottery 🚀🚀🚀🚀
 
 [![MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/LOG1997/log-lottery)
 [![github](https://img.shields.io/badge/Author-xaboy-blue.svg)](https://github.com/log1997)
 [![vue3](https://img.shields.io/badge/VUE-3.0-green.svg)](https://github.com/log1997)
 
+log-lottery是一个可配置可定制化的抽奖应用，炫酷3D球体，可用于年会抽奖等活动，支持奖品、人员、界面、图片音乐配置。
 
+## 功能描述
+
+- 🕍 炫酷3D球体，年会抽奖必备，开箱即用
+- 🎁 奖品奖项配置
+- 👱 抽奖名单设置管理
+- 🛞 界面信息自定义
+- 🎼 图片、背景音乐管理，使用本地存储
+- 🖼️ excel表格导入人员名单、抽奖结果使用excel导出
+- 🎈 临时增加抽奖
+
+## 技术
+
+- vue3
+- threejs
+- indexdb
+- pinia
+- daisyui
 
 ## License
 
