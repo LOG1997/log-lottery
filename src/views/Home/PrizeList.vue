@@ -3,6 +3,9 @@ import { ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import useStore from '@/store'
 
+import ImageSync from '@/components/ImageSync/index.vue'
+import defaultPrizeImage from '@/assets/images/龙.png'
+
 const prizeConfig = useStore().prizeConfig
 const globalConfig = useStore().globalConfig
 const { getPrizeConfig: localPrizeList, getCurrentPrize: currentPrize } = storeToRefs(prizeConfig)
@@ -39,7 +42,8 @@ onMounted(() => {
                                 class="relative flex flex-row items-center justify-between w-64 h-20 shadow-xl card bg-base-100" v-if="item.isShow">
                                 <div v-if="item.isUsed" class="absolute z-50 w-full h-full bg-gray-800/70 item-mask rounded-xl"></div>
                                 <figure class="w-10 h-10 rounded-xl">
-                                    <img :src="item.picture.url" alt="Shoes" class="object-cover h-full rounded-xl" />
+                                    <ImageSync v-if="item.picture.url" :imgItem="item.picture"></ImageSync>
+                                    <img v-else :src="defaultPrizeImage" alt="Prize" class="object-cover h-full rounded-xl" />
                                 </figure>
                                 <div class="items-center p-0 text-center card-body">
                                     <h2 class="p-0 m-0 card-title">{{ item.name }}</h2>

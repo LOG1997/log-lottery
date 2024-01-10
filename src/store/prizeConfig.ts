@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { IPrizeConfig } from '@/types/prizeConfig';
+import { IPrizeConfig } from '@/types/storeType';
 import { defaultPrizeList } from './data';
 export const usePrizeConfig = defineStore('prize', {
     state() {
@@ -71,11 +71,11 @@ return state.prizeConfig.prizeList;
         },
         // 删除全部奖项
         deleteAllPrizeConfig() {
-            this.prizeConfig.prizeList = [];
+            this.prizeConfig.prizeList = [] as IPrizeConfig[];
         },
         // 设置当前奖项
         setCurrentPrize(prizeConfigItem: IPrizeConfig) {
-            this.prizeConfig.currentPrize = prizeConfigItem;
+            this.prizeConfig.currentPrize = prizeConfigItem
         },
         // 重置所有配置
         resetDefault() {
@@ -97,7 +97,7 @@ return state.prizeConfig.prizeList;
                     isShow: true,
                     isUsed: false,
                     frequency: 1,
-                },
+                } as IPrizeConfig
             }
         }
     },

@@ -1,6 +1,7 @@
 <script setup lang='ts'>
 import { ref, onMounted, watch } from 'vue'
-import { readImage } from '@/utils/file'
+import { IImage } from '@/types/storeType'
+import { readFileData } from '@/utils/file'
 import localforage from 'localforage'
 import useStore from '@/store'
 import { storeToRefs } from 'pinia'
@@ -14,14 +15,14 @@ const imgUploadToast = ref(0) //0是不显示，1是成功，2是失败,3是不�
 const imageDbStore = localforage.createInstance({
     name: 'imgStore'
 })
-const handleFileChange = async (e: any) => {
-    const isImage= /image*/.test(e.target.files[0].type)
+const handleFileChange = async (e: Event) => {
+    const isImage= /image*/.test(((e.target as HTMLInputElement).files as FileList)[0].type)
     if (!isImage) {
         imgUploadToast.value = 3
 
         return
     }
-    let { dataUrl, fileName } = await readImage(e.target.files[0])
+    let { dataUrl, fileName } = await readFileData(((e.target as HTMLInputElement).files as FileList)[0])
     imageDbStore.setItem(new Date().getTime().toString() + '+' + fileName, dataUrl)
         .then(() => {
             imgUploadToast.value = 1
@@ -45,7 +46,7 @@ const getImageDbStore =async () => {
     }
 }
 
-const removeImage=(item:any)=>{
+const removeImage=(item:IImage)=>{
     if(item.url=='Storage'){
         imageDbStore.removeItem(item.id).then(() => {
             globalConfig.removeImage(item.id)
@@ -91,8 +92,8 @@ watch(() => imgUploadToast.value, (val) => {
                 <div class="flex items-center gap-8">
                     <div class="avatar h-14">
                         <div class="w-12 h-12 mask mask-squircle hover:w-14 hover:h-14">
-                            <img v-if="item.url!=='Storage'" :src="item.url" alt="Avatar Tailwind CSS Component" />
-                            <ImageSync v-else :imgItem="item"></ImageSync>
+                            <!-- <img v-if="item.url!=='Storage'" :src="item.url" alt="Avatar Tailwind CSS Component" /> -->
+                            <ImageSync :imgItem="item"></ImageSync>
                         </div>
                     </div>
                     <div class="w-64">

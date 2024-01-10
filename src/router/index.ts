@@ -28,7 +28,7 @@ export const configRoutes={
                 name:'AllPersonConfig',
                 component:()=>import('@/views/Config/Person/PersonAll.vue'),
                 meta:{
-                    title:'所有人员',
+                    title:'人员名单',
                     icon:'all'
                 }
             },
@@ -37,7 +37,7 @@ export const configRoutes={
                 name:'AlreadyPerson',
                 component:()=>import('@/views/Config/Person/PersonAlready.vue'),
                 meta:{
-                    title:'已领取人员',
+                    title:'中奖名单人员',
                     icon:'already'
                 }
             },
@@ -84,7 +84,7 @@ export const configRoutes={
                 name:'ImageConfig',
                 component:()=>import('@/views/Config/Global/ImageConfig.vue'),
                 meta:{
-                    title:'图片配置',
+                    title:'图片列表',
                     icon:'image'
                 }
             },
@@ -93,7 +93,7 @@ export const configRoutes={
                 name:'MusicConfig',
                 component:()=>import('@/views/Config/Global/MusicConfig.vue'),
                 meta:{
-                    title:'音乐配置',
+                    title:'音乐列表',
                     icon:'music'
                 }
             }

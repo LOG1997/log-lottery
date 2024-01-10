@@ -1,16 +1,13 @@
 import { defineStore } from 'pinia';
-import { IPersonConfig } from '@/types/personConfig';
-import { IPrizeConfig } from '@/types/prizeConfig';
-import {defaultPersonList} from './data'
+import { IPersonConfig } from '@/types/storeType';
+import { IPrizeConfig } from '@/types/storeType';
+import { defaultPersonList } from './data'
 export const usePersonConfig = defineStore('person', {
     state() {
         return {
             personConfig: {
                 allPersonList: [] as IPersonConfig[],
-                // alreadyPersonList: [] as IPersonConfig[],
-                // notPersonList: [] as IPersonConfig[],
-                tableRowCount: 12,
-                showField: [] as any[]
+                alreadyPersonList: [] as IPersonConfig[],
             }
         };
     },
@@ -29,20 +26,16 @@ export const usePersonConfig = defineStore('person', {
                 return item.isWin === true;
             });
         },
+        // 获取中奖人员详情
+        getAlreadyPersonDetail(state) {
+           return state.personConfig.alreadyPersonList
+        },
         // 获取未中奖人员名单
         getNotPersonList(state) {
             return state.personConfig.allPersonList.filter((item: IPersonConfig) => {
                 return item.isWin === false;
             });
         },
-        // 获取table列数
-        getTableRowCount(state) {
-            return state.personConfig.tableRowCount;
-        },
-        // 获取要展示那些字段
-        getShowField(state) {
-            return state.personConfig.showField;
-        }
     },
     actions: {
         // 添加未中奖人员
@@ -61,59 +54,77 @@ export const usePersonConfig = defineStore('person', {
             }
             personList.forEach((person: IPersonConfig) => {
                 this.personConfig.allPersonList.map((item: IPersonConfig) => {
-                    if (item.id === person.id&&prize!=null) {
+                    if (item.id === person.id && prize != null) {
                         item.isWin = true
-                        item.prizeName = prize.name
+                        // person.isWin = true
+                        item.prizeName += prize.name
+                        // person.prizeName += prize.name
                         item.prizeTime = new Date().toString()
+                        // person.prizeTime = new Date().toString()
                     }
                 });
+                console.log('person;;',person)
+                this.personConfig.alreadyPersonList.push(person);
             });
         },
         // 从已中奖移动到未中奖
         moveAlreadyToNot(person: IPersonConfig) {
-            if (person.id != undefined || person.id != null) {
-                for(let i=0;i<this.personConfig.allPersonList.length;i++){
-                    if(person.id === this.personConfig.allPersonList[i].id){
-                        this.personConfig.allPersonList[i].isWin=false
-                        this.personConfig.allPersonList[i].prizeName=''
-                        this.personConfig.allPersonList[i].prizeTime=''
-                        
-return
-                    }
+            if (person.id == undefined || person.id == null) {
+                return
+            }
+            const alreadyPersonListLength= this.personConfig.alreadyPersonList.length
+            for (let i = 0; i < this.personConfig.allPersonList.length; i++) {
+                if (person.id === this.personConfig.allPersonList[i].id) {
+                    this.personConfig.allPersonList[i].isWin = false
+                    this.personConfig.allPersonList[i].prizeName = ''
+                    this.personConfig.allPersonList[i].prizeTime = ''
+
+                    return
                 }
+            }
+            for(let i=0;i<alreadyPersonListLength;i++){
+                this.personConfig.alreadyPersonList=this.personConfig.alreadyPersonList.filter((item:IPersonConfig)=>{
+                    return item.id!==person.id
+                })
             }
         },
         // 删除指定人员
         deletePerson(person: IPersonConfig) {
             if (person.id != undefined || person.id != null) {
                 this.personConfig.allPersonList = this.personConfig.allPersonList.filter((item: IPersonConfig) => item.id !== person.id);
+                this.personConfig.alreadyPersonList = this.personConfig.alreadyPersonList.filter((item: IPersonConfig) => item.id!== person.id);
             }
         },
         // 删除所有人员
         deleteAllPerson() {
             this.personConfig.allPersonList = [];
+            this.personConfig.alreadyPersonList = [];
         },
 
-        // 重置所有人员
+        // 删除所有人员
         resetPerson() {
             this.personConfig.allPersonList = [];
+            this.personConfig.alreadyPersonList = [];
         },
         // 重置已中奖人员
         resetAlreadyPerson() {
             // 把已中奖人员合并到未中奖人员，要验证是否已存在
             this.personConfig.allPersonList.forEach((item: IPersonConfig) => {
-               item.isWin = false;
+                item.isWin = false;
+                item.prizeName = '';
+                item.prizeTime = '';
             });
+            this.personConfig.alreadyPersonList=[];
         },
         setDefaultPersonList() {
             this.personConfig.allPersonList = defaultPersonList;
+            this.personConfig.alreadyPersonList=[];
         },
         // 重置所有配置
         reset() {
             this.personConfig = {
                 allPersonList: [] as IPersonConfig[],
-                tableRowCount: 12,
-                showField: [] as string[]
+                alreadyPersonList: [] as IPersonConfig[],
             }
         },
     },

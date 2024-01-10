@@ -5,12 +5,16 @@ import { useElementStyle, useElementPosition } from '@/hooks/useElement'
 import StarsBackground from '@/components/StarsBackground/index.vue'
 import confetti from 'canvas-confetti'
 import { filterData } from '@/utils'
-import * as THREE from 'three'
-import {
-    CSS3DRenderer, CSS3DObject
-} from 'three/examples/jsm/renderers/CSS3DRenderer.js';
-import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
-import TWEEN from 'three/examples/jsm/libs/tween.module.js';
+// import * as THREE from 'three'
+import {Scene,PerspectiveCamera,Object3D,Vector3} from 'three'
+// import {
+//     CSS3DRenderer, CSS3DObject
+// } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
+import {CSS3DRenderer, CSS3DObject} from 'three-css3d'
+// import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
+import TrackballControls from 'three-trackballcontrols';
+// import TWEEN from 'three/examples/jsm/libs/tween.module.js';
+import * as TWEEN from '@tweenjs/tween.js'
 import useStore from '@/store'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
@@ -28,7 +32,6 @@ const { getCurrentPrize: currentPrize } = storeToRefs(prizeConfig)
 const { getTopTitle: topTitle, getCardColor: cardColor, getTextColor: textColor, getLuckyColor: luckyColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount } = storeToRefs(globalConfig)
 const tableData = ref<any[]>([])
 // const tableData = ref<any[]>(JSON.parse(JSON.stringify(alreadyPersonList.value)).concat(JSON.parse(JSON.stringify(notPersonList.value))))
-
 const currentStatus = ref(0) // 0为初始状态， 1为抽奖准备状态，2为抽奖中状态，3为抽奖结束状态
 const ballRotationY = ref(0)
 const containerRef = ref<HTMLElement>()
@@ -80,8 +83,8 @@ const init = () => {
     const farPlane = 10000;
     const WebGLoutput = containerRef.value
 
-    scene.value = new THREE.Scene();
-    camera.value = new THREE.PerspectiveCamera(felidView, aspect, nearPlane, farPlane);
+    scene.value = new Scene();
+    camera.value = new PerspectiveCamera(felidView, aspect, nearPlane, farPlane);
     camera.value.position.z = cameraZ.value
     renderer.value = new CSS3DRenderer()
     renderer.value.setSize(width, height * 0.9)
@@ -138,7 +141,7 @@ const init = () => {
         const tableLen = tableData.value.length;
 
         for (let i = 0; i < tableLen; i++) {
-            const object = new THREE.Object3D();
+            const object = new Object3D();
 
             object.position.x = tableData.value[i].x * (cardSize.value.width + 40) - rowCount.value * 90;
             object.position.y = -tableData.value[i].y * (cardSize.value.height + 20) + 1000;
@@ -151,12 +154,12 @@ const init = () => {
     function createSphereVertices() {
         let i = 0;
         const objLength = objects.value.length;
-        const vector = new THREE.Vector3();
+        const vector = new Vector3();
 
         for (; i < objLength; ++i) {
             let phi = Math.acos(-1 + (2 * i) / objLength);
             let theta = Math.sqrt(objLength * Math.PI) * phi;
-            const object = new THREE.Object3D();
+            const object = new Object3D();
 
             object.position.x = 800 * Math.cos(theta) * Math.sin(phi);
             object.position.y = 800 * Math.sin(theta) * Math.sin(phi);
@@ -171,12 +174,12 @@ const init = () => {
     }
     function createHelixVertices() {
         let i = 0;
-        const vector = new THREE.Vector3();
+        const vector = new Vector3();
         const objLength = objects.value.length;
         for (; i < objLength; ++i) {
             let phi = i * 0.213 + Math.PI;
 
-            const object = new THREE.Object3D();
+            const object = new Object3D();
 
             object.position.x = 800 * Math.sin(phi);
             object.position.y = -(i * 8) + 450;
@@ -378,14 +381,13 @@ const stopLottery = async () => {
     rollBall(0, 1)
     currentStatus.value = 0
     // 抽奖池是否为全体人员
-    // const personPool=currentPrize.value.isAll?
-
-    // const notPersonListLength = notPersonList.value.length;
+    const personPool = currentPrize.value.isAll ? allPersonList.value : notPersonList.value
+    // const notPersonListLength = personPool.length;
     // 每次最多抽十个
     let luckyCount = 10
     const leftover = currentPrize.value.count - currentPrize.value.isUsedCount
     leftover < luckyCount ? luckyCount = leftover : luckyCount
-    if (notPersonList.value.length < leftover) {
+    if (personPool.length < leftover) {
         toast.open({
             message: '抽奖人数不够',
             type: 'warning',
@@ -396,24 +398,25 @@ const stopLottery = async () => {
         return;
     }
     for (let i = 0; i < luckyCount; i++) {
-        if (notPersonList.value.length > 0) {
-            const randomIndex = Math.round(Math.random() * notPersonList.value.length - 1)
-            luckyTargets.value.push(notPersonList.value[randomIndex])
-            // console.log(
-            //     'leftover:', leftover, '\n',
-            //     'luckyCount', luckyCount, '\n',
-            //     'currentPrize.value.isUsedCount', currentPrize.value.isUsedCount, '\n',
-            //     'randomIndex', randomIndex, '\n',
-            //     'notPersonList.value.length - 1', notPersonList.value.length - 1, '\n',
-            //     'notPersonList.value[randomIndex]', notPersonList.value[randomIndex], '\n',
-            //     'cadd id:', notPersonList.value[randomIndex].id
-            // )
-            let LuckyCard = objects.value[notPersonList.value[randomIndex].id]
-            luckyCardList.value.push(LuckyCard)
+        if (personPool.length > 0) {
+            const randomIndex = Math.round(Math.random() * (personPool.length-1))
+            luckyTargets.value.push(personPool[randomIndex])
+            console.log(
+                'leftover:', leftover, '\n',
+                'luckyCount', luckyCount, '\n',
+                'currentPrize.value.isUsedCount', currentPrize.value.isUsedCount, '\n',
+                'randomIndex', randomIndex, '\n',
+                'personPool.length - 1', personPool.length - 1, '\n',
+                'personPool[randomIndex]', personPool[randomIndex], '\n',
+            )
+            console.log(
+                'cadd id:', personPool[randomIndex].id)
+            let luckyCard = objects.value[personPool[randomIndex].id]
+            luckyCardList.value.push(luckyCard)
 
-            notPersonList.value.splice(randomIndex, 1)
+            personPool.splice(randomIndex, 1)
             // console.log(
-            //     'objects.value[notPersonList.value[randomIndex].id]', LuckyCard
+            //     'objects.value[personPool[randomIndex].id]', LuckyCard
             // )
         }
     }
@@ -443,16 +446,16 @@ const stopLottery = async () => {
                 resetCamera()
             })
     })
-    currentPrize.value.isUsedCount += luckyCount
-    if (currentPrize.value.isUsedCount >= currentPrize.value.count) {
-        currentPrize.value.isUsed = true
-    }
+    // currentPrize.value.isUsedCount += luckyCount
+    // if (currentPrize.value.isUsedCount >= currentPrize.value.count) {
+    //     currentPrize.value.isUsed = true
+    // }
     // luckyCardList.value = []
 
-    personConfig.addAlreadyPersonList(luckyTargets.value, currentPrize.value)
-    prizeConfig.updatePrizeConfig(currentPrize.value)
+    // personConfig.addAlreadyPersonList(luckyTargets.value, currentPrize.value)
+    // prizeConfig.updatePrizeConfig(currentPrize.value)
 
-    prizeConfig.setCurrentPrize(currentPrize.value)
+    // prizeConfig.setCurrentPrize(currentPrize.value)
     luckyTargets.value = []
 }
 // 庆祝动画
@@ -548,19 +551,19 @@ onUnmounted(() => {
 
         <!-- 选中菜单结构 start-->
         <div id="menu">
-            <button class="btn-end " @click="enterLottery" v-if="currentStatus == 0&&tableData.length > 0">进入抽奖</button>
+            <button class="btn-end " @click="enterLottery" v-if="currentStatus == 0 && tableData.length > 0">进入抽奖</button>
             <div class="start">
-            <button class="btn-start" @click="startLottery" v-if="currentStatus == 1"><strong>开始</strong>
-                <div id="container-stars">
-                    <div id="stars"></div>
-                </div>
+                <button class="btn-start" @click="startLottery" v-if="currentStatus == 1"><strong>开始</strong>
+                    <div id="container-stars">
+                        <div id="stars"></div>
+                    </div>
 
-                <div id="glow">
-                    <div class="circle"></div>
-                    <div class="circle"></div>
-                </div>
-            </button>
-        </div>
+                    <div id="glow">
+                        <div class="circle"></div>
+                        <div class="circle"></div>
+                    </div>
+                </button>
+            </div>
 
             <button class="btn-end btn glass btn-lg" @click="stopLottery" v-if="currentStatus == 2">抽取幸运儿</button>
 
@@ -588,182 +591,185 @@ onUnmounted(() => {
     margin: 0 auto;
     font-size: 32px;
 }
-.start{
+
+.start {
     // 居中
     display: flex;
     justify-content: center;
 }
+
 .btn-start {
     cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 13rem;
-  overflow: hidden;
-  height: 3rem;
-  background-size: 300% 300%;
-  backdrop-filter: blur(1rem);
-  border-radius: 5rem;
-  transition: 0.5s;
-  animation: gradient_301 5s ease infinite;
-  border: double 4px transparent;
-  background-image: linear-gradient(#212121, #212121),  linear-gradient(137.48deg, #ffdb3b 10%,#FE53BB 45%, #8F51EA 67%, #0044ff 87%);
-  background-origin: border-box;
-  background-clip: content-box, border-box;
-  -webkit-animation: pulsate-fwd 1.2s ease-in-out infinite both;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 13rem;
+    overflow: hidden;
+    height: 3rem;
+    background-size: 300% 300%;
+    backdrop-filter: blur(1rem);
+    border-radius: 5rem;
+    transition: 0.5s;
+    animation: gradient_301 5s ease infinite;
+    border: double 4px transparent;
+    background-image: linear-gradient(#212121, #212121), linear-gradient(137.48deg, #ffdb3b 10%, #FE53BB 45%, #8F51EA 67%, #0044ff 87%);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    -webkit-animation: pulsate-fwd 1.2s ease-in-out infinite both;
     animation: pulsate-fwd 1.2s ease-in-out infinite both;
 }
 
 #container-stars {
-  position: absolute;
-  z-index: -1;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  transition: 0.5s;
-  backdrop-filter: blur(1rem);
-  border-radius: 5rem;
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    transition: 0.5s;
+    backdrop-filter: blur(1rem);
+    border-radius: 5rem;
 }
 
 strong {
-  z-index: 2;
-  font-family: 'Avalors Personal Use';
-  font-size: 12px;
-  letter-spacing: 5px;
-  color: #FFFFFF;
-  text-shadow: 0 0 4px white;
+    z-index: 2;
+    font-family: 'Avalors Personal Use';
+    font-size: 12px;
+    letter-spacing: 5px;
+    color: #FFFFFF;
+    text-shadow: 0 0 4px white;
 }
 
 #glow {
-  position: absolute;
-  display: flex;
-  width: 12rem;
+    position: absolute;
+    display: flex;
+    width: 12rem;
 }
 
 .circle {
-  width: 100%;
-  height: 30px;
-  filter: blur(2rem);
-  animation: pulse_3011 4s infinite;
-  z-index: -1;
+    width: 100%;
+    height: 30px;
+    filter: blur(2rem);
+    animation: pulse_3011 4s infinite;
+    z-index: -1;
 }
 
 .circle:nth-of-type(1) {
-  background: rgba(254, 83, 186, 0.636);
+    background: rgba(254, 83, 186, 0.636);
 }
 
 .circle:nth-of-type(2) {
-  background: rgba(142, 81, 234, 0.704);
+    background: rgba(142, 81, 234, 0.704);
 }
 
 .btn-start:hover #container-stars {
-  z-index: 1;
-  background-color: #212121;
+    z-index: 1;
+    background-color: #212121;
 }
 
 .btn-start:hover {
-  transform: scale(1.1)
+    transform: scale(1.1)
 }
 
 .btn-start:active {
-  border: double 4px #FE53BB;
-  background-origin: border-box;
-  background-clip: content-box, border-box;
-  animation: none;
+    border: double 4px #FE53BB;
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    animation: none;
 }
 
 .btn-start:active .circle {
-  background: #FE53BB;
+    background: #FE53BB;
 }
 
 #stars {
-  position: relative;
-  background: transparent;
-  width: 200rem;
-  height: 200rem;
+    position: relative;
+    background: transparent;
+    width: 200rem;
+    height: 200rem;
 }
 
 #stars::after {
-  content: "";
-  position: absolute;
-  top: -10rem;
-  left: -100rem;
-  width: 100%;
-  height: 100%;
-  animation: animStarRotate 90s linear infinite;
+    content: "";
+    position: absolute;
+    top: -10rem;
+    left: -100rem;
+    width: 100%;
+    height: 100%;
+    animation: animStarRotate 90s linear infinite;
 }
 
 #stars::after {
-  background-image: radial-gradient(#ffffff 1px, transparent 1%);
-  background-size: 50px 50px;
+    background-image: radial-gradient(#ffffff 1px, transparent 1%);
+    background-size: 50px 50px;
 }
 
 #stars::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -50%;
-  width: 170%;
-  height: 500%;
-  animation: animStar 60s linear infinite;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 170%;
+    height: 500%;
+    animation: animStar 60s linear infinite;
 }
 
 #stars::before {
-  background-image: radial-gradient(#ffffff 1px, transparent 1%);
-  background-size: 50px 50px;
-  opacity: 0.5;
+    background-image: radial-gradient(#ffffff 1px, transparent 1%);
+    background-size: 50px 50px;
+    opacity: 0.5;
 }
 
 @keyframes animStar {
-  from {
-    transform: translateY(0);
-  }
+    from {
+        transform: translateY(0);
+    }
 
-  to {
-    transform: translateY(-135rem);
-  }
+    to {
+        transform: translateY(-135rem);
+    }
 }
 
 @keyframes animStarRotate {
-  from {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(360deg);
+    }
 
-  to {
-    transform: rotate(0);
-  }
+    to {
+        transform: rotate(0);
+    }
 }
 
 @keyframes gradient_301 {
-  0% {
-    background-position: 0% 50%;
-  }
+    0% {
+        background-position: 0% 50%;
+    }
 
-  50% {
-    background-position: 100% 50%;
-  }
+    50% {
+        background-position: 100% 50%;
+    }
 
-  100% {
-    background-position: 0% 50%;
-  }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 @keyframes pulse_3011 {
-  0% {
-    transform: scale(0.75);
-    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
-  }
+    0% {
+        transform: scale(0.75);
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+    }
 
-  70% {
-    transform: scale(1);
-    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
-  }
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+    }
 
-  100% {
-    transform: scale(0.75);
-    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-  }
+    100% {
+        transform: scale(0.75);
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    }
 }
+
 .btn-end {
     -webkit-animation: pulsate-fwd 0.9s ease-in-out infinite both;
     animation: pulsate-fwd 0.9s ease-in-out infinite both;

@@ -1,4 +1,4 @@
-export const readFile = (file: any): Promise<any> => {
+export const readFileBinary = (file: any): Promise<any> => {
     return new Promise(resolve => {
         const reader = new FileReader()
         reader.readAsBinaryString(file)
@@ -8,7 +8,7 @@ export const readFile = (file: any): Promise<any> => {
     })
 }
 
-export const readImage = (file: any): Promise<any> => {
+export const readFileData = (file: any): Promise<{dataUrl:string,fileName:string}> => {
     return new Promise(resolve => {
         const reader = new FileReader()
         reader.readAsDataURL(file)
@@ -17,15 +17,3 @@ export const readImage = (file: any): Promise<any> => {
         }
     })
 }
-
-
-export const readMusic = (file: any): Promise<any> => {
-    return new Promise(resolve => {
-        const reader = new FileReader()
-        reader.readAsDataURL(file)
-        reader.onload = (ev: any) => {
-            resolve({dataUrl:ev.target.result,fileName:file.name})
-        }
-    })
-}
-

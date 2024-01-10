@@ -1,7 +1,8 @@
 <script setup lang='ts'>
 import { ref, onMounted } from 'vue'
 import {storeToRefs } from 'pinia'
-import { readMusic } from '@/utils/file'
+import { IMusic } from '@/types/storeType';
+import { readFileData } from '@/utils/file'
 import useStore from '@/store';
 
 import localforage from 'localforage'
@@ -15,11 +16,11 @@ const globalConfig = useStore().globalConfig
 const { getMusicList: localMusicList } = storeToRefs(globalConfig);
 const limitType = ref('audio/*')
 const localMusicListValue = ref(localMusicList)
-const play = async (item: any) => {
+const play = async (item: IMusic) => {
     globalConfig.setCurrentMusic(item,false)
 }
 
-const deleteMusic = (item: any) => {
+const deleteMusic = (item: IMusic) => {
     globalConfig.removeMusic(item.id)
     audioDbStore.removeItem(item.name)
     // setTimeout(()=>{
@@ -46,14 +47,14 @@ const getMusicDbStore = async () => {
         })
     }
 }
-const handleFileChange = async (e: any) => {
-    const isAudio = /audio*/.test(e.target.files[0].type)
+const handleFileChange = async (e: Event) => {
+    const isAudio = /audio*/.test(((e.target as HTMLInputElement).files as FileList)[0].type)
     if (!isAudio) {
         audioUploadToast.value = 3
 
         return
     }
-    let { dataUrl, fileName } = await readMusic(e.target.files[0])
+    let { dataUrl, fileName } = await readFileData(((e.target as HTMLInputElement).files as FileList)[0])
     audioDbStore.setItem(new Date().getTime().toString() + '+' + fileName, dataUrl)
         .then(() => {
             audioUploadToast.value = 1

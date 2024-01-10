@@ -1,25 +1,26 @@
 import { defineStore } from 'pinia';
 import { defaultMusicList,defaultImageList } from './data'
-// import { IPrizeConfig } from '@/types/prizeConfig';
+import {IMusic,IImage} from '@/types/storeType';
+// import { IPrizeConfig } from '@/types/storeType';
 export const useGlobalConfig = defineStore('global', {
     state() {
         return {
             globalConfig: {
-                rowCount: 12,
+                rowCount: 17,
                 isSHowPrizeList:true,
                 topTitle:'大明内阁六部御前奏对',
                 theme: {
                     name: 'dark',
                     detail: { primary: '#0f5fd3' },
-                    cardColor: 'rgba(0, 255, 255)',
+                    cardColor: '#ff79c6',
                     cardWidth: 140,
                     cardHeight: 200,
                     textColor: '#ffffff',
                     luckyCardColor:'#ECB1AC',
                     textSize: 30
                 },
-                musicList: defaultMusicList,
-                imageList:defaultImageList,
+                musicList: defaultMusicList as IMusic[],
+                imageList:defaultImageList as IImage[],
             },
             currentMusic: {
                 item:defaultMusicList[0],
@@ -122,7 +123,7 @@ export const useGlobalConfig = defineStore('global', {
             this.globalConfig.theme.textSize = textSize;
         },
         // 添加音乐
-        addMusic(music: any) {
+        addMusic(music: IMusic) {
             // 验证音乐是否已存在，看name字段
             for (let i = 0; i < this.globalConfig.musicList.length; i++) {
                 if (this.globalConfig.musicList[i].name === music.name) {
@@ -141,7 +142,7 @@ export const useGlobalConfig = defineStore('global', {
             }
         },
         // 设置当前播放音乐
-        setCurrentMusic(musicItem: any,paused:boolean=true) {
+        setCurrentMusic(musicItem: IMusic,paused:boolean=true) {
             this.currentMusic={
                 item:musicItem,
                 paused:paused,
@@ -149,14 +150,14 @@ export const useGlobalConfig = defineStore('global', {
         },
         // 重置音乐列表
         resetMusicList() {
-            this.globalConfig.musicList = defaultMusicList;
+            this.globalConfig.musicList = defaultMusicList as IMusic[];
         },
         // 清空音乐列表
         clearMusicList() {
-            this.globalConfig.musicList = [];
+            this.globalConfig.musicList = [] as IMusic[];
         },
         // 添加图片
-        addImage(image:any){
+        addImage(image:IImage){
             for (let i = 0; i < this.globalConfig.imageList.length; i++) {
                 if (this.globalConfig.imageList[i].name === image.name) {
                     return;
@@ -175,11 +176,11 @@ export const useGlobalConfig = defineStore('global', {
         },
         // 重置图片列表
         resetImageList() {
-            this.globalConfig.imageList = defaultImageList;
+            this.globalConfig.imageList = defaultImageList as IImage[];
         },
         // 清空图片列表
         clearImageList() {
-            this.globalConfig.imageList = [];
+            this.globalConfig.imageList = [] as IImage[]
         },
         // 设置是否显示奖品列表
         setIsShowPrizeList(isShowPrizeList: boolean) {
@@ -202,11 +203,11 @@ export const useGlobalConfig = defineStore('global', {
                     textSize: 30
 
                 },
-                musicList: defaultMusicList,
-                imageList:defaultImageList,
+                musicList: defaultMusicList as IMusic[],
+                imageList:defaultImageList as IImage[],
             },
             this.currentMusic= {
-                item:defaultMusicList[0],
+                item:defaultMusicList[0] as IMusic,
                 paused:true,
             }
         }

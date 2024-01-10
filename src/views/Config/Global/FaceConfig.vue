@@ -97,7 +97,9 @@ watch(() => formData.value.rowCount, () => {
             formErr.value.rowCount = err.issues[0].message
         })
 })
-
+watch(topTitleValue,(val)=>{
+    globalConfig.setTopTitle(val)
+}),
 
 watch(themeValue, (val: any) => {
     const selectedThemeDetail = daisyuiThemeList.value[val]

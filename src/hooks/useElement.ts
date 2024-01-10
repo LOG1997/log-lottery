@@ -26,6 +26,7 @@ export const useElementStyle=(element:any,cardColor:string,cardSize:{width:numbe
     element.children[0].style.fontSize = textSize*0.5+'px'
     
     element.children[1].style.fontSize = textSize+'px'
+    element.children[1].style.lineHeight = textSize*3+'px'
     element.children[1].style.textShadow = `0 0 12px ${rgba(cardColor, 0.95)}`
     
     element.children[2].style.fontSize = textSize*0.5+'px'

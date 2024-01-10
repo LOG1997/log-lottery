@@ -15,8 +15,15 @@ const imgUrl=ref('')
 
 
 const getImageStoreItem=async (item:any):Promise<string>=>{
-    const key=item.id;
-     const image=await imageDbStore.getItem(key) as string
+    let image=''
+    if(item.url=='Storage'){
+        const key=item.id;
+        image=await imageDbStore.getItem(key) as string
+    }
+    else{
+        image=item.url
+    }
+
      
 return image
 }
@@ -28,7 +35,7 @@ onMounted(async ()=>{
 </script>
 
 <template>
-    <img :src="imgUrl" Alt="Image"/>
+    <img :src="imgUrl" alt="Image" class="object-cover h-full rounded-xl"/>
 </template>
 
 <style lang='scss' scoped>

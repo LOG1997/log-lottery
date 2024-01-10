@@ -1,105 +1,21 @@
-# Vue3 + Vite4 + Element + Windicss + Bootstrap
+<p align="center">
+    <a href="http://www.form-create.com">
+        <svg t="1704902663531" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4318" width="200" height="200"><path d="M433.230769 630.153846m-275.692307 0a275.692308 275.692308 0 1 0 551.384615 0 275.692308 275.692308 0 1 0-551.384615 0Z" fill="#E2FFFF" p-id="4319"></path><path d="M512 0C228.903385 0 0 228.903385 0 512s228.903385 512 512 512 512-228.903385 512-512S795.096615 0 512 0z m42.968615 938.653538V883.396923c0-27.608615-21.464615-46.040615-46.040615-46.040615-24.536615 0-46.040615 21.504-46.040615 46.08v55.21723c-196.450462-21.464615-356.036923-181.090462-377.540923-377.540923H140.603077c24.536615 0 46.040615-21.504 46.040615-46.08 0-24.536615-21.504-46.001231-46.08-46.00123H85.385846c18.392615-199.522462 178.018462-362.220308 377.540923-383.684923v61.36123c0 24.576 21.504 46.08 46.08 46.08 24.536615 0 46.001231-21.504 46.001231-46.08V85.346462c202.594462 21.464615 365.292308 181.090462 383.684923 383.684923h-61.361231c-27.648 0-46.08 18.392615-46.08 46.040615 0 24.536615 21.504 46.040615 46.08 46.040615h61.361231c-21.464615 199.522462-184.162462 359.148308-383.684923 377.540923z" fill="#437DFF" p-id="4320"></path><path d="M499.396923 291.170462a19.692308 19.692308 0 0 1 25.245539 0.039384l2.520615 2.520616 9.964308 12.169846C625.427692 414.208 669.538462 495.340308 669.538462 549.218462 669.538462 637.44 599.04 708.923077 512 708.923077s-157.538462-71.483077-157.538462-159.704615c0-49.900308 37.809231-123.155692 113.506462-219.72677l18.904615-23.630769 9.964308-12.130461a19.692308 19.692308 0 0 1 2.599385-2.56z m12.603077 110.434461l-9.570462 13.075692-13.23323 18.747077-11.815385 17.644308C447.763692 496.679385 433.230769 530.313846 433.230769 549.218462c0 44.937846 35.524923 80.935385 78.769231 80.935384 43.244308 0 78.769231-35.997538 78.769231-80.935384 0-16.305231-11.027692-43.992615-33.437539-81.053539l-10.318769-16.462769a790.843077 790.843077 0 0 0-11.697231-17.565539l-13.115077-18.668307-10.200615-13.863385z" fill="#437DFF" p-id="4321"></path></svg>
+    </a>
+</p>
 
-## 文件夹介绍
-### 🅰️api
-request.ts文件为axios封装，可在此拦截操作请求和回复
-### 🆒components
-组件文件夹，存放公共组件，如SvgIcon图标组件、Table表格组件等
-### 👀hooks
-封装hooks函数，公共函数的提取
-### 🪪icons
-存放图标组件，图标组件使用vite插件vite-plugin-svg-icon引入
-```ts
-plugins[
-    ...
-          createSvgIconsPlugin({
-        // 指定需要缓存的图标文件夹
-        iconDirs: [path.resolve(process.cwd(), "src/icons")],
-        // 指定symbolId格式
-        symbolId: "icon-[dir]-[name]",
-      }),
-      ...
-]
-```
-使用时在组件内按如下方法使用即可
-```ts
-    <svg-icon :name="'menu'" class="svgMenu cursor-pointer"></svg-icon>
-```
-### 🏬layout
-整体的的布局组件，在router文件中根路径下引入。
-包含Header、Main、Footer组件，布局使用了bootstrap的响应式布局
-如菜单列表的写法
-```ts
-    <nav class="navbar navbar-expand-lg">
-      <div class="container-fluid">
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <!-- <span class="navbar-toggler-icon"></span> -->
-          <svg-icon :name="'open'"></svg-icon>
-        </button>
-        <div
-          class="nav-list collapse navbar-collapse"
-          id="navbarSupportedContent"
-        >
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li
-              class="nav-item"
-              v-for="item in navList.data"
-              :key="item.id"
-              @click="skip(item.url)"
-            >
-              <a class="nav-link active" aria-current="page" href="#">{{
-                item.name
-              }}</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-```
-使用媒体查询监听屏幕宽度自适应调整布局
-如Header组件中，屏幕宽度大于1200px时始终保持headeer栏宽度为200px
-```css
-//  @/layout/components/Header.vue
-@media screen and (min-width: 1200px) {
-  .header-container {
-    width: 1200px;
-    margin: 0 auto;
-  }
-}
-```
+# log-lottery
+
+[![MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/LOG1997/log-lottery)
+
+[![github](https://img.shields.io/badge/Author-xaboy-blue.svg)](https://github.com/log1997)
+
+[![vue3](https://img.shields.io/badge/VUE-3.0-green.svg)](https://github.com/log1997)
 
 
-其中Main组件中写入
-```ts
-      <router-view class="main-container-content"></router-view>
-```
-### 🏳️‍⚧️router
-路由管理，使用history模式
-### 🛒store
-状态管理，使用pinia
-### 🍟style
-存放样式文件，模板里主要存放的是主题文件，使用scss。
-文件中的函数以及样式在main.ts中引入过后即可使用
-### 🥅types
-定义的类型和接口
-### 🎊views
-界面组件
-### 🙈App.vue
-界面入口
-### 🧵Main.ts
-项目入口文件
-### 🗽env文件
-根据不同环境配置的路径地址，常量名称必须是`VITE_***`格式，在vite项目中引入时的方式为`import.meta.env.VITE_***`。
-还需要在`vite.config.ts`文件中设置才可引用，具体见文件
-### 🪔vite.config.ts
-配置了icons的引入、elemnet的按需引入和自动注册、element图标的使用、windicss的引入、符号别名的设置、server的设置。
 
-### 📦在.env文件中修改链接
+## License
+
+[MIT](http://opensource.org/licenses/MIT)
+
+Copyright (c) 2024-present log1997
