@@ -7,9 +7,7 @@
 # log-lottery
 
 [![MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/LOG1997/log-lottery)
-
 [![github](https://img.shields.io/badge/Author-xaboy-blue.svg)](https://github.com/log1997)
-
 [![vue3](https://img.shields.io/badge/VUE-3.0-green.svg)](https://github.com/log1997)
 
 
