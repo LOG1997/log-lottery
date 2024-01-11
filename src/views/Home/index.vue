@@ -13,8 +13,8 @@ import { Scene, PerspectiveCamera, Object3D, Vector3 } from 'three'
 //     CSS3DRenderer, CSS3DObject
 // } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
 import { CSS3DRenderer, CSS3DObject } from 'three-css3d'
-// import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
-import TrackballControls from 'three-trackballcontrols';
+import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
+// import TrackballControls from 'three-trackballcontrols';
 // import TWEEN from 'three/examples/jsm/libs/tween.module.js';
 import * as TWEEN from '@tweenjs/tween.js'
 import useStore from '@/store'

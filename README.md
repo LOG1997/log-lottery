@@ -30,6 +30,7 @@ log-lottery是一个可配置可定制化的抽奖应用，炫酷3D球体，可�
 - pinia
 - daisyui
 
+> 项目思路来源于 https://github.com/moshang-xc/lottery
 ## License
 
 [MIT](http://opensource.org/licenses/MIT)

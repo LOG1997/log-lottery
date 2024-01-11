@@ -15,7 +15,6 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     StarsBackground: typeof import('./components/StarsBackground/index.vue')['default']
     SvgIcon: typeof import('./components/SvgIcon/index.vue')['default']
-    Table: typeof import('./components/Table/index.vue')['default']
     ToTop: typeof import('./components/ToTop/index.vue')['default']
   }
 }
