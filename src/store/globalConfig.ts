@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { defaultMusicList,defaultImageList } from './data'
+import { defaultMusicList,defaultImageList,defaultPatternList } from './data'
 import {IMusic,IImage} from '@/types/storeType';
 // import { IPrizeConfig } from '@/types/storeType';
 export const useGlobalConfig = defineStore('global', {
@@ -17,7 +17,9 @@ export const useGlobalConfig = defineStore('global', {
                     cardHeight: 200,
                     textColor: '#ffffff',
                     luckyCardColor:'#ECB1AC',
-                    textSize: 30
+                    textSize: 30,
+                    patternColor:'#1b66c9',
+                    patternList:defaultPatternList as number[],
                 },
                 musicList: defaultMusicList as IMusic[],
                 imageList:defaultImageList as IImage[],
@@ -67,6 +69,14 @@ export const useGlobalConfig = defineStore('global', {
         // 获取文字大小
         getTextSize(state) {
             return state.globalConfig.theme.textSize;
+        },
+        // 获取图案颜色
+        getPatterColor(state){
+            return state.globalConfig.theme.patternColor;
+        },
+        // 获取图案列表
+        getPatternList(state){
+            return state.globalConfig.theme.patternList;
         },
         // 获取音乐列表
         getMusicList(state) {
@@ -121,6 +131,18 @@ export const useGlobalConfig = defineStore('global', {
         // 设置文字大小
         setTextSize(textSize: number) {
             this.globalConfig.theme.textSize = textSize;
+        },
+        // 设置图案颜色
+        setPatterColor(patterColor: string) {
+            this.globalConfig.theme.patternColor = patterColor;
+        },
+        // 设置图案列表
+        setPatternList(patternList: number[]) {
+            this.globalConfig.theme.patternList = patternList;
+        },
+        // 重置图案列表
+        resetPatternList() {
+            this.globalConfig.theme.patternList = defaultPatternList;
         },
         // 添加音乐
         addMusic(music: IMusic) {
@@ -200,7 +222,9 @@ export const useGlobalConfig = defineStore('global', {
                     cardWidth: 200,
                     cardHeight: 140,
                     textColor: '#ffffff',
-                    textSize: 30
+                    textSize: 30,
+                    patternColor: '#1b66c9',
+                    patternList:defaultPatternList,
 
                 },
                 musicList: defaultMusicList as IMusic[],

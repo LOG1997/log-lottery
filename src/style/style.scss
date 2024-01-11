@@ -1,7 +1,6 @@
 .element-card {
     cursor: default;
     text-align: center;
-
     .card-id {
         position: absolute;
         top: 20px;
@@ -30,14 +29,18 @@
 .lucky-element-card {
     cursor: default;
     text-align: center;
+    &::before {
+        background-color: linear-gradient(-45deg, #e81cff 0%, #40c9ff 100%);
+        border: 1px solid linear-gradient(-45deg, #e81cff 0%, #40c9ff 100%);
+    }
 
-    .lucky-card-id {
+    .card-id {
         position: absolute;
         top: 20px;
         right: 20px;
     }
 
-    .lucky-card-name {
+    .card-name {
         position: absolute;
         top: 40px;
         left: 0px;
@@ -46,9 +49,12 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        // -webkit-animation: tracking-in-expand-fwd 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both;
+        // animation: tracking-in-expand-fwd 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both;
+        // animation-delay: 0.6s;
     }
 
-    .lucky-card-detail {
+    .card-detail {
         position: absolute;
         left: 0;
         right: 0;

@@ -20,7 +20,7 @@ const addPrize = () => {
         id: new Date().getTime().toString(),
         name: '奖项',
         sort: 0,
-        isAll: true,
+        isAll: false,
         count: 1,
         isUsedCount:0,
         picture: {

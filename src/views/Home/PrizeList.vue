@@ -8,8 +8,10 @@ import defaultPrizeImage from '@/assets/images/龙.png'
 
 const prizeConfig = useStore().prizeConfig
 const globalConfig = useStore().globalConfig
+const system= useStore().system
 const { getPrizeConfig: localPrizeList, getCurrentPrize: currentPrize } = storeToRefs(prizeConfig)
 const {getIsShowPrizeList:isShowPrizeList}= storeToRefs(globalConfig)
+const {getIsMobile:isMobile} = storeToRefs(system)
 const prizeListRef = ref()
 const prizeListContainerRef = ref()
 // 获取prizeListRef高度
@@ -34,7 +36,7 @@ onMounted(() => {
     <div class="flex items-center">
         <div ref="prizeListContainerRef">
             <transition name="prize-list" :appear="true">
-                <div v-if="prizeShow" class="flex items-center">
+                <div v-if="prizeShow&&!isMobile" class="flex items-center">
                     <ul class="flex flex-col gap-1 p-2 rounded-xl bg-slate-500/50" ref="prizeListRef">
                         <li v-for="item in localPrizeList" :key="item.id"
                             :class="currentPrize.id == item.id ? 'current-prize' : ''">
@@ -55,13 +57,13 @@ onMounted(() => {
                         </li>
                     </ul>
                     <div class="flex flex-col gap-3">
-                        <div class="tooltip" data-tip="奖项列表">
+                        <div class="tooltip tooltip-right" data-tip="奖项列表">
                             <div class="flex items-center w-6 h-8 rounded-r-lg cursor-pointer prize-option bg-slate-500/50"
                                 @click="prizeShow = !prizeShow">
                                 <svg-icon name="arrow_left" class="w-full h-full"></svg-icon>
                             </div>
                         </div>
-                        <div class="tooltip" data-tip="添加抽奖">
+                        <div class="tooltip tooltip-right" data-tip="添加抽奖">
                             <div class="flex items-center w-6 h-8 rounded-r-lg cursor-pointer prize-option bg-slate-500/50"
                                 @click="addTemporaryPrize">
                                 <svg-icon name="add" class="w-full h-full"></svg-icon>
@@ -73,7 +75,7 @@ onMounted(() => {
         </div>
 
         <transition name="prize-operate" :appear="true">
-            <div class="tooltip" data-tip="奖项列表" v-show="!prizeShow">
+            <div class="tooltip tooltip-right" data-tip="奖项列表" v-show="!prizeShow">
                 <div class="flex items-center w-6 h-8 rounded-r-lg cursor-pointer prize-option bg-slate-500/50"
                     @click="prizeShow = !prizeShow">
                     <svg-icon name="arrow_right" class="w-full h-full"></svg-icon>

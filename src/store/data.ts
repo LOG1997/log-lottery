@@ -175,3 +175,4 @@ export const defaultImageList = [
         url: 'https://24years.top/resource/image/image5.png'
     }
 ]
+export const defaultPatternList=[19,20,21,38,55,54,53,70,87,88,89,23,40,57,74,91,92,93,76,59,42,25,24,27,28,29,46,63,62,61,78,95,96,97,31,48,65,66,67,33,50,84,101]

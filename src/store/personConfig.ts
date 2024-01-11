@@ -63,7 +63,6 @@ export const usePersonConfig = defineStore('person', {
                         // person.prizeTime = new Date().toString()
                     }
                 });
-                console.log('person;;',person)
                 this.personConfig.alreadyPersonList.push(person);
             });
         },

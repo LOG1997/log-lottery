@@ -9,10 +9,11 @@ import daisyuiThemes from 'daisyui/src/theming/themes'
 import { ColorPicker } from 'vue3-colorpicker';
 import 'vue3-colorpicker/style.css';
 import { isRgbOrRgba, isHex } from '@/utils/color'
+import PatternSetting from './components/PatternSetting.vue'
 
 const globalConfig = useStore().globalConfig
 const personConfig = useStore().personConfig
-const {getTopTitle:topTitle, getTheme: localTheme, getCardColor: cardColor,getLuckyColor:luckyCardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount,getIsShowPrizeList:isShowPrizeList } = storeToRefs(globalConfig)
+const { getTopTitle: topTitle, getTheme: localTheme, getPatterColor: patternColor, getPatternList: patternList, getCardColor: cardColor, getLuckyColor: luckyCardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowPrizeList: isShowPrizeList } = storeToRefs(globalConfig)
 const { getAlreadyPersonList: alreadyPersonList, getNotPersonList: notPersonList } = storeToRefs(personConfig)
 const colorPickerRef = ref()
 
@@ -21,7 +22,7 @@ interface ThemeDaType {
 }
 const isRowCountChange = ref(0) //0未改变，1改变,2加载中
 const themeValue = ref(localTheme.value.name)
-const topTitleValue= ref(structuredClone(topTitle.value))
+const topTitleValue = ref(structuredClone(topTitle.value))
 const cardColorValue = ref(structuredClone(cardColor.value))
 const luckyCardColorValue = ref(structuredClone(luckyCardColor.value))
 const textColorValue = ref(structuredClone(textColor.value))
@@ -29,6 +30,7 @@ const cardSizeValue = ref(structuredClone(cardSize.value))
 const textSizeValue = ref(structuredClone(textSize.value))
 const rowCountValue = ref(structuredClone(rowCount.value))
 const isShowPrizeListValue = ref(structuredClone(isShowPrizeList.value))
+const patternColorValue = ref(structuredClone(patternColor.value))
 const themeList = ref(Object.keys(daisyuiThemes))
 const daisyuiThemeList = ref<ThemeDaType>(daisyuiThemes)
 const formData = ref({
@@ -72,11 +74,19 @@ const resetPersonLayout = () => {
         const newNotPersonList = newList.slice(alreadyLen, notLen + alreadyLen)
         personConfig.deleteAllPerson()
         personConfig.addNotPersonList(newNotPersonList)
-        personConfig.addAlreadyPersonList(newAlreadyPersonList,null)
-        
-    isRowCountChange.value = 0
+        personConfig.addAlreadyPersonList(newAlreadyPersonList, null)
+
+        isRowCountChange.value = 0
     }, 1000)
 }
+
+const clearPattern = () => {
+    globalConfig.setPatternList([] as number[])
+}
+const resetPattern = () => {
+    globalConfig.resetPatternList()
+}
+
 // const handleChangeShowFields = (fieldItem: any) => {
 //     formData.value.showField.map((item) => {
 //         if (item.label === fieldItem.label) {
@@ -97,18 +107,18 @@ watch(() => formData.value.rowCount, () => {
             formErr.value.rowCount = err.issues[0].message
         })
 })
-watch(topTitleValue,(val)=>{
+watch(topTitleValue, (val) => {
     globalConfig.setTopTitle(val)
 }),
 
-watch(themeValue, (val: any) => {
-    const selectedThemeDetail = daisyuiThemeList.value[val]
-    globalConfig.setTheme({ name: val, detail: selectedThemeDetail })
-    themeChange(val)
-    if (selectedThemeDetail.primary && (isHex(selectedThemeDetail.primary) || isRgbOrRgba(selectedThemeDetail.primary))) {
-        globalConfig.setCardColor(selectedThemeDetail.primary)
-    }
-}, { deep: true })
+    watch(themeValue, (val: any) => {
+        const selectedThemeDetail = daisyuiThemeList.value[val]
+        globalConfig.setTheme({ name: val, detail: selectedThemeDetail })
+        themeChange(val)
+        if (selectedThemeDetail.primary && (isHex(selectedThemeDetail.primary) || isRgbOrRgba(selectedThemeDetail.primary))) {
+            globalConfig.setCardColor(selectedThemeDetail.primary)
+        }
+    }, { deep: true })
 
 watch(cardColorValue, (val: string) => {
     globalConfig.setCardColor(val)
@@ -116,7 +126,9 @@ watch(cardColorValue, (val: string) => {
 watch(luckyCardColorValue, (val: string) => {
     globalConfig.setLuckyCardColor(val)
 }, { deep: true })
-
+watch(patternColorValue, (val: string) => {
+    globalConfig.setPatterColor(val)
+})
 watch(textColorValue, (val: string) => {
     globalConfig.setTextColor(val)
 }, { deep: true })
@@ -124,9 +136,9 @@ watch(textColorValue, (val: string) => {
 watch(cardSizeValue, (val: { width: number; height: number; }) => {
     globalConfig.setCardSize(val)
 }, { deep: true }),
-watch(isShowPrizeListValue,()=>{
-    globalConfig.setIsShowPrizeList(isShowPrizeListValue.value)
-})
+    watch(isShowPrizeListValue, () => {
+        globalConfig.setIsShowPrizeList(isShowPrizeListValue.value)
+    })
 onMounted(() => {
 })
 </script>
@@ -183,7 +195,8 @@ onMounted(() => {
             <div class="label">
                 <span class="label-text">中奖卡片颜色</span>
             </div>
-            <ColorPicker ref="colorPickerRef" v-model="luckyCardColorValue" v-model:pure-color="luckyCardColorValue"></ColorPicker>
+            <ColorPicker ref="colorPickerRef" v-model="luckyCardColorValue" v-model:pure-color="luckyCardColorValue">
+            </ColorPicker>
         </label>
 
         <label class="w-full max-w-xs form-control">
@@ -225,12 +238,41 @@ onMounted(() => {
             <input type="number" v-model="textSizeValue" placeholder="Type here"
                 class="w-full max-w-xs input input-bordered" />
         </label>
+        <label class="w-full max-w-xs form-control">
+            <div class="label">
+                <span class="label-text">高亮颜色</span>
+            </div>
+            <ColorPicker ref="colorPickerRef" v-model="patternColorValue" v-model:pure-color="patternColorValue">
+            </ColorPicker>
+        </label>
+        <label class="flex flex-row items-center w-full gap-24 mb-0 form-control">
+            <div>
+                <div class="label">
+                    <span class="label-text">图案设置</span>
+                </div>
+                <div class="h-auto">
+                    <PatternSetting :rowCount="rowCount" :cardColor="cardColor" :patternColor="patternColor"
+                        :patternList="patternList"></PatternSetting>
+                </div>
+            </div>
+        </label>
+        <div class="flex w-full h-24 gap-3 m-0">
+            <button class="mt-5 btn btn-info btn-sm" @click.stop="clearPattern">
+                <span>清空图案设置</span>
+            </button>
+            <div class="tooltip" data-tip="默认图案设置针对17列时有效，其他列数请自行设置">
+                <button class="mt-5 btn btn-info btn-sm" @click="resetPattern">
+                    <span>默认图案设置</span>
+                </button>
+            </div>
+        </div>
+
         <label class="w-full max-w-xs mb-10 form-control">
             <div class="label">
                 <span class="label-text">是否常显奖品列表</span>
             </div>
-            <input type="checkbox" :checked="isShowPrizeListValue" @change="isShowPrizeListValue=!isShowPrizeListValue"
-                        class="mt-2 border-solid checkbox checkbox-secondary border-1" />
+            <input type="checkbox" :checked="isShowPrizeListValue" @change="isShowPrizeListValue = !isShowPrizeListValue"
+                class="mt-2 border-solid checkbox checkbox-secondary border-1" />
         </label>
 
     </div>
