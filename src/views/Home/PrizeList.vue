@@ -8,24 +8,43 @@ import defaultPrizeImage from '@/assets/images/龙.png'
 
 const prizeConfig = useStore().prizeConfig
 const globalConfig = useStore().globalConfig
-const system= useStore().system
-const { getPrizeConfig: localPrizeList, getCurrentPrize: currentPrize } = storeToRefs(prizeConfig)
-const {getIsShowPrizeList:isShowPrizeList}= storeToRefs(globalConfig)
-const {getIsMobile:isMobile} = storeToRefs(system)
+const system = useStore().system
+const { getPrizeConfig: localPrizeList, getCurrentPrize: currentPrize, getTemporaryPrize: temporaryPrize } = storeToRefs(prizeConfig)
+const { getIsShowPrizeList: isShowPrizeList, getImageList: localImageList } = storeToRefs(globalConfig)
+const { getIsMobile: isMobile } = storeToRefs(system)
 const prizeListRef = ref()
 const prizeListContainerRef = ref()
+
+const temporaryPrizeRef = ref()
 // 获取prizeListRef高度
 const getPrizeListHeight = () => {
-    let height=200;
-    if(prizeListRef.value){
-     height = (prizeListRef.value as HTMLElement).offsetHeight}
+    let height = 200;
+    if (prizeListRef.value) {
+        height = (prizeListRef.value as HTMLElement).offsetHeight
+    }
 
     return height
 }
 const prizeShow = ref(structuredClone(isShowPrizeList.value))
 
 const addTemporaryPrize = () => {
-    console.log('addTemporaryPrize')
+    temporaryPrizeRef.value.showModal()
+}
+
+const deleteTemporaryPrize = () => {
+    temporaryPrize.value.isShow = false
+    prizeConfig.setTemporaryPrize(temporaryPrize.value)
+}
+const submitTemporaryPrize = () => {
+    if (!temporaryPrize.value.name || !temporaryPrize.value.count) {
+        alert('请填写完整信息')
+
+        return
+    }
+    temporaryPrize.value.isShow = true
+    temporaryPrize.value.id=new Date().getTime().toString()
+    prizeConfig.setCurrentPrize(temporaryPrize.value)
+    prizeConfig.setCurrentPrize(temporaryPrize.value)
 }
 onMounted(() => {
     prizeListContainerRef.value.style.height = getPrizeListHeight() + 'px'
@@ -34,23 +53,129 @@ onMounted(() => {
 
 <template>
     <div class="flex items-center">
+        <dialog id="my_modal_1" ref="temporaryPrizeRef" class="border-none modal">
+            <div class="modal-box">
+                <h3 class="text-lg font-bold">增加临时抽奖</h3>
+                <div class="flex flex-col gap-3">
+                    <label class="flex w-full max-w-xs">
+                        <div class="label">
+                            <span class="label-text">名称:</span>
+                        </div>
+                        <input type="text" v-model="temporaryPrize.name" placeholder="名称"
+                            class="max-w-xs input-sm input input-bordered" />
+                    </label>
+                    <label class="flex w-full max-w-xs">
+                        <div class="label">
+                            <span class="label-text">是否全员参加</span>
+                        </div>
+                        <input type="checkbox" :checked="temporaryPrize.isAll"
+                            @change="temporaryPrize.isAll = !temporaryPrize.isAll"
+                            class="mt-2 border-solid checkbox checkbox-secondary border-1" />
+                    </label>
+                    <label class="flex w-full max-w-xs">
+                        <div class="label">
+                            <span class="label-text">获奖人数</span>
+                        </div>
+                        <input type="number" v-model="temporaryPrize.count" placeholder="获奖人数"
+                            class="max-w-xs input-sm input input-bordered" />
+                    </label>
+                    <label class="flex w-full max-w-xs">
+                        <div class="label">
+                            <span class="label-text">已获奖人数</span>
+                        </div>
+                        <input disabled type="number" v-model="temporaryPrize.isUsedCount" placeholder="获奖人数"
+                            class="max-w-xs input-sm input input-bordered" />
+                    </label>
+                    <label class="flex w-full max-w-xs">
+                        <div class="label">
+                            <span class="label-text">已抽取</span>
+                        </div>
+                        <input type="checkbox" :checked="temporaryPrize.isUsed"
+                            @change="temporaryPrize.isUsed ? (() => { temporaryPrize.isUsed = false; temporaryPrize.isUsedCount = 0 })() : (() => { temporaryPrize.isUsed = true; temporaryPrize.isUsedCount = temporaryPrize.count })()"
+                            class="mt-2 border-solid checkbox checkbox-secondary border-1" />
+                    </label>
+                    <label class="flex w-full max-w-xs">
+                        <div class="label">
+                            <span class="label-text">图片</span>
+                        </div>
+                        <select class="flex-1 w-12 select select-warning select-sm" v-model="temporaryPrize.picture">
+                            <option v-if="temporaryPrize.picture.id" :value="{ id: '', name: '', url: '' }"><span>❌</span>
+                            </option>
+                            <option disabled selected>选择一张图片</option>
+                            <option class="w-auto" v-for="picItem in localImageList" :key="picItem.id" :value="picItem">{{
+                                picItem.name }}
+                            </option>
+                        </select>
+                    </label>
+                </div>
+                <div class="modal-action">
+                    <form method="dialog" class="flex gap-3">
+                        <button class="btn btn-sm" @click="submitTemporaryPrize">确定</button>
+                        <button class="btn btn-sm">取消</button>
+                    </form>
+                </div>
+            </div>
+        </dialog>
+
         <div ref="prizeListContainerRef">
+            <div class="h-20 w-72" :class="temporaryPrize.isShow ? 'current-prize' : ''" v-if="temporaryPrize.isShow">
+                <div class="relative flex flex-row items-center justify-between w-full h-full shadow-xl card bg-base-100">
+                    <div v-if="temporaryPrize.isUsed"
+                        class="absolute z-50 w-full h-full bg-gray-800/70 item-mask rounded-xl"></div>
+                    <figure class="w-10 h-10 rounded-xl">
+                        <ImageSync v-if="temporaryPrize.picture.url" :imgItem="temporaryPrize.picture"></ImageSync>
+                        <img v-else :src="defaultPrizeImage" alt="Prize" class="object-cover h-full rounded-xl" />
+                    </figure>
+                    <div class="items-center p-0 text-center card-body">
+                        <div class="tooltip tooltip-left" :data-tip="temporaryPrize.name">
+                            <h2 class="p-0 m-0 overflow-hidden w-28 card-title whitespace-nowrap text-ellipsis">{{
+                                temporaryPrize.name }}</h2>
+                        </div>
+                        <p class="absolute z-40 p-0 m-0 text-gray-300/80 mt-9">{{ temporaryPrize.isUsedCount }}/{{
+                            temporaryPrize.count }}</p>
+                        <progress class="w-3/4 h-6 progress progress-primary" :value="temporaryPrize.isUsedCount"
+                            :max="temporaryPrize.count"></progress>
+                        <!-- <p class="p-0 m-0">{{ item.isUsedCount }}/{{ item.count }}</p> -->
+                    </div>
+                    <div class="flex flex-col gap-1 mr-2">
+                        <div class="tooltip tooltip-left" data-tip="编辑">
+                            <div class="cursor-pointer hover:text-blue-400" @click="addTemporaryPrize">
+                                <svg-icon name="edit"></svg-icon>
+                            </div>
+                        </div>
+                        <div class="tooltip tooltip-left" data-tip="删除">
+                            <div class="cursor-pointer hover:text-blue-400" @click="deleteTemporaryPrize">
+                                <svg-icon name="delete"></svg-icon>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
             <transition name="prize-list" :appear="true">
-                <div v-if="prizeShow&&!isMobile" class="flex items-center">
+                <div v-if="prizeShow && !isMobile && !temporaryPrize.isShow" class="flex items-center">
                     <ul class="flex flex-col gap-1 p-2 rounded-xl bg-slate-500/50" ref="prizeListRef">
                         <li v-for="item in localPrizeList" :key="item.id"
                             :class="currentPrize.id == item.id ? 'current-prize' : ''">
-                            <div
-                                class="relative flex flex-row items-center justify-between w-64 h-20 shadow-xl card bg-base-100" v-if="item.isShow">
-                                <div v-if="item.isUsed" class="absolute z-50 w-full h-full bg-gray-800/70 item-mask rounded-xl"></div>
+                            <div class="relative flex flex-row items-center justify-between w-64 h-20 shadow-xl card bg-base-100"
+                                v-if="item.isShow">
+                                <div v-if="item.isUsed"
+                                    class="absolute z-50 w-full h-full bg-gray-800/70 item-mask rounded-xl"></div>
                                 <figure class="w-10 h-10 rounded-xl">
                                     <ImageSync v-if="item.picture.url" :imgItem="item.picture"></ImageSync>
-                                    <img v-else :src="defaultPrizeImage" alt="Prize" class="object-cover h-full rounded-xl" />
+                                    <img v-else :src="defaultPrizeImage" alt="Prize"
+                                        class="object-cover h-full rounded-xl" />
                                 </figure>
                                 <div class="items-center p-0 text-center card-body">
-                                    <h2 class="p-0 m-0 card-title">{{ item.name }}</h2>
-                                    <p class="absolute z-40 p-0 m-0 text-gray-300/80 pt-9">{{ item.isUsedCount }}/{{ item.count }}</p>
-                                    <progress class="w-3/4 h-6 progress progress-primary" :value="item.isUsedCount" :max="item.count"></progress>
+                                    <div class="tooltip tooltip-left" :data-tip="item.name">
+                                        <h2
+                                            class="w-24 p-0 m-0 overflow-hidden text-center card-title whitespace-nowrap text-ellipsis">
+                                            {{ item.name }}</h2>
+                                    </div>
+                                    <p class="absolute z-40 p-0 m-0 text-gray-300/80 mt-9">{{ item.isUsedCount }}/{{
+                                        item.count }}</p>
+                                    <progress class="w-3/4 h-6 progress progress-primary" :value="item.isUsedCount"
+                                        :max="item.count"></progress>
                                     <!-- <p class="p-0 m-0">{{ item.isUsedCount }}/{{ item.count }}</p> -->
                                 </div>
                             </div>
@@ -71,7 +196,10 @@ onMounted(() => {
                         </div>
                     </div>
                 </div>
+
+
             </transition>
+
         </div>
 
         <transition name="prize-operate" :appear="true">
@@ -86,6 +214,10 @@ onMounted(() => {
 </template>
 
 <style lang='scss' scoped>
+.label {
+    width: 120px;
+}
+
 .prize-list-enter-active {
     -webkit-animation: slide-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
     animation: slide-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
@@ -102,12 +234,6 @@ onMounted(() => {
     -webkit-animation: show-operate 0.6s;
 }
 
-// .prize-operate-leave-active {
-//     -webkit-animation-delay: 0.5s;
-//     -webkit-animation: slide-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-//     animation-delay: 0.5s;
-//     animation: slide-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-// }
 .current-prize {
     position: relative;
     display: block;
@@ -131,7 +257,6 @@ onMounted(() => {
     // animation-play-state: paused;
     translate: -5% 0%;
     transition: translate 0.25s ease-out;
-
     animation-play-state: running;
     transition-duration: 0.75s;
     translate: 0% 0%;

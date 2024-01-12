@@ -22,6 +22,23 @@ export const usePrizeConfig = defineStore('prize', {
                     isShow: true,
                     isUsed: false,
                     frequency: 1,
+                } as IPrizeConfig,
+                temporaryPrize:{
+                    id: '',
+                    name: '',
+                    sort: 0,
+                    isAll: false,
+                    count: 1,
+                    isUsedCount:0,
+                    picture: {
+                        id: '-1',
+                        name: '',
+                        url: ''
+                    },
+                    desc: '',
+                    isShow: false,
+                    isUsed: false,
+                    frequency: 1,
                 } as IPrizeConfig
             }
         };
@@ -45,6 +62,10 @@ return state.prizeConfig.prizeList;
         getCurrentPrize(state) {
             return state.prizeConfig.currentPrize;
         },
+        // 获取临时的奖项
+        getTemporaryPrize(state){
+            return state.prizeConfig.temporaryPrize;
+        },
 
     },
     actions: {
@@ -62,12 +83,25 @@ return state.prizeConfig.prizeList;
         },
         // 更新奖项数据
         updatePrizeConfig(prizeConfigItem: IPrizeConfig) {
-            const index = this.prizeConfig.prizeList.findIndex(item => item.id === prizeConfigItem.id);
-            this.prizeConfig.prizeList[index] = prizeConfigItem;
-            if(prizeConfigItem.isUsed&&index+1<this.prizeConfig.prizeList.length){
+            // const index = this.prizeConfig.prizeList.findIndex(item => item.id === prizeConfigItem.id);
+            // this.prizeConfig.prizeList[index] = prizeConfigItem;
+            // if(prizeConfigItem.isUsed&&index+1<this.prizeConfig.prizeList.length){
+            //     // 设置下一个为currentPrize
+            //     this.setCurrentPrize(this.prizeConfig.prizeList[index+1]);
+            // }
+            if(prizeConfigItem.isUsed&&this.prizeConfig.prizeList.length){
                 // 设置下一个为currentPrize
-                this.setCurrentPrize(this.prizeConfig.prizeList[index+1]);
+                for(let i=0;i<this.prizeConfig.prizeList.length;i++){
+                    if(!this.prizeConfig.prizeList[i].isUsed){
+                        this.setCurrentPrize(this.prizeConfig.prizeList[i]);
+                        break;
+                    }
+                }
             }
+            else{
+                return
+            }
+            this.resetTemporaryPrize()
         },
         // 删除全部奖项
         deleteAllPrizeConfig() {
@@ -76,6 +110,43 @@ return state.prizeConfig.prizeList;
         // 设置当前奖项
         setCurrentPrize(prizeConfigItem: IPrizeConfig) {
             this.prizeConfig.currentPrize = prizeConfigItem
+        },
+        // 设置临时奖项
+        setTemporaryPrize(prizeItem: IPrizeConfig) {
+            if(prizeItem.isShow==false){
+                for(let i=0;i<this.prizeConfig.prizeList.length;i++){
+                    if(this.prizeConfig.prizeList[i].isUsed==false){
+                        this.setCurrentPrize(this.prizeConfig.prizeList[i]);
+                        
+break
+                    }
+                }
+                this.resetTemporaryPrize()
+                
+return
+            }
+            
+            this.prizeConfig.temporaryPrize = prizeItem
+        },
+        // 重置临时奖项
+        resetTemporaryPrize() {
+            this.prizeConfig.temporaryPrize = {
+                id: '',
+                name: '',
+                sort: 0,
+                isAll: false,
+                count: 1,
+                isUsedCount:0,
+                picture: {
+                    id: '-1',
+                    name: '',
+                    url: ''
+                },
+                desc: '',
+                isShow: false,
+                isUsed: false,
+                frequency: 1,
+            } as IPrizeConfig;
         },
         // 重置所有配置
         resetDefault() {
@@ -97,7 +168,8 @@ return state.prizeConfig.prizeList;
                     isShow: true,
                     isUsed: false,
                     frequency: 1,
-                } as IPrizeConfig
+                } as IPrizeConfig,
+                temporaryPrize:{} as IPrizeConfig
             }
         }
     },

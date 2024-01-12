@@ -1,6 +1,7 @@
 .element-card {
     cursor: default;
     text-align: center;
+    user-select: none;
     .card-id {
         position: absolute;
         top: 20px;

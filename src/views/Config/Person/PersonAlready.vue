@@ -56,14 +56,6 @@ const tableColumnsList = [
                     handleMoveNotPerson(row)
                 }
             },
-            // {
-            //     label: '删除',
-            //     type: 'btn-error',
-            //     onClick: (row: any) => {
-            //         console.log('删除:', row)
-            //     }
-            // },
-
         ]
     },
 ]

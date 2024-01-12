@@ -15,12 +15,62 @@ log-lottery是一个可配置可定制化的抽奖应用，炫酷3D球体，可�
 ## 功能描述
 
 - 🕍 炫酷3D球体，年会抽奖必备，开箱即用
+- 🧿 持久化存储，数据不丢失
 - 🎁 奖品奖项配置
 - 👱 抽奖名单设置管理
 - 🛞 界面信息自定义
-- 🎼 图片、背景音乐管理，使用本地存储
+- 🎼 播放背景音乐
+- 💾 图片、背景音乐管理，使用本地存储，有默认资源可直接使用
 - 🖼️ excel表格导入人员名单、抽奖结果使用excel导出
-- 🎈 临时增加抽奖
+- 🎈 可增加临时抽奖
+
+## 详细介绍
+
+### 配置参与人员
+
+于人员配置管理界面下载excel模板，按要求填好数据后导入即可。
+
+### 配置奖项
+
+于奖项配置管理界面添加奖项后，自定义修改名称、抽取人数、是否全员参加、图片显示。
+
+### 界面配置
+
+可自定义配置标题、列数、卡片颜色、首页图案等。
+
+### 图片和音乐管理
+
+上传图片或音乐即可，数据使用indexdb在浏览器本地进行存储。
+
+## 预览
+
+首页
+
+![image_home](./static/images/home.png)
+
+![image_home_prize_list](./static//images/home_prizelist.png)
+
+抽奖
+
+![image_lottery](./static/images/lottery-enter.png)
+
+![image_lottery_done](./static/images/lottery-done.png)
+
+配置
+
+![image_config_person_all](./static/images/config_personall.png)
+
+![image_config_prize_list](./static/images/config_prize.png)
+
+![image_config_view](./static/images/config-view.png)
+
+![image_config_pattern](./static/images/config_pattern.png)
+
+图片音乐配置
+
+![image_config_img](./static/images/image_config.png)
+
+![image_music](./static/images/music_music.png)
 
 ## 技术
 
@@ -30,7 +80,28 @@ log-lottery是一个可配置可定制化的抽奖应用，炫酷3D球体，可�
 - pinia
 - daisyui
 
+## 开发
+
+安装依赖
+
+```bash
+pnpm i
+```
+
+开发运行
+
+```bash
+pnpm dev
+```
+
+打包
+
+```bash
+pnpm build
+```
+
 > 项目思路来源于 https://github.com/moshang-xc/lottery
+
 ## License
 
 [MIT](http://opensource.org/licenses/MIT)

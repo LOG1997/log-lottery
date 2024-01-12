@@ -9,8 +9,9 @@ export interface IPersonConfig {
     y:number
     createTime: string;
     updateTime: string;
-    prizeName: string;
-    prizeTime: string;
+    prizeName:string[];
+    prizeId:string[];
+    prizeTime: string[];
 }
 export interface IPrizeConfig {
     id: number|string;

@@ -29,7 +29,7 @@ const personConfig = useStore().personConfig
 const globalConfig = useStore().globalConfig
 const prizeConfig = useStore().prizeConfig
 
-const { getAllPersonList: allPersonList, getNotPersonList: notPersonList } = storeToRefs(personConfig)
+const { getAllPersonList: allPersonList, getNotPersonList: notPersonList,getNotThisPrizePersonList: notThisPrizePersonList } = storeToRefs(personConfig)
 const { getCurrentPrize: currentPrize } = storeToRefs(prizeConfig)
 const { getTopTitle: topTitle, getCardColor: cardColor,getPatterColor: patternColor, getPatternList: patternList, getTextColor: textColor, getLuckyColor: luckyColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount } = storeToRefs(globalConfig)
 const tableData = ref<any[]>([])
@@ -57,6 +57,7 @@ const targets = {
 const luckyTargets = ref<any[]>([])
 const luckyCardList = ref<number[]>([])
 let luckyCount = ref(10)
+const personPool=ref<IPersonConfig[]>([])
 
 const intervalTimer = ref<any>(null)
 // const currentPrizeValue = ref(JSON.parse(JSON.stringify(currentPrize.value)))
@@ -381,8 +382,9 @@ const startLottery = () => {
 
         return
     }
+    personPool.value=currentPrize.value.isAll ? notThisPrizePersonList.value : notPersonList.value
     // 验证抽奖人数是否还够
-    if (notPersonList.value.length < currentPrize.value.count) {
+    if (personPool.value.length < currentPrize.value.count-currentPrize.value.isUsedCount) {
         toast.open({
             message: '抽奖人数不够',
             type: 'warning',
@@ -406,11 +408,11 @@ const stopLottery = async () => {
     // TWEEN.removeAll();
     rollBall(0, 1)
     // 抽奖池是否为全体人员
-    const personPool = currentPrize.value.isAll ? allPersonList.value : notPersonList.value
+    //  personPool=currentPrize.value.isAll ? notThisPrizePersonList.value : notPersonList.value
     // 每次最多抽十个
     const leftover = currentPrize.value.count - currentPrize.value.isUsedCount
     leftover < luckyCount.value ? luckyCount.value = leftover : luckyCount
-    if (personPool.length < leftover) {
+    if (personPool.value.length < leftover) {
         toast.open({
             message: '抽奖人数不够',
             type: 'warning',
@@ -421,23 +423,10 @@ const stopLottery = async () => {
         return;
     }
     for (let i = 0; i < luckyCount.value; i++) {
-        if (personPool.length > 0) {
-            const randomIndex = Math.round(Math.random() * (personPool.length - 1))
-            luckyTargets.value.push(personPool[randomIndex])
-            // console.log(
-            //     'leftover:', leftover, '\n',
-            //     'luckyCount', luckyCount, '\n',
-            //     'currentPrize.value.isUsedCount', currentPrize.value.isUsedCount, '\n',
-            //     'randomIndex', randomIndex, '\n',
-            //     'personPool.length - 1', personPool.length - 1, '\n',
-            //     'personPool[randomIndex]', personPool[randomIndex], '\n',
-            // )
-    
-
-            personPool.splice(randomIndex, 1)
-            // console.log(
-            //     'objects.value[personPool[randomIndex].id]', LuckyCard
-            // )
+        if (personPool.value.length > 0) {
+            const randomIndex = Math.round(Math.random() * (personPool.value.length - 1))
+            luckyTargets.value.push(personPool.value[randomIndex])
+            personPool.value.splice(randomIndex, 1)
         }
     }
     const windowSize = { width: window.innerWidth, height: window.innerHeight }
@@ -475,7 +464,7 @@ const stopLottery = async () => {
 }
 // 继续
 const continueLottery = async () => {
-    // currentPrize.value.isUsedCount += luckyCount.value
+    currentPrize.value.isUsedCount += luckyCount.value
     if (currentPrize.value.isUsedCount >= currentPrize.value.count) {
         currentPrize.value.isUsed = true
     }
@@ -590,7 +579,7 @@ onUnmounted(() => {
 
 <template>
     <div class="absolute z-10 flex flex-col items-center justify-center -translate-x-1/2 left-1/2">
-        <h2 class="pt-12 m-0 mb-12 font-mono tracking-wide text-center leading-12"
+        <h2 class="pt-12 m-0 mb-12 font-mono tracking-wide text-center leading-12 header-title"
             :style="{ fontSize: textSize * 1.5 + 'px', color: textColor }">{{ topTitle }}</h2>
         <div class="flex gap-3">
             <button v-if="tableData.length <= 0" class="cursor-pointer btn btn-outline btn-secondary btn-lg"
@@ -670,15 +659,10 @@ onUnmounted(() => {
     margin: 0 auto;
     font-size: 32px;
 }
-// .enter-enter-active{
-//     -webkit-animation: fade-in-fwd 0.6s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
-// 	        animation: fade-in-fwd 0.6s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
-//             animation-delay:0.5s ;
-// }
-// .enter-leave-active{
-//     -webkit-animation: swing-out-top-bck 0.45s cubic-bezier(0.600, -0.280, 0.735, 0.045) both;
-// 	        animation: swing-out-top-bck 0.45s cubic-bezier(0.600, -0.280, 0.735, 0.045) both;
-// }
+.header-title{
+    -webkit-animation: tracking-in-expand-fwd 0.8s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
+	        animation: tracking-in-expand-fwd 0.8s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
+}
 .start {
     // 居中
     display: flex;
@@ -967,11 +951,15 @@ strong {
         transform: scale(1);
     }
 }
-@-webkit-keyframes fade-in-fwd {
+@-webkit-keyframes tracking-in-expand-fwd {
   0% {
-    -webkit-transform: translateZ(-80px);
-            transform: translateZ(-80px);
+    letter-spacing: -0.5em;
+    -webkit-transform: translateZ(-700px);
+            transform: translateZ(-700px);
     opacity: 0;
+  }
+  40% {
+    opacity: 0.6;
   }
   100% {
     -webkit-transform: translateZ(0);
@@ -979,11 +967,15 @@ strong {
     opacity: 1;
   }
 }
-@keyframes fade-in-fwd {
+@keyframes tracking-in-expand-fwd {
   0% {
-    -webkit-transform: translateZ(-80px);
-            transform: translateZ(-80px);
+    letter-spacing: -0.5em;
+    -webkit-transform: translateZ(-700px);
+            transform: translateZ(-700px);
     opacity: 0;
+  }
+  40% {
+    opacity: 0.6;
   }
   100% {
     -webkit-transform: translateZ(0);
@@ -991,37 +983,6 @@ strong {
     opacity: 1;
   }
 }
-@-webkit-keyframes swing-out-top-bck {
-  0% {
-    -webkit-transform: rotateX(0deg);
-            transform: rotateX(0deg);
-    -webkit-transform-origin: top;
-            transform-origin: top;
-    opacity: 1;
-  }
-  100% {
-    -webkit-transform: rotateX(-100deg);
-            transform: rotateX(-100deg);
-    -webkit-transform-origin: top;
-            transform-origin: top;
-    opacity: 0;
-  }
-}
-@keyframes swing-out-top-bck {
-  0% {
-    -webkit-transform: rotateX(0deg);
-            transform: rotateX(0deg);
-    -webkit-transform-origin: top;
-            transform-origin: top;
-    opacity: 1;
-  }
-  100% {
-    -webkit-transform: rotateX(-100deg);
-            transform: rotateX(-100deg);
-    -webkit-transform-origin: top;
-            transform-origin: top;
-    opacity: 0;
-  }
-}
+
 
 </style>

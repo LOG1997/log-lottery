@@ -39,12 +39,16 @@ const exportData = () => {
         delete data[i].id
         delete data[i].createTime
         delete data[i].updateTime
+        delete data[i].prizeId
         // 修改字段名称
         if (data[i].isWin) {
             data[i].isWin = '是'
         } else {
             data[i].isWin = '否'
         }
+        // 格式化数组为
+        data[i].prizeTime=data[i].prizeTime.join(',')
+        data[i].prizeName=data[i].prizeName.join(',')
     }
     let dataString = JSON.stringify(data)
     dataString = dataString

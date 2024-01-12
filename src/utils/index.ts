@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 // 筛选人员数据
 export const filterData = (tableData: any[],localRowCount: number,startIndex=0) => {
     const dataLength = tableData.length
@@ -19,8 +20,8 @@ return tableData
 export const addOtherInfo=(personList:any[])=>{
     const len=personList.length;
     for(let i=0;i<len;i++){
-        personList[i].createTime=new Date().toString();
-        personList[i].updateTime=new Date().toString();
+        personList[i].createTime=dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss');
+        personList[i].updateTime=dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss');
         personList[i].prizeName='';
         personList[i].prizeTime='';
     }

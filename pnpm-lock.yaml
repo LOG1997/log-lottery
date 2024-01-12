@@ -17,6 +17,9 @@ dependencies:
   canvas-confetti:
     specifier: ^1.9.2
     version: 1.9.2
+  dayjs:
+    specifier: ^1.11.10
+    version: 1.11.10
   localforage:
     specifier: ^1.10.0
     version: 1.10.0
@@ -38,9 +41,6 @@ dependencies:
   three-css3d:
     specifier: ^1.0.6
     version: 1.0.6(three@0.160.0)
-  three-trackballcontrols:
-    specifier: ^0.9.0
-    version: 0.9.0(three@0.160.0)
   vue:
     specifier: ^3.3.8
     version: 3.3.8(typescript@5.2.2)
@@ -1941,6 +1941,10 @@ packages:
       whatwg-mimetype: 3.0.0
       whatwg-url: 12.0.1
     dev: true
+
+  /dayjs@1.11.10:
+    resolution: {integrity: sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==}
+    dev: false
 
   /de-indent@1.0.2:
     resolution: {integrity: sha512-e/1zu3xH5MQryN2zdVaF0OrdNLUbvWxzMbi+iNA6Bky7l1RoP8a2fIbRocyHclXt/arDrrR6lL3TqFD9pMQTsg==}
@@ -4981,14 +4985,6 @@ packages:
     resolution: {integrity: sha512-0J8rF7LA+BZW3bFfT0IInS8+TWhiNfyFa2lYjnPIfi9Ubnveu0I6fRszH2vIX01fH+OpEUF8fZ7jGdxNGyVYWA==}
     peerDependencies:
       three: '>=0.144.0'
-    dependencies:
-      three: 0.160.0
-    dev: false
-
-  /three-trackballcontrols@0.9.0(three@0.160.0):
-    resolution: {integrity: sha512-Z6HmIJnP70r5uONvcPCdLEF0SsG1kbGzNb7qQYj3c7b6v2E3XTlbNpZsgTjt36oKm0Z2tU11D6EbW4i8KIHuqA==}
-    peerDependencies:
-      three: '>= 0.86 <= 1.0'
     dependencies:
       three: 0.160.0
     dev: false

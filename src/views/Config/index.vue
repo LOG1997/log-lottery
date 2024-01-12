@@ -64,7 +64,10 @@ const skip = (path: string) => {
     </div>
     <footer class="p-10 rounded footer footer-center bg-base-200 text-base-content">
         <nav class="grid grid-flow-col gap-4">
-            <a class="link link-hover cursor-pointer text-inherit" target="_blank" href="https://24years.top">行有不得，反求诸己</a>
+            <a class="cursor-pointer link link-hover text-inherit" target="_blank" href="https://24years.top">行有不得，反求诸己</a>
+        </nav>
+        <nav>
+            <a class="cursor-pointer link link-hover text-inherit" target="_blank" href="https://24years.top">破山中贼易，破心中贼难</a>
         </nav>
         <nav>
             <div class="grid grid-flow-col gap-4">

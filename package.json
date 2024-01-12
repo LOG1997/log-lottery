@@ -18,6 +18,7 @@
         "@vueuse/core": "^10.6.1",
         "axios": "^1.6.1",
         "canvas-confetti": "^1.9.2",
+        "dayjs": "^1.11.10",
         "localforage": "^1.10.0",
         "pinia": "^2.1.7",
         "pinia-plugin-persist": "^1.0.0",

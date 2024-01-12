@@ -86,7 +86,7 @@ watch(() => prizeList.value, (val:IPrizeConfig[]) => {
         </div>
         <ul>
             <li v-for="item in prizeList" :key="item.id" class="flex gap-10"
-                :class="currentPrize.id == item.id ? 'border-1 border-solid rounded-xl' : null">
+                :class="currentPrize.id == item.id ? 'border-1 border-dotted rounded-xl' : null">
                 <label class="max-w-xs mb-10 form-control">
                     <!-- 向上向下 -->
                     <div class="flex flex-col items-center gap-2 pt-5">

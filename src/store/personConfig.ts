@@ -2,6 +2,8 @@ import { defineStore } from 'pinia';
 import { IPersonConfig } from '@/types/storeType';
 import { IPrizeConfig } from '@/types/storeType';
 import { defaultPersonList } from './data'
+import { usePrizeConfig } from './prizeConfig';
+import dayjs from 'dayjs'
 export const usePersonConfig = defineStore('person', {
     state() {
         return {
@@ -18,7 +20,18 @@ export const usePersonConfig = defineStore('person', {
         },
         // 获取全部人员名单
         getAllPersonList(state) {
-            return state.personConfig.allPersonList;
+            return state.personConfig.allPersonList.filter((item: IPersonConfig) => {
+                return item
+            });
+        },
+        // 获取未获此奖的人员名单
+        getNotThisPrizePersonList(state: any) {
+            const currentPrize = usePrizeConfig().prizeConfig.currentPrize;
+            const data = state.personConfig.allPersonList.filter((item: IPersonConfig) => {
+                return !item.prizeId.includes(currentPrize.id as string);
+            });
+            
+return data
         },
         // 获取已中奖人员名单
         getAlreadyPersonList(state) {
@@ -28,7 +41,7 @@ export const usePersonConfig = defineStore('person', {
         },
         // 获取中奖人员详情
         getAlreadyPersonDetail(state) {
-           return state.personConfig.alreadyPersonList
+            return state.personConfig.alreadyPersonList
         },
         // 获取未中奖人员名单
         getNotPersonList(state) {
@@ -57,11 +70,14 @@ export const usePersonConfig = defineStore('person', {
                     if (item.id === person.id && prize != null) {
                         item.isWin = true
                         // person.isWin = true
-                        item.prizeName += prize.name
+                        item.prizeName.push(prize.name)
                         // person.prizeName += prize.name
-                        item.prizeTime = new Date().toString()
+                        item.prizeTime.push(dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'))
                         // person.prizeTime = new Date().toString()
+                        item.prizeId.push(prize.id as string)
                     }
+
+                    return item
                 });
                 this.personConfig.alreadyPersonList.push(person);
             });
@@ -71,27 +87,28 @@ export const usePersonConfig = defineStore('person', {
             if (person.id == undefined || person.id == null) {
                 return
             }
-            const alreadyPersonListLength= this.personConfig.alreadyPersonList.length
+            const alreadyPersonListLength = this.personConfig.alreadyPersonList.length
             for (let i = 0; i < this.personConfig.allPersonList.length; i++) {
                 if (person.id === this.personConfig.allPersonList[i].id) {
                     this.personConfig.allPersonList[i].isWin = false
-                    this.personConfig.allPersonList[i].prizeName = ''
-                    this.personConfig.allPersonList[i].prizeTime = ''
+                    this.personConfig.allPersonList[i].prizeName = []
+                    this.personConfig.allPersonList[i].prizeTime = []
+                    this.personConfig.allPersonList[i].prizeId = []
 
-                    return
+                    break
                 }
             }
-            for(let i=0;i<alreadyPersonListLength;i++){
-                this.personConfig.alreadyPersonList=this.personConfig.alreadyPersonList.filter((item:IPersonConfig)=>{
-                    return item.id!==person.id
-                })
+            for (let i = 0; i < alreadyPersonListLength; i++) {
+                this.personConfig.alreadyPersonList = this.personConfig.alreadyPersonList.filter((item: IPersonConfig) => 
+                    item.id !== person.id
+                )
             }
         },
         // 删除指定人员
         deletePerson(person: IPersonConfig) {
             if (person.id != undefined || person.id != null) {
                 this.personConfig.allPersonList = this.personConfig.allPersonList.filter((item: IPersonConfig) => item.id !== person.id);
-                this.personConfig.alreadyPersonList = this.personConfig.alreadyPersonList.filter((item: IPersonConfig) => item.id!== person.id);
+                this.personConfig.alreadyPersonList = this.personConfig.alreadyPersonList.filter((item: IPersonConfig) => item.id !== person.id);
             }
         },
         // 删除所有人员
@@ -110,14 +127,15 @@ export const usePersonConfig = defineStore('person', {
             // 把已中奖人员合并到未中奖人员，要验证是否已存在
             this.personConfig.allPersonList.forEach((item: IPersonConfig) => {
                 item.isWin = false;
-                item.prizeName = '';
-                item.prizeTime = '';
+                item.prizeName = [];
+                item.prizeTime = [];
+                item.prizeId = []
             });
-            this.personConfig.alreadyPersonList=[];
+            this.personConfig.alreadyPersonList = [];
         },
         setDefaultPersonList() {
             this.personConfig.allPersonList = defaultPersonList;
-            this.personConfig.alreadyPersonList=[];
+            this.personConfig.alreadyPersonList = [];
         },
         // 重置所有配置
         reset() {
