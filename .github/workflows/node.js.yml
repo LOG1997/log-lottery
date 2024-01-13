@@ -21,13 +21,16 @@ jobs:
 
     steps:
             - uses: actions/checkout@v3
+            - uses: pnpm/action-setup@v2
+              with:
+                version: 8
             - name: Use Node.js ${{ matrix.node-version }}
               uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: 'pnpm'
             - run: pnpm install
-            - run: npnpm builld
+            - run: pnpm builld
             - name: Deploy to gh-pages
               uses: crazy-max/ghaction-github-pages@v2
               with:
