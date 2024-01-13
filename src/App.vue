@@ -40,15 +40,26 @@ const judgeMobile=()=>{
     const isAndroid = ua.indexOf('Android') > -1 || ua.indexOf('Adr') > -1
     const isIOS =!!ua.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
     
-    if(isAndroid||isIOS){
-        tipDialog.value.showModal()
-    }
     system.setIsMobile(isAndroid||isIOS)
+    
+return isAndroid||isIOS
+}
+// 判断是否chrome或者edge访问
+const judgeChromeOrEdge=()=>{
+    const ua = navigator.userAgent
+    const isChrome = ua.indexOf('Chrome') > -1
+    const isEdge = ua.indexOf('Edg') > -1
+
+    system.setIsChrome(isChrome)
+
+return isChrome||isEdge
 }
 onMounted(() => {
     setLocalTheme(localTheme.value)
     setCurrentPrize()
-    judgeMobile()
+    if(judgeMobile()||!judgeChromeOrEdge()){
+        tipDialog.value.showModal()
+    }
 })
 </script>
 
@@ -56,9 +67,10 @@ onMounted(() => {
      <dialog id="my_modal_1" ref="tipDialog" class="border-none modal">
         <div class="modal-box">
             <h3 class="text-lg font-bold">提示!</h3>
-            <p class="py-4">请使用PC进行访问以获得最佳显示效果</p>
+            <p class="py-4" v-if="judgeMobile()">请使用PC进行访问以获得最佳显示效果</p>
+            <p class="py-4" v-if=" !judgeChromeOrEdge()">请使用最新版Chrome或者Edge浏览器</p>
             <div class="modal-action">
-                <form method="dialog" class="flex gap-3 justify-start w-full">
+                <form method="dialog" class="flex justify-start w-full gap-3">
                     <!-- if there is a button in form, it will close the modal -->
                     <button class="btn">确定</button>
                 </form>
