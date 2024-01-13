@@ -31,6 +31,9 @@ jobs:
                   cache: 'pnpm'
             - run: pnpm install
             - run: pnpm build
+            - name: Copy and Rename index.html to dist
+              run: cp dist/index.html dist/404.html
+
             - name: Deploy to gh-pages
               uses: crazy-max/ghaction-github-pages@v2
               with:
@@ -38,3 +41,5 @@ jobs:
                   build_dir: dist
               env:
                   GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+              
+
