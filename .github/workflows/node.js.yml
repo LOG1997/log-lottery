@@ -30,7 +30,7 @@ jobs:
                   node-version: ${{ matrix.node-version }}
                   cache: 'pnpm'
             - run: pnpm install
-            - run: pnpm builld
+            - run: pnpm build
             - name: Deploy to gh-pages
               uses: crazy-max/ghaction-github-pages@v2
               with:
