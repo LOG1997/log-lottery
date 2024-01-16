@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 // 筛选人员数据
-export const filterData = (tableData: any[],localRowCount: number,startIndex=0) => {
+export const filterData = (tableData: any[], localRowCount: number, startIndex = 0) => {
     const dataLength = tableData.length
     let j = 0;
     for (let i = 0; i < dataLength; i++) {
@@ -13,27 +13,28 @@ export const filterData = (tableData: any[],localRowCount: number,startIndex=0) 
         // 是否中奖
         tableData[i].isWin = false
     }
-    
-return tableData
+
+    return tableData
 }
 
-export const addOtherInfo=(personList:any[])=>{
-    const len=personList.length;
-    for(let i=0;i<len;i++){
-        personList[i].createTime=dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss');
-        personList[i].updateTime=dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss');
-        personList[i].prizeName='';
-        personList[i].prizeTime='';
+export const addOtherInfo = (personList: any[]) => {
+    const len = personList.length;
+    for (let i = 0; i < len; i++) {
+        personList[i].createTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss');
+        personList[i].updateTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss');
+        personList[i].prizeName = [] as string[];
+        personList[i].prizeTime = [] as string[];
+        personList[i].prizeId = [];
     }
 
     return personList
 }
 
-export const selectCard=(cardIndexArr:number[],tableLength:number,personId:number):number=>{
-    const cardIndex = Math.round(Math.random() * (tableLength-1));
-    if(cardIndexArr.includes(cardIndex)){
-       return selectCard(cardIndexArr,tableLength,personId)
+export const selectCard = (cardIndexArr: number[], tableLength: number, personId: number): number => {
+    const cardIndex = Math.round(Math.random() * (tableLength - 1));
+    if (cardIndexArr.includes(cardIndex)) {
+        return selectCard(cardIndexArr, tableLength, personId)
     }
-    
-return cardIndex
+
+    return cardIndex
 }
