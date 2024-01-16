@@ -16,6 +16,14 @@ log-lottery是一个可配置可定制化的抽奖应用，炫酷3D球体，可�
 
 使用PC端最新版Chrome或Edge浏览器。
 
+访问地址：
+
+https://24years.top/log-lottery
+
+or
+
+ https://log1997.github.io/log-lottery/
+
 ## 功能描述
 
 - 🕍 炫酷3D球体，年会抽奖必备，开箱即用
