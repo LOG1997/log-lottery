@@ -14,9 +14,12 @@ const settingRef = ref()
 // const audio = ref(new Audio())
 const globalConfig = useStore().globalConfig
 const { getMusicList: localMusicList,getCurrentMusic:currentMusic } = storeToRefs(globalConfig);
-const localMusicListValue = ref(localMusicList)
+// const localMusicListValue = ref(localMusicList)
 
 const play = async (item: any) => {
+    if(!item){
+        return
+    }
     // if (!audio.value.paused && !skip) {
     //     audio.value.pause()
 
@@ -37,6 +40,9 @@ const play = async (item: any) => {
     audio.value.play()
 }
 const playMusic=(item:any,skip = false)=>{
+    if(!item){
+        return
+    }
     if(!currentMusic.value.paused&&!skip){
         globalConfig.setCurrentMusic(item,true)
         
@@ -46,13 +52,13 @@ return
 }
 const nextPlay = () => {
     // 播放下一首
-    if (localMusicListValue.value.length > 1) {
-        let index = localMusicListValue.value.findIndex((item: any) => item.name == currentMusic.value.item.name)
+    if (localMusicList.value.length >= 1) {
+        let index = localMusicList.value.findIndex((item: any) => item.name == currentMusic.value.item.name)
         index++
-        if (index >= localMusicListValue.value.length) {
+        if (index >= localMusicList.value.length) {
             index = 0
         }
-        globalConfig.setCurrentMusic(localMusicListValue.value[index],false)
+        globalConfig.setCurrentMusic(localMusicList.value[index],false)
     }
 }
 // 监听播放成后开始下一首
@@ -68,7 +74,7 @@ const enterHome = () => {
 }
 
 onMounted(() => {
-    globalConfig.setCurrentMusic(localMusicListValue.value[0],true)
+    globalConfig.setCurrentMusic(localMusicList.value[0],true)
     onPlayEnd()
     // 不使用空格控制audio
 })
@@ -101,7 +107,7 @@ watch(currentMusic, (val: any) => {
             </div>
         </div>
 
-        <div class="tooltip tooltip-left" :data-tip="currentMusic ? currentMusic.item.name+'\n\r &nbsp; 右键下一曲' : '播放/暂停'">
+        <div class="tooltip tooltip-left" :data-tip="currentMusic.item ? currentMusic.item.name+'\n\r &nbsp; 右键下一曲' : '没有音乐可以播放'">
             <div class="flex items-center justify-center w-10 h-10 p-0 m-0 cursor-pointer setting-container bg-slate-500/50 rounded-l-xl hover:bg-slate-500/80 hover:text-blue-400/90"
                 @click="playMusic(currentMusic.item)" @click.right.prevent="nextPlay">
                 <svg-icon :name="currentMusic.paused ? 'play' : 'pause'"></svg-icon>
