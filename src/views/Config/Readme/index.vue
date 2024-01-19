@@ -1,11 +1,10 @@
 <script setup lang='ts'>
 import {ref,onMounted} from 'vue'
 import markdownit from 'markdown-it'
-
 const md = markdownit()
 const readmeHtml=ref('')
 const readMd=()=>{
-    fetch('/src/views/Config/Readme/readme.md')
+    fetch('/readme.md')
     .then(res=>res.text())
     .then(res=>{
         readmeHtml.value = md.render(res)
