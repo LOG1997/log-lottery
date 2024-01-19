@@ -42,6 +42,7 @@
         "@tailwindcss/typography": "^0.5.10",
         "@testing-library/vue": "^8.0.0",
         "@types/canvas-confetti": "^1.6.4",
+        "@types/markdown-it": "^13.0.7",
         "@types/node": "^20.9.0",
         "@types/three": "^0.160.0",
         "@typescript-eslint/eslint-plugin": "^6.11.0",
