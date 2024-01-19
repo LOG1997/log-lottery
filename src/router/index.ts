@@ -98,7 +98,16 @@ export const configRoutes={
                 }
             }
         ]
-      }
+      },
+      {
+        path: '/log-lottery/config/readme',
+        name: 'Readme',
+        component: () => import('@/views/Config/Readme/index.vue'),
+        meta:{
+            title: '操作说明',
+            icon: 'readme'
+        }
+      },
     ]
   }
 const routes = [

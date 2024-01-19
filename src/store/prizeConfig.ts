@@ -83,15 +83,9 @@ return state.prizeConfig.prizeList;
         },
         // 更新奖项数据
         updatePrizeConfig(prizeConfigItem: IPrizeConfig) {
-            // const index = this.prizeConfig.prizeList.findIndex(item => item.id === prizeConfigItem.id);
-            // this.prizeConfig.prizeList[index] = prizeConfigItem;
-            // if(prizeConfigItem.isUsed&&index+1<this.prizeConfig.prizeList.length){
-            //     // 设置下一个为currentPrize
-            //     this.setCurrentPrize(this.prizeConfig.prizeList[index+1]);
-            // }
-            if(prizeConfigItem.isUsed&&this.prizeConfig.prizeList.length){
-                // 设置下一个为currentPrize
-                for(let i=0;i<this.prizeConfig.prizeList.length;i++){
+            const prizeListLength=this.prizeConfig.prizeList.length;
+            if(prizeConfigItem.isUsed&&prizeListLength){
+                for(let i=0;i<prizeListLength;i++){
                     if(!this.prizeConfig.prizeList[i].isUsed){
                         this.setCurrentPrize(this.prizeConfig.prizeList[i]);
                         break;
