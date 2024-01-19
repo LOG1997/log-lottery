@@ -4,7 +4,7 @@ import markdownit from 'markdown-it'
 const md = markdownit()
 const readmeHtml=ref('')
 const readMd=()=>{
-    fetch('/readme.md')
+    fetch('/log-lottery/readme.md')
     .then(res=>res.text())
     .then(res=>{
         readmeHtml.value = md.render(res)
