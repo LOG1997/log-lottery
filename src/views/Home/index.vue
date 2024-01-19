@@ -369,7 +369,7 @@ const startLottery = () => {
         return
     }
     // 验证是否已抽完全部奖项
-    if (currentPrize.value.isUsed||!currentPrize.value) {
+    if (currentPrize.value.isUsed || !currentPrize.value) {
         toast.open({
             message: '抽奖抽完了',
             type: 'warning',
@@ -471,8 +471,8 @@ const continueLottery = async () => {
         currentPrize.value.isUsed = true
         currentPrize.value.isUsedCount = currentPrize.value.count
     }
-        personConfig.addAlreadyPersonList(luckyTargets.value, currentPrize.value)
-        prizeConfig.updatePrizeConfig(currentPrize.value)
+    personConfig.addAlreadyPersonList(luckyTargets.value, currentPrize.value)
+    prizeConfig.updatePrizeConfig(currentPrize.value)
     await enterLottery()
 }
 const quitLottery = () => {
@@ -546,10 +546,10 @@ const randomBallData = (mod: 'default' | 'lucky' | 'sphere' = 'default') => {
     // 两秒执行一次
     intervalTimer.value = setInterval(() => {
         // 产生随机数数组
-        const indexLength=4
-        const cardRandomIndexArr:number[]=[]
-        const personRandomIndexArr:number[]=[]
-        for(let i=0;i<indexLength;i++){
+        const indexLength = 4
+        const cardRandomIndexArr: number[] = []
+        const personRandomIndexArr: number[] = []
+        for (let i = 0; i < indexLength; i++) {
             cardRandomIndexArr.push(Math.round(Math.random() * (tableData.value.length - 1)))
             personRandomIndexArr.push(Math.round(Math.random() * (allPersonList.value.length - 1)))
         }
@@ -558,16 +558,48 @@ const randomBallData = (mod: 'default' | 'lucky' | 'sphere' = 'default') => {
         }
     }, 200)
 }
+// 监听键盘
+const listenKeyboard = () => {
+    window.addEventListener('keydown', (e: any) => {
+        if ((e.keyCode !== 32 || e.keyCode !== 27) && !canOperate.value) {
+            return
+        }
+        if (e.keyCode === 27 && currentStatus.value === 3) {
+            quitLottery()
+        }
+        if(e.keyCode!==32){
+            return
+        }
+        switch (currentStatus.value) {
+            case 0:
+                enterLottery()
+                break;
+            case 1:
+                startLottery()
+                break;
+            case 2:
+                stopLottery()
+                break;
+            case 3:
+                continueLottery()
+                break;
+            default:
+                break;
+        }
+    })
+}
 onMounted(() => {
     initTableData();
     init();
     animation();
     containerRef.value!.style.color = `${textColor}`
     randomBallData()
+    listenKeyboard()
 });
 onUnmounted(() => {
     clearInterval(intervalTimer.value)
     intervalTimer.value = null
+    window.removeEventListener('keydown', listenKeyboard)
 })
 // watch(() => currentPrize.value.isUsed, (val) => {
 //     if (val) {

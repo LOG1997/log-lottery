@@ -1,8 +1,10 @@
 import { createApp } from 'vue';
 import './style.css';
+import './style/markdown.css'
 import './style/style.scss'
 import * as THREE from 'three';
 import App from './App.vue';
+import VueDOMPurifyHTML from 'vue-dompurify-html'
 
 const app = createApp(App);
 // 全局svg组件
@@ -19,4 +21,4 @@ pinia.use(piniaPluginPersist);
 
 app.config.globalProperties.$THREE = THREE; //挂载到原型
 app.component('svg-icon', svgIcon);
-app.use(router).use(pinia).mount('#app');
+app.use(router).use(VueDOMPurifyHTML).use(pinia).mount('#app');
