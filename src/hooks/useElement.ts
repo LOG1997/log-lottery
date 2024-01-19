@@ -3,7 +3,7 @@ import { IPersonConfig } from '@/types/storeType'
 
 export const useElementStyle = (element: any, person: IPersonConfig, index: number, patternList: number[], patternColor: string, cardColor: string, cardSize: { width: number, height: number }, textSize: number, mod: 'default' | 'lucky'|'sphere' = 'default') => {
     if (patternList.includes(index+1)&&mod=='default') {
-        element.style.backgroundColor = rgba(patternColor, Math.random() * 0.5 + 0.5)
+        element.style.backgroundColor = rgba(patternColor, Math.random() * 0.2 + 0.8)
     }
     else if(mod=='sphere'||mod=='default') {
         element.style.backgroundColor = rgba(cardColor, Math.random() * 0.5 + 0.25)
