@@ -44,7 +44,6 @@ const submitTemporaryPrize = () => {
     temporaryPrize.value.isShow = true
     temporaryPrize.value.id=new Date().getTime().toString()
     prizeConfig.setCurrentPrize(temporaryPrize.value)
-    prizeConfig.setCurrentPrize(temporaryPrize.value)
 }
 onMounted(() => {
     prizeListContainerRef.value.style.height = getPrizeListHeight() + 'px'
