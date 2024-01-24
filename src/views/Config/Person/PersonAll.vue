@@ -159,6 +159,8 @@ onMounted(() => {
         </div>
     </dialog>
     <div class="min-w-1000px">
+        
+        <h2>人员管理</h2>
         <div class="flex gap-3 justify-">
             <button class="btn btn-error btn-sm" @click="delAllDataDialog.showModal()">全部删除</button>
             <div class="tooltip tooltip-bottom" data-tip="下载文件后，请在excel中填写数据，并保存为xlsx格式">
