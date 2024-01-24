@@ -76,15 +76,7 @@ export const defaultPrizeList = <IPrizeConfig[]>[
         },
         separateCount: {
             enable: true,
-            countList: [{
-                id: '0',
-                count: 6,
-                isUsedCount: 0,
-            }, {
-                id: '1',
-                count: 6,
-                isUsedCount: 0,
-            }]
+            countList: []
         },
         desc: '三等奖',
         isShow: true,

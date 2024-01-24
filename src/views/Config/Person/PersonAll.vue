@@ -135,7 +135,7 @@ onMounted(() => {
     <dialog id="my_modal_1" ref="resetDataDialog" class="border-none modal">
         <div class="modal-box">
             <h3 class="text-lg font-bold">提示!</h3>
-            <p class="py-4">该操作会重置所有人员数据，是否继续？</p>
+            <p class="py-4">该操作会清空人员中奖信息，是否继续？</p>
             <div class="modal-action">
                 <form method="dialog" class="flex gap-3">
                     <!-- if there is a button in form, it will close the modal -->
@@ -161,7 +161,7 @@ onMounted(() => {
     <div class="min-w-1000px">
         
         <h2>人员管理</h2>
-        <div class="flex gap-3 justify-">
+        <div class="flex gap-3">
             <button class="btn btn-error btn-sm" @click="delAllDataDialog.showModal()">全部删除</button>
             <div class="tooltip tooltip-bottom" data-tip="下载文件后，请在excel中填写数据，并保存为xlsx格式">
                 <a class="no-underline btn btn-secondary btn-sm" download="人口登记表.xlsx" target="_blank"
@@ -180,7 +180,7 @@ onMounted(() => {
                 <!-- <button class="btn btn-primary btn-sm">上传excel</button> -->
 
             </div>
-            <button class="btn btn-error btn-sm" @click="resetDataDialog.showModal()">重置数据</button>
+            <button class="btn btn-error btn-sm" @click="resetDataDialog.showModal()">重置人员数据</button>
             <button class="btn btn-accent btn-sm" @click="exportData">导出结果</button>
             <div>
                 <span>中奖人数：</span>

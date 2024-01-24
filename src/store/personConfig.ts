@@ -30,8 +30,8 @@ export const usePersonConfig = defineStore('person', {
             const data = state.personConfig.allPersonList.filter((item: IPersonConfig) => {
                 return !item.prizeId.includes(currentPrize.id as string);
             });
-            
-return data
+
+            return data
         },
         // 获取已中奖人员名单
         getAlreadyPersonList(state) {
@@ -99,7 +99,7 @@ return data
                 }
             }
             for (let i = 0; i < alreadyPersonListLength; i++) {
-                this.personConfig.alreadyPersonList = this.personConfig.alreadyPersonList.filter((item: IPersonConfig) => 
+                this.personConfig.alreadyPersonList = this.personConfig.alreadyPersonList.filter((item: IPersonConfig) =>
                     item.id !== person.id
                 )
             }

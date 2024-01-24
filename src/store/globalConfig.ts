@@ -1,14 +1,14 @@
 import { defineStore } from 'pinia';
-import { defaultMusicList,defaultImageList,defaultPatternList } from './data'
-import {IMusic,IImage} from '@/types/storeType';
+import { defaultMusicList, defaultImageList, defaultPatternList } from './data'
+import { IMusic, IImage } from '@/types/storeType';
 // import { IPrizeConfig } from '@/types/storeType';
 export const useGlobalConfig = defineStore('global', {
     state() {
         return {
             globalConfig: {
                 rowCount: 17,
-                isSHowPrizeList:true,
-                topTitle:'大明内阁六部御前奏对',
+                isSHowPrizeList: true,
+                topTitle: '大明内阁六部御前奏对',
                 theme: {
                     name: 'dark',
                     detail: { primary: '#0f5fd3' },
@@ -16,17 +16,17 @@ export const useGlobalConfig = defineStore('global', {
                     cardWidth: 140,
                     cardHeight: 200,
                     textColor: '#ffffff',
-                    luckyCardColor:'#ECB1AC',
+                    luckyCardColor: '#ECB1AC',
                     textSize: 30,
-                    patternColor:'#1b66c9',
-                    patternList:defaultPatternList as number[],
+                    patternColor: '#1b66c9',
+                    patternList: defaultPatternList as number[],
                 },
                 musicList: defaultMusicList as IMusic[],
-                imageList:defaultImageList as IImage[],
+                imageList: defaultImageList as IImage[],
             },
             currentMusic: {
-                item:defaultMusicList[0],
-                paused:true,
+                item: defaultMusicList[0],
+                paused: true,
             },
         };
     },
@@ -71,11 +71,11 @@ export const useGlobalConfig = defineStore('global', {
             return state.globalConfig.theme.textSize;
         },
         // 获取图案颜色
-        getPatterColor(state){
+        getPatterColor(state) {
             return state.globalConfig.theme.patternColor;
         },
         // 获取图案列表
-        getPatternList(state){
+        getPatternList(state) {
             return state.globalConfig.theme.patternList;
         },
         // 获取音乐列表
@@ -164,10 +164,10 @@ export const useGlobalConfig = defineStore('global', {
             }
         },
         // 设置当前播放音乐
-        setCurrentMusic(musicItem: IMusic,paused:boolean=true) {
-            this.currentMusic={
-                item:musicItem,
-                paused:paused,
+        setCurrentMusic(musicItem: IMusic, paused: boolean = true) {
+            this.currentMusic = {
+                item: musicItem,
+                paused: paused,
             }
         },
         // 重置音乐列表
@@ -179,7 +179,7 @@ export const useGlobalConfig = defineStore('global', {
             this.globalConfig.musicList = [] as IMusic[];
         },
         // 添加图片
-        addImage(image:IImage){
+        addImage(image: IImage) {
             for (let i = 0; i < this.globalConfig.imageList.length; i++) {
                 if (this.globalConfig.imageList[i].name === image.name) {
                     return;
@@ -211,29 +211,28 @@ export const useGlobalConfig = defineStore('global', {
         // 重置所有配置
         reset() {
             this.globalConfig = {
-                rowCount: 12,
-                topTitle:'大明内阁六部御前奏对',
-                isSHowPrizeList:true,
+                rowCount: 17,
+                isSHowPrizeList: true,
+                topTitle: '大明内阁六部御前奏对',
                 theme: {
                     name: 'dark',
                     detail: { primary: '#0f5fd3' },
-                    cardColor: 'rgba(0, 255, 255)',
-                    luckyCardColor:'#ECB1AC',
-                    cardWidth: 200,
-                    cardHeight: 140,
+                    cardColor: '#ff79c6',
+                    cardWidth: 140,
+                    cardHeight: 200,
                     textColor: '#ffffff',
+                    luckyCardColor: '#ECB1AC',
                     textSize: 30,
                     patternColor: '#1b66c9',
-                    patternList:defaultPatternList,
-
+                    patternList: defaultPatternList as number[],
                 },
                 musicList: defaultMusicList as IMusic[],
-                imageList:defaultImageList as IImage[],
+                imageList: defaultImageList as IImage[],
             },
-            this.currentMusic= {
-                item:defaultMusicList[0] as IMusic,
-                paused:true,
-            }
+                this.currentMusic = {
+                    item: defaultMusicList[0],
+                    paused: true,
+                }
         }
     },
     persist: {
