@@ -408,7 +408,7 @@ const stopLottery = async () => {
     
     let leftover = currentPrize.value.count - currentPrize.value.isUsedCount
     const customCount=currentPrize.value.separateCount
-    if(customCount.enable&&customCount.countList.length>0){
+    if(customCount&&customCount.enable&&customCount.countList.length>0){
         for(let i=0;i<customCount.countList.length;i++){
             if(customCount.countList[i].isUsedCount<customCount.countList[i].count){
                 leftover=customCount.countList[i].count-customCount.countList[i].isUsedCount
@@ -466,7 +466,7 @@ const continueLottery = async () => {
     }
 
     const customCount=currentPrize.value.separateCount
-    if(customCount.enable&&customCount.countList.length>0){
+    if(customCount&&customCount.enable&&customCount.countList.length>0){
         for(let i=0;i<customCount.countList.length;i++){
             if(customCount.countList[i].isUsedCount<customCount.countList[i].count){
                 customCount.countList[i].isUsedCount+= luckyCount.value

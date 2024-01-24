@@ -174,7 +174,7 @@ onMounted(() => {
                         <input type="file" class="" id="explore" style="display: none" @change="handleFileChange"
                             :accept="limitType" />
 
-                        <span class="btn btn-primary btn-sm">上传文件</span>
+                        <span class="btn btn-primary btn-sm">导入人员数据</span>
                     </div>
                 </label>
                 <!-- <button class="btn btn-primary btn-sm">上传excel</button> -->

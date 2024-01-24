@@ -67,7 +67,7 @@ const selectPrize = (item: IPrizeConfig) => {
 const changePrizeStatus=(item:IPrizeConfig)=>{
     if(item.isUsed==true){
         item.isUsedCount=0;
-        if(item.separateCount.countList.length){
+        if(item.separateCount&&item.separateCount.countList.length){
             item.separateCount.countList.forEach((countItem:any)=>{
                 countItem.isUsedCount=0;
             })
@@ -75,7 +75,7 @@ const changePrizeStatus=(item:IPrizeConfig)=>{
     }
     else{
         item.isUsedCount=item.count;
-        if(item.separateCount.countList.length){
+        if(item.separateCount&&item.separateCount.countList.length){
             item.separateCount.countList.forEach((countItem:any)=>{
                 countItem.isUsedCount=countItem.count;
             })
@@ -206,7 +206,7 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
                         </option>
                     </select>
                 </label>
-                <label class="w-full max-w-xs mb-10 form-control">
+                <label class="w-full max-w-xs mb-10 form-control" v-if="item.separateCount">
                     <div class="label">
                         <span class="label-text">单次抽取个数</span>
                     </div>
