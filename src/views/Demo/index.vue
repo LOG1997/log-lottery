@@ -1,12 +1,9 @@
 <script setup lang='ts'>
-
-import StarsBackground from '../../components/StarsBackground/index.vue'
-
 </script>
 
 <template>
 <div>
-    <StarsBackground></StarsBackground>
+    <button class="btn btn-error">打印</button>
 </div>
 </template>
 

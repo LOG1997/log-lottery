@@ -8,32 +8,40 @@ export const usePrizeConfig = defineStore('prize', {
                 prizeList: defaultPrizeList,
                 currentPrize: {
                     id: '001',
-                    name: '一等奖',
+                    name: '三等奖',
                     sort: 1,
-                    isAll: true,
-                    count: 1,
-                    isUsedCount:0,
+                    isAll: false,
+                    count: 12,
+                    isUsedCount: 0,
                     picture: {
-                        id: '0',
-                        name: '一等奖',
-                        url: 'https://24years.top/resource/image/image1.png'
+                        id: '2',
+                        name: '三等奖',
+                        url: 'https://24years.top/resource/image/image3.png'
                     },
-                    desc: '一等奖',
+                    separateCount: {
+                        enable: true,
+                        countList: []
+                    },
+                    desc: '三等奖',
                     isShow: true,
                     isUsed: false,
                     frequency: 1,
                 } as IPrizeConfig,
-                temporaryPrize:{
+                temporaryPrize: {
                     id: '',
                     name: '',
                     sort: 0,
                     isAll: false,
                     count: 1,
-                    isUsedCount:0,
+                    isUsedCount: 0,
                     picture: {
                         id: '-1',
                         name: '',
                         url: ''
+                    },
+                    separateCount: {
+                        enable: true,
+                        countList: []
                     },
                     desc: '',
                     isShow: false,
@@ -50,7 +58,7 @@ export const usePrizeConfig = defineStore('prize', {
         },
         // 获取奖品列表
         getPrizeConfig(state) {
-return state.prizeConfig.prizeList;
+            return state.prizeConfig.prizeList;
         },
         // 根据id获取配置
         getPrizeConfigById(state) {
@@ -63,7 +71,7 @@ return state.prizeConfig.prizeList;
             return state.prizeConfig.currentPrize;
         },
         // 获取临时的奖项
-        getTemporaryPrize(state){
+        getTemporaryPrize(state) {
             return state.prizeConfig.temporaryPrize;
         },
 
@@ -83,16 +91,16 @@ return state.prizeConfig.prizeList;
         },
         // 更新奖项数据
         updatePrizeConfig(prizeConfigItem: IPrizeConfig) {
-            const prizeListLength=this.prizeConfig.prizeList.length;
-            if(prizeConfigItem.isUsed&&prizeListLength){
-                for(let i=0;i<prizeListLength;i++){
-                    if(!this.prizeConfig.prizeList[i].isUsed){
+            const prizeListLength = this.prizeConfig.prizeList.length;
+            if (prizeConfigItem.isUsed && prizeListLength) {
+                for (let i = 0; i < prizeListLength; i++) {
+                    if (!this.prizeConfig.prizeList[i].isUsed) {
                         this.setCurrentPrize(this.prizeConfig.prizeList[i]);
                         break;
                     }
                 }
             }
-            else{
+            else {
                 return
             }
             this.resetTemporaryPrize()
@@ -107,19 +115,19 @@ return state.prizeConfig.prizeList;
         },
         // 设置临时奖项
         setTemporaryPrize(prizeItem: IPrizeConfig) {
-            if(prizeItem.isShow==false){
-                for(let i=0;i<this.prizeConfig.prizeList.length;i++){
-                    if(this.prizeConfig.prizeList[i].isUsed==false){
+            if (prizeItem.isShow == false) {
+                for (let i = 0; i < this.prizeConfig.prizeList.length; i++) {
+                    if (this.prizeConfig.prizeList[i].isUsed == false) {
                         this.setCurrentPrize(this.prizeConfig.prizeList[i]);
-                        
-break
+
+                        break
                     }
                 }
                 this.resetTemporaryPrize()
-                
-return
+
+                return
             }
-            
+
             this.prizeConfig.temporaryPrize = prizeItem
         },
         // 重置临时奖项
@@ -130,7 +138,7 @@ return
                 sort: 0,
                 isAll: false,
                 count: 1,
-                isUsedCount:0,
+                isUsedCount: 0,
                 picture: {
                     id: '-1',
                     name: '',
@@ -148,22 +156,26 @@ return
                 prizeList: defaultPrizeList,
                 currentPrize: {
                     id: '001',
-                    name: '一等奖',
+                    name: '三等奖',
                     sort: 1,
-                    isAll: true,
-                    count: 1,
-                    isUsedCount:0,
+                    isAll: false,
+                    count: 12,
+                    isUsedCount: 0,
                     picture: {
-                        id: '0',
-                        name: '一等奖',
-                        url: 'https://24years.top/resource/image/image1.png'
+                        id: '2',
+                        name: '三等奖',
+                        url: 'https://24years.top/resource/image/image3.png'
                     },
-                    desc: '一等奖',
+                    separateCount: {
+                        enable: true,
+                        countList: []
+                    },
+                    desc: '三等奖',
                     isShow: true,
                     isUsed: false,
                     frequency: 1,
                 } as IPrizeConfig,
-                temporaryPrize:{} as IPrizeConfig
+                temporaryPrize: {} as IPrizeConfig
             }
         }
     },

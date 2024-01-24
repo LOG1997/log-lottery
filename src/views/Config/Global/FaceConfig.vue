@@ -13,10 +13,11 @@ import PatternSetting from './components/PatternSetting.vue'
 
 const globalConfig = useStore().globalConfig
 const personConfig = useStore().personConfig
+const prizeConfig= useStore().prizeConfig
 const { getTopTitle: topTitle, getTheme: localTheme, getPatterColor: patternColor, getPatternList: patternList, getCardColor: cardColor, getLuckyColor: luckyCardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowPrizeList: isShowPrizeList } = storeToRefs(globalConfig)
 const { getAlreadyPersonList: alreadyPersonList, getNotPersonList: notPersonList } = storeToRefs(personConfig)
 const colorPickerRef = ref()
-
+const resetDataDialogRef=ref()
 interface ThemeDaType {
     [key: string]: any
 }
@@ -87,6 +88,14 @@ const resetPattern = () => {
     globalConfig.resetPatternList()
 }
 
+const resetData=()=>{
+    globalConfig.reset();
+    personConfig.reset();
+    prizeConfig.resetDefault();
+    // 刷新页面
+    window.location.reload()
+}
+
 // const handleChangeShowFields = (fieldItem: any) => {
 //     formData.value.showField.map((item) => {
 //         if (item.label === fieldItem.label) {
@@ -144,7 +153,24 @@ onMounted(() => {
 </script>
 
 <template>
+     <dialog id="my_modal_1" ref="resetDataDialogRef" class="border-none modal">
+        <div class="modal-box">
+            <h3 class="text-lg font-bold">提示!</h3>
+            <p class="py-4">该操作会重置所有数据，是否继续？</p>
+            <div class="modal-action">
+                <form method="dialog" class="flex gap-3">
+                    <!-- if there is a button in form, it will close the modal -->
+                    <button class="btn" @click="resetDataDialogRef.close()">取消</button>
+                    <button class="btn" @click="resetData">确定</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
     <div>
+        <h2>全局配置</h2>
+        <div class="mb-8">
+            <button class="btn btn-sm btn-primary" @click="resetDataDialogRef.showModal()">重置所有数据</button>
+        </div>
         <label class="flex flex-row items-center w-full gap-24 mb-10 form-control">
             <div class="">
                 <div class="label">

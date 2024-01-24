@@ -403,21 +403,20 @@ const stopLottery = async () => {
     intervalTimer.value = null
     canOperate.value = false
     rollBall(0, 1)
-    // 抽奖池是否为全体人员
-    // 每次最多抽十个
     luckyCount.value = 10
-    const leftover = currentPrize.value.count - currentPrize.value.isUsedCount
-    leftover < luckyCount.value ? luckyCount.value = leftover : luckyCount
-    if (personPool.value.length < leftover) {
-        toast.open({
-            message: '抽奖人数不够',
-            type: 'warning',
-            position: 'top-right',
-            duration: 10000
-        })
-
-        return;
+    // 自定义抽奖个数
+    
+    let leftover = currentPrize.value.count - currentPrize.value.isUsedCount
+    const customCount=currentPrize.value.separateCount
+    if(customCount&&customCount.enable&&customCount.countList.length>0){
+        for(let i=0;i<customCount.countList.length;i++){
+            if(customCount.countList[i].isUsedCount<customCount.countList[i].count){
+                leftover=customCount.countList[i].count-customCount.countList[i].isUsedCount
+                break;
+            }
+        }
     }
+    leftover < luckyCount.value ? luckyCount.value = leftover : luckyCount
     for (let i = 0; i < luckyCount.value; i++) {
         if (personPool.value.length > 0) {
             const randomIndex = Math.round(Math.random() * (personPool.value.length - 1))
@@ -464,6 +463,16 @@ const stopLottery = async () => {
 const continueLottery = async () => {
     if (!canOperate.value) {
         return
+    }
+
+    const customCount=currentPrize.value.separateCount
+    if(customCount&&customCount.enable&&customCount.countList.length>0){
+        for(let i=0;i<customCount.countList.length;i++){
+            if(customCount.countList[i].isUsedCount<customCount.countList[i].count){
+                customCount.countList[i].isUsedCount+= luckyCount.value
+                break;
+            }
+        }
     }
     currentPrize.value.isUsedCount += luckyCount.value
     luckyCount.value = 0

@@ -105,6 +105,8 @@ const tableColumnsDetail = [
 
 <template>
     <div class="overflow-y-auto">
+        
+        <h2>已中奖人员管理</h2>
         <div class="flex items-center justify-start gap-10">
             <!-- <button class="btn btn-error btn-sm" @click="deleteAll">全部删除</button> -->
             <div>
