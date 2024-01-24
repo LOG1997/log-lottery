@@ -11,7 +11,6 @@ declare module 'vue' {
     EditSeparateDialog: typeof import('./components/NumberSeparate/EditSeparateDialog.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     ImageSync: typeof import('./components/ImageSync/index.vue')['default']
-    NumberSeparate: typeof import('./components/NumberSeparate/index.vue')['default']
     PlayMusic: typeof import('./components/PlayMusic/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

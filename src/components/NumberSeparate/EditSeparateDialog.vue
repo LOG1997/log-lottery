@@ -54,15 +54,12 @@ watch(totalNumber, (val) => {
     }
     separatedNumberRef.value.showModal()
     scaleList.value = new Array(separatedNumber.value.length + 1).fill(totalNumber.value)
-    console.log('code line-56 \n\r😀 scaleList.value:\n\r',scaleList.value);
     for (let i = separatedNumber.value.length - 1; i >= 0; i--) {
         scaleList.value[i] = scaleList.value[i + 1] - separatedNumber.value[i].count
     }
     if(scaleList.value[0]!==0){
         scaleList.value.unshift(0)
     }
-    
-    console.log('code line-56 \n\r😀 scaleList.value:\n\r',scaleList.value);
 })
 onMounted(() => {
     // 阻止esc事件
