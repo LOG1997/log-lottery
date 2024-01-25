@@ -34,8 +34,8 @@ const editScale = (item: number) => {
     }
 }
 const clearData = () => {
+    emits('clearData',separatedNumber.value)
     separatedNumberRef.value.close()
-    emits('clearData')
 }
 watch(scaleList, (val: number[]) => {
     separatedNumber.value = []

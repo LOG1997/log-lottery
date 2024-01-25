@@ -83,7 +83,8 @@ const changePrizeStatus=(item:IPrizeConfig)=>{
     }
     item.isUsed=!item.isUsed
 }
-const clearSelectedPrize = () => {
+const clearSelectedPrize = (value:any) => {
+    selectedPrize.value!.separateCount.countList=value;
     selectedPrize.value = null
 }
 const resetDefault = () => {
@@ -124,6 +125,7 @@ onMounted(() => {
 watch(() => prizeList.value, (val: IPrizeConfig[]) => {
     prizeConfig.setPrizeConfig(val)
 }, { deep: true })
+
 
 </script>
 
