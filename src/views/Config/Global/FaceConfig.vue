@@ -1,7 +1,6 @@
 <script setup lang='ts'>
 import { ref, watch, onMounted } from 'vue'
 import useStore from '@/store'
-import { filterData } from '@/utils'
 import { storeToRefs } from 'pinia'
 import { themeChange } from 'theme-change';
 import zod from 'zod';
@@ -69,10 +68,8 @@ const resetPersonLayout = () => {
             return
         }
         const allPersonList = alreadyPersonList.value.concat(notPersonList.value)
-        const newList = filterData(allPersonList, rowCountValue.value)
-
-        const newAlreadyPersonList = newList.slice(0, alreadyLen)
-        const newNotPersonList = newList.slice(alreadyLen, notLen + alreadyLen)
+        const newAlreadyPersonList = allPersonList.slice(0, alreadyLen)
+        const newNotPersonList = allPersonList.slice(alreadyLen, notLen + alreadyLen)
         personConfig.deleteAllPerson()
         personConfig.addNotPersonList(newNotPersonList)
         personConfig.addAlreadyPersonList(newAlreadyPersonList, null)
@@ -238,11 +235,6 @@ onMounted(() => {
                 </div>
                 <input type="number" v-model="cardSizeValue.width" placeholder="Type here"
                     class="w-full max-w-xs input input-bordered" />
-                <div class="help">
-                    <span class="text-sm text-red-400 help-text" v-if="formErr.rowCount">
-                        {{ formErr.rowCount }}
-                    </span>
-                </div>
             </div>
             <div>
                 <div class="label">
@@ -250,11 +242,6 @@ onMounted(() => {
                 </div>
                 <input type="number" v-model="cardSizeValue.height" placeholder="Type here"
                     class="w-full max-w-xs input input-bordered" />
-                <div class="help">
-                    <span class="text-sm text-red-400 help-text" v-if="formErr.rowCount">
-                        {{ formErr.rowCount }}
-                    </span>
-                </div>
             </div>
         </label>
         <label class="w-full max-w-xs mb-10 form-control">

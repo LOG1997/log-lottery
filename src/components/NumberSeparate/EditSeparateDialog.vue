@@ -2,7 +2,6 @@
 import { ref, watch, onMounted, toRefs } from 'vue'
 import { Separate } from '@/types/storeType'
 
-
 const props = defineProps({
     totalNumber: {
         type: Number,
@@ -14,7 +13,7 @@ const props = defineProps({
     }
 })
 
-const emits = defineEmits(['clearData'])
+const emits = defineEmits(['submitData'])
 
 const separatedNumberRef = ref()
 const { separatedNumber, totalNumber } = toRefs(props)
@@ -34,16 +33,16 @@ const editScale = (item: number) => {
     }
 }
 const clearData = () => {
-    emits('clearData',separatedNumber.value)
+    emits('submitData', separatedNumber.value)
     separatedNumberRef.value.close()
 }
 watch(scaleList, (val: number[]) => {
-    separatedNumber.value = []
+    separatedNumber.value.length=0
     for (let i = 1; i < scaleList.value.length; i++) {
-        separatedNumber.value[i-1] = {
+        separatedNumber.value[i - 1] = {
             id: i.toString(),
             count: val[i] - val[i - 1],
-            isUsedCount:0,
+            isUsedCount: 0,
         }
     }
 }, { deep: true })
@@ -53,6 +52,7 @@ watch(totalNumber, (val) => {
         return
     }
     separatedNumberRef.value.showModal()
+    // scaleList.value = [0, val]
     scaleList.value = new Array(separatedNumber.value.length + 1).fill(totalNumber.value)
     for (let i = separatedNumber.value.length - 1; i >= 0; i--) {
         scaleList.value[i] = scaleList.value[i + 1] - separatedNumber.value[i].count
@@ -79,7 +79,7 @@ onMounted(() => {
             <div class="flex justify-between px-3 text-center separated-number">
                 <div v-for="item in props.totalNumber" :key="item"
                     class="relative flex flex-col items-center cursor-pointer">
-                    <div class="absolute mb-12 text-center tooltip -top-5 hover:text-lg" data-tip="左键切割右键取消"
+                    <div class="absolute mb-12 text-center tooltip -top-5 hover:text-lg" data-tip="左键切割"
                         @click.left="editScale(item)">
                         <span> {{ item }}</span>
                     </div>

@@ -6,27 +6,23 @@ import { IPersonConfig } from '@/types/storeType';
 import { storeToRefs } from 'pinia'
 import * as XLSX from 'xlsx'
 import { readFileBinary } from '@/utils/file'
-import { filterData, addOtherInfo } from '@/utils'
+import { addOtherInfo } from '@/utils'
 import DaiysuiTable from '@/components/DaiysuiTable/index.vue'
 
 const personConfig = useStore().personConfig
-const globalConfig = useStore().globalConfig
 const { getAllPersonList: allPersonList, getAlreadyPersonList: alreadyPersonList } = storeToRefs(personConfig)
-const { getRowCount: rowCount } = storeToRefs(globalConfig)
 const limitType = '.xlsx,.xls'
-const excelData = ref<any[]>([])
 // const personList = ref<any[]>([])
 
-const resetDataDialog=ref()
-const delAllDataDialog=ref()
+const resetDataDialog = ref()
+const delAllDataDialog = ref()
 
 const handleFileChange = async (e: Event) => {
     let dataBinary = await readFileBinary(((e.target as HTMLInputElement).files as FileList)[0]!)
     let workBook = XLSX.read(dataBinary, { type: 'binary', cellDates: true })
     let workSheet = workBook.Sheets[workBook.SheetNames[0]]
-    excelData.value = XLSX.utils.sheet_to_json(workSheet)
-    const uploadData = filterData(excelData.value, rowCount.value)
-    const allData = addOtherInfo(uploadData);
+    const excelData = XLSX.utils.sheet_to_json(workSheet)
+    const allData = addOtherInfo(excelData);
     personConfig.resetPerson()
     personConfig.addNotPersonList(allData)
 }
@@ -47,8 +43,8 @@ const exportData = () => {
             data[i].isWin = '否'
         }
         // 格式化数组为
-        data[i].prizeTime=data[i].prizeTime.join(',')
-        data[i].prizeName=data[i].prizeName.join(',')
+        data[i].prizeTime = data[i].prizeTime.join(',')
+        data[i].prizeName = data[i].prizeName.join(',')
     }
     let dataString = JSON.stringify(data)
     dataString = dataString
@@ -159,7 +155,7 @@ onMounted(() => {
         </div>
     </dialog>
     <div class="min-w-1000px">
-        
+
         <h2>人员管理</h2>
         <div class="flex gap-3">
             <button class="btn btn-error btn-sm" @click="delAllDataDialog.showModal()">全部删除</button>

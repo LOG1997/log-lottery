@@ -64,27 +64,43 @@ const selectPrize = (item: IPrizeConfig) => {
     }
 }
 
-const changePrizeStatus=(item:IPrizeConfig)=>{
-    if(item.isUsed==true){
-        item.isUsedCount=0;
-        if(item.separateCount&&item.separateCount.countList.length){
-            item.separateCount.countList.forEach((countItem:any)=>{
-                countItem.isUsedCount=0;
-            })
-        }
-    }
-    else{
-        item.isUsedCount=item.count;
-        if(item.separateCount&&item.separateCount.countList.length){
-            item.separateCount.countList.forEach((countItem:any)=>{
-                countItem.isUsedCount=countItem.count;
-            })
-        }
-    }
-    item.isUsed=!item.isUsed
+const changePrizeStatus = (item: IPrizeConfig) => {
+    // if (item.isUsed == true) {
+    //     item.isUsedCount = 0;
+    //     if (item.separateCount && item.separateCount.countList.length) {
+    //         item.separateCount.countList.forEach((countItem: any) => {
+    //             countItem.isUsedCount = 0;
+    //         })
+    //     }
+    // }
+    // else {
+    //     item.isUsedCount = item.count;
+    //     if (item.separateCount && item.separateCount.countList.length) {
+    //         item.separateCount.countList.forEach((countItem: any) => {
+    //             countItem.isUsedCount = countItem.count;
+    //         })
+    //     }
+    // }
+    item.isUsed?item.isUsedCount=0:item.isUsedCount=item.count;
+    item.separateCount.countList = []
+    item.isUsed = !item.isUsed
 }
-const clearSelectedPrize = (value:any) => {
-    selectedPrize.value!.separateCount.countList=value;
+
+const changePrizePerson = (item: IPrizeConfig) => {
+    let indexPrize = -1;
+    for (let i = 0; i < prizeList.value.length; i++) {
+        if (prizeList.value[i].id == item.id) {
+            indexPrize = i;
+            break;
+        }
+    }
+    if (indexPrize > -1) {
+        prizeList.value[indexPrize].separateCount.countList = []
+        prizeList.value[indexPrize].isUsed?prizeList.value[indexPrize].isUsedCount=prizeList.value[indexPrize].count:prizeList.value[indexPrize].isUsedCount=0
+    }
+}
+const submitData = (value: any) => {
+    selectedPrize.value!.separateCount.countList = value;
     selectedPrize.value = null
 }
 const resetDefault = () => {
@@ -176,9 +192,9 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
                     <div class="label">
                         <span class="label-text">抽奖人数</span>
                     </div>
-                    <input type="number" v-model="item.count" placeholder="获奖人数"
+                    <input type="number" v-model="item.count" placeholder="获奖人数" @change="changePrizePerson(item)"
                         class="w-full max-w-xs p-0 m-0 input-sm input input-bordered" />
-                    <div class="tooltip tooltip-bottom" :data-tip="'已抽取:'+item.isUsedCount + '/' + item.count">
+                    <div class="tooltip tooltip-bottom" :data-tip="'已抽取:' + item.isUsedCount + '/' + item.count">
                         <progress class="w-full progress" :value="item.isUsedCount" :max="item.count"></progress>
                     </div>
                 </label>
@@ -193,8 +209,7 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
                     <div class="label">
                         <span class="label-text">已抽取</span>
                     </div>
-                    <input type="checkbox" :checked="item.isUsed"
-                        @change="changePrizeStatus(item)"
+                    <input type="checkbox" :checked="item.isUsed" @change="changePrizeStatus(item)"
                         class="mt-2 border-solid checkbox checkbox-secondary border-1" />
                 </label>
                 <label class="w-full max-w-xs mb-10 form-control">
@@ -217,11 +232,12 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
                             v-if="item.separateCount.countList.length">
                             <li class="relative flex items-center justify-center w-8 h-8 bg-slate-600/60 separated"
                                 v-for="se in item.separateCount.countList" :key="se.id">
-                                <div class="flex items-center justify-center w-full h-full tooltip" :data-tip="'已抽取:'+se.isUsedCount + '/' + se.count">
-                                <div class="absolute left-0 z-50 h-full bg-blue-300/80"
-                                    :style="`width:${se.isUsedCount * 100 / se.count}%`"></div>
-                                <span>{{ se.count }}</span>
-                            </div>
+                                <div class="flex items-center justify-center w-full h-full tooltip"
+                                    :data-tip="'已抽取:' + se.isUsedCount + '/' + se.count">
+                                    <div class="absolute left-0 z-50 h-full bg-blue-300/80"
+                                        :style="`width:${se.isUsedCount * 100 / se.count}%`"></div>
+                                    <span>{{ se.count }}</span>
+                                </div>
                             </li>
                         </ul>
                         <button v-else class="btn btn-secondary btn-xs">设置</button>
@@ -238,7 +254,7 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
             </li>
         </ul>
         <EditSeparateDialog :totalNumber="selectedPrize?.count" :separated-number="selectedPrize?.separateCount.countList"
-            @clearData="clearSelectedPrize" />
+            @submitData="submitData" />
     </div>
 </template>
 
