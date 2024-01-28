@@ -5,6 +5,9 @@ import useStore from '@/store'
 
 import ImageSync from '@/components/ImageSync/index.vue'
 import defaultPrizeImage from '@/assets/images/龙.png'
+import { IPrizeConfig } from '../../types/storeType';
+
+import EditSeparateDialog from '@/components/NumberSeparate/EditSeparateDialog.vue'
 
 const prizeConfig = useStore().prizeConfig
 const globalConfig = useStore().globalConfig
@@ -16,6 +19,7 @@ const prizeListRef = ref()
 const prizeListContainerRef = ref()
 
 const temporaryPrizeRef = ref()
+const selectedPrize = ref<IPrizeConfig | null>()
 // 获取prizeListRef高度
 const getPrizeListHeight = () => {
     let height = 200;
@@ -45,8 +49,44 @@ const submitTemporaryPrize = () => {
     temporaryPrize.value.id=new Date().getTime().toString()
     prizeConfig.setCurrentPrize(temporaryPrize.value)
 }
+const selectPrize = (item: IPrizeConfig) => {
+    selectedPrize.value = item
+    selectedPrize.value.isUsedCount = 0
+    selectedPrize.value.isUsed = false
+
+    if (selectedPrize.value.separateCount.countList.length > 1) {
+        return
+    }
+    selectedPrize.value.separateCount = {
+        enable: true,
+        countList: [
+            {
+                id: '0',
+                count: item.count,
+                isUsedCount: 0,
+            }
+        ]
+    }
+}
+const submitData = (value: any) => {
+    selectedPrize.value!.separateCount.countList = value;
+    selectedPrize.value = null
+}
+const changePersonCount=()=>{
+    temporaryPrize.value.separateCount.countList=[]
+}
+const setCurrentPrize=()=>{
+for(let i=0;i<localPrizeList.value.length;i++){
+    if(localPrizeList.value[i].isUsedCount<localPrizeList.value[i].count){
+        prizeConfig.setCurrentPrize(localPrizeList.value[i])
+        
+return
+    }
+}
+}
 onMounted(() => {
     prizeListContainerRef.value.style.height = getPrizeListHeight() + 'px'
+    setCurrentPrize()
 })
 </script>
 
@@ -75,7 +115,7 @@ onMounted(() => {
                         <div class="label">
                             <span class="label-text">获奖人数</span>
                         </div>
-                        <input type="number" v-model="temporaryPrize.count" placeholder="获奖人数"
+                        <input type="number" v-model="temporaryPrize.count" @change="changePersonCount" placeholder="获奖人数"
                             class="max-w-xs input-sm input input-bordered" />
                     </label>
                     <label class="flex w-full max-w-xs">
@@ -85,14 +125,26 @@ onMounted(() => {
                         <input disabled type="number" v-model="temporaryPrize.isUsedCount" placeholder="获奖人数"
                             class="max-w-xs input-sm input input-bordered" />
                     </label>
-                    <label class="flex w-full max-w-xs">
-                        <div class="label">
-                            <span class="label-text">已抽取</span>
-                        </div>
-                        <input type="checkbox" :checked="temporaryPrize.isUsed"
-                            @change="temporaryPrize.isUsed ? (() => { temporaryPrize.isUsed = false; temporaryPrize.isUsedCount = 0 })() : (() => { temporaryPrize.isUsed = true; temporaryPrize.isUsedCount = temporaryPrize.count })()"
-                            class="mt-2 border-solid checkbox checkbox-secondary border-1" />
-                    </label>
+                    <label class="flex w-full max-w-xs" v-if="temporaryPrize.separateCount">
+                    <div class="label">
+                        <span class="label-text">单次抽取个数</span>
+                    </div>
+                    <div class="flex justify-start h-full" @click="selectPrize(temporaryPrize)">
+                        <ul class="flex flex-wrap w-full h-full gap-1 p-0 pt-1 m-0 cursor-pointer"
+                            v-if="temporaryPrize.separateCount.countList.length">
+                            <li class="relative flex items-center justify-center w-8 h-8 bg-slate-600/60 separated"
+                                v-for="se in temporaryPrize.separateCount.countList" :key="se.id">
+                                <div class="flex items-center justify-center w-full h-full tooltip"
+                                    :data-tip="'已抽取:' + se.isUsedCount + '/' + se.count">
+                                    <div class="absolute left-0 z-50 h-full bg-blue-300/80"
+                                        :style="`width:${se.isUsedCount * 100 / se.count}%`"></div>
+                                    <span>{{ se.count }}</span>
+                                </div>
+                            </li>
+                        </ul>
+                        <button v-else class="btn btn-secondary btn-xs">设置</button>
+                    </div>
+                </label>
                     <label class="flex w-full max-w-xs">
                         <div class="label">
                             <span class="label-text">图片</span>
@@ -115,7 +167,8 @@ onMounted(() => {
                 </div>
             </div>
         </dialog>
-
+        <EditSeparateDialog :totalNumber="selectedPrize?.count" :separated-number="selectedPrize?.separateCount.countList"
+            @submitData="submitData" />
         <div ref="prizeListContainerRef">
             <div class="h-20 w-72" :class="temporaryPrize.isShow ? 'current-prize' : ''" v-if="temporaryPrize.isShow">
                 <div class="relative flex flex-row items-center justify-between w-full h-full shadow-xl card bg-base-100">
@@ -195,10 +248,7 @@ onMounted(() => {
                         </div>
                     </div>
                 </div>
-
-
             </transition>
-
         </div>
 
         <transition name="prize-operate" :appear="true">

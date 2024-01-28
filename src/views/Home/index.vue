@@ -68,16 +68,18 @@ function initTableData() {
         return
     }
     const totalCount = rowCount.value * 7
-    tableData.value = JSON.parse(JSON.stringify(allPersonList.value))
-    const tableDataLength = tableData.value.length
-    if (tableDataLength < totalCount) {
-        const repeatCount = Math.ceil(totalCount / tableDataLength)
+    const orginPersonData = JSON.parse(JSON.stringify(allPersonList.value))
+    const orginPersonLength = orginPersonData.length
+    if (orginPersonLength < totalCount) {
+        const repeatCount = Math.ceil(totalCount / orginPersonLength)
         // 复制数据
         for (let i = 0; i < repeatCount; i++) {
-            tableData.value = tableData.value.concat(JSON.parse(JSON.stringify(tableData.value)))
+            tableData.value = tableData.value.concat(JSON.parse(JSON.stringify(orginPersonData)))
         }
     }
-
+    else{
+        tableData.value=orginPersonData.slice(0, totalCount)
+    }
     tableData.value = filterData(tableData.value.slice(0, totalCount), rowCount.value)
 }
 const init = () => {
@@ -354,9 +356,11 @@ const enterLottery = async () => {
         randomBallData()
     }
     if (patternList.value.length) {
-        patternList.value.forEach((item: number) => {
-            objects.value[item - 1].element.style.backgroundColor = rgba(cardColor.value, Math.random() * 0.5 + 0.25)
-        })
+        for(let i=0;i<patternList.value.length;i++){
+            if(i<rowCount.value*7){
+                objects.value[patternList.value[i]-1].element.style.backgroundColor = rgba(cardColor.value, Math.random() * 0.5 + 0.25)
+            }
+        }
     }
     canOperate.value = false
     await transform(targets.sphere, 1000)
@@ -391,27 +395,15 @@ const startLottery = () => {
 
         return;
     }
-    currentStatus.value = 2
-    rollBall(10, 3000)
-}
-
-const stopLottery = async () => {
-    if (!canOperate.value) {
-        return
-    }
-    clearInterval(intervalTimer.value)
-    intervalTimer.value = null
-    canOperate.value = false
-    rollBall(0, 1)
     luckyCount.value = 10
     // 自定义抽奖个数
-    
+
     let leftover = currentPrize.value.count - currentPrize.value.isUsedCount
-    const customCount=currentPrize.value.separateCount
-    if(customCount&&customCount.enable&&customCount.countList.length>0){
-        for(let i=0;i<customCount.countList.length;i++){
-            if(customCount.countList[i].isUsedCount<customCount.countList[i].count){
-                leftover=customCount.countList[i].count-customCount.countList[i].isUsedCount
+    const customCount = currentPrize.value.separateCount
+    if (customCount && customCount.enable && customCount.countList.length > 0) {
+        for (let i = 0; i < customCount.countList.length; i++) {
+            if (customCount.countList[i].isUsedCount < customCount.countList[i].count) {
+                leftover = customCount.countList[i].count - customCount.countList[i].isUsedCount
                 break;
             }
         }
@@ -424,6 +416,25 @@ const stopLottery = async () => {
             personPool.value.splice(randomIndex, 1)
         }
     }
+    toast.open({
+        message: `现在抽取${currentPrize.value.name} ${leftover}人`,
+        type:'default',
+        position: 'top-right',
+        duration: 8000
+    })
+    currentStatus.value = 2
+    rollBall(10, 3000)
+}
+
+const stopLottery = async () => {
+    if (!canOperate.value) {
+        return
+    }
+    clearInterval(intervalTimer.value)
+    intervalTimer.value = null
+    canOperate.value = false
+    rollBall(0, 1)
+
     const windowSize = { width: window.innerWidth, height: window.innerHeight }
     luckyTargets.value.forEach((person: IPersonConfig, index: number) => {
         let cardIndex = selectCard(luckyCardList.value, tableData.value.length, person.id)
@@ -465,11 +476,11 @@ const continueLottery = async () => {
         return
     }
 
-    const customCount=currentPrize.value.separateCount
-    if(customCount&&customCount.enable&&customCount.countList.length>0){
-        for(let i=0;i<customCount.countList.length;i++){
-            if(customCount.countList[i].isUsedCount<customCount.countList[i].count){
-                customCount.countList[i].isUsedCount+= luckyCount.value
+    const customCount = currentPrize.value.separateCount
+    if (customCount && customCount.enable && customCount.countList.length > 0) {
+        for (let i = 0; i < customCount.countList.length; i++) {
+            if (customCount.countList[i].isUsedCount < customCount.countList[i].count) {
+                customCount.countList[i].isUsedCount += luckyCount.value
                 break;
             }
         }
@@ -576,7 +587,7 @@ const listenKeyboard = () => {
         if (e.keyCode === 27 && currentStatus.value === 3) {
             quitLottery()
         }
-        if(e.keyCode!==32){
+        if (e.keyCode !== 32) {
             return
         }
         switch (currentStatus.value) {

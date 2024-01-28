@@ -67,7 +67,7 @@ export const defaultPrizeList = <IPrizeConfig[]>[
         name: '三等奖',
         sort: 1,
         isAll: false,
-        count: 12,
+        count: 3,
         isUsedCount: 0,
         picture: {
             id: '2',
@@ -88,7 +88,7 @@ export const defaultPrizeList = <IPrizeConfig[]>[
         name: '二等奖',
         sort: 2,
         isAll: false,
-        count: 1,
+        count: 2,
         isUsedCount: 0,
         picture: {
             id: '1',
@@ -168,6 +168,48 @@ export const defaultPrizeList = <IPrizeConfig[]>[
         frequency: 1,
     }
 ]
+export const defaultCurrentPrize = <IPrizeConfig>{
+    id: '001',
+    name: '三等奖',
+    sort: 1,
+    isAll: false,
+    count: 12,
+    isUsedCount: 0,
+    picture: {
+        id: '2',
+        name: '三等奖',
+        url: 'https://24years.top/resource/image/image3.png'
+    },
+    separateCount: {
+        enable: true,
+        countList: []
+    },
+    desc: '三等奖',
+    isShow: true,
+    isUsed: false,
+    frequency: 1,
+}
+export const defaultTemporaryPrize = <IPrizeConfig>{
+    id: '',
+    name: '',
+    sort: 0,
+    isAll: false,
+    count: 1,
+    isUsedCount: 0,
+    picture: {
+        id: '-1',
+        name: '',
+        url: ''
+    },
+    separateCount: {
+        enable: true,
+        countList: []
+    },
+    desc: '',
+    isShow: false,
+    isUsed: false,
+    frequency: 1,
+}
 
 export const defaultImageList = [
     {

@@ -1,32 +1,12 @@
 import { defineStore } from 'pinia';
 import { IPrizeConfig } from '@/types/storeType';
-import { defaultPrizeList } from './data';
+import { defaultPrizeList, defaultCurrentPrize } from './data';
 export const usePrizeConfig = defineStore('prize', {
     state() {
         return {
             prizeConfig: {
                 prizeList: defaultPrizeList,
-                currentPrize: {
-                    id: '001',
-                    name: '三等奖',
-                    sort: 1,
-                    isAll: false,
-                    count: 12,
-                    isUsedCount: 0,
-                    picture: {
-                        id: '2',
-                        name: '三等奖',
-                        url: 'https://24years.top/resource/image/image3.png'
-                    },
-                    separateCount: {
-                        enable: true,
-                        countList: []
-                    },
-                    desc: '三等奖',
-                    isShow: true,
-                    isUsed: false,
-                    frequency: 1,
-                } as IPrizeConfig,
+                currentPrize: defaultCurrentPrize,
                 temporaryPrize: {
                     id: '',
                     name: '',
@@ -144,6 +124,10 @@ export const usePrizeConfig = defineStore('prize', {
                     name: '',
                     url: ''
                 },
+                separateCount: {
+                    enable: true,
+                    countList: []
+                },
                 desc: '',
                 isShow: false,
                 isUsed: false,
@@ -154,28 +138,28 @@ export const usePrizeConfig = defineStore('prize', {
         resetDefault() {
             this.prizeConfig = {
                 prizeList: defaultPrizeList,
-                currentPrize: {
-                    id: '001',
-                    name: '三等奖',
-                    sort: 1,
+                currentPrize: defaultCurrentPrize,
+                temporaryPrize: {
+                    id: '',
+                    name: '',
+                    sort: 0,
                     isAll: false,
-                    count: 12,
+                    count: 1,
                     isUsedCount: 0,
                     picture: {
-                        id: '2',
-                        name: '三等奖',
-                        url: 'https://24years.top/resource/image/image3.png'
+                        id: '-1',
+                        name: '',
+                        url: ''
                     },
                     separateCount: {
                         enable: true,
                         countList: []
                     },
-                    desc: '三等奖',
-                    isShow: true,
+                    desc: '',
+                    isShow: false,
                     isUsed: false,
                     frequency: 1,
-                } as IPrizeConfig,
-                temporaryPrize: {} as IPrizeConfig
+                } as IPrizeConfig
             }
         }
     },

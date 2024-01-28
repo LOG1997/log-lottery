@@ -10,7 +10,7 @@ export const useGlobalConfig = defineStore('global', {
                 isSHowPrizeList: true,
                 topTitle: '大明内阁六部御前奏对',
                 theme: {
-                    name: 'dark',
+                    name: 'dracula',
                     detail: { primary: '#0f5fd3' },
                     cardColor: '#ff79c6',
                     cardWidth: 140,
@@ -215,7 +215,7 @@ export const useGlobalConfig = defineStore('global', {
                 isSHowPrizeList: true,
                 topTitle: '大明内阁六部御前奏对',
                 theme: {
-                    name: 'dark',
+                    name: 'dracula',
                     detail: { primary: '#0f5fd3' },
                     cardColor: '#ff79c6',
                     cardWidth: 140,
