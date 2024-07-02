@@ -10,7 +10,7 @@ import Icons from 'unplugin-icons/vite';
 import IconsResolver from 'unplugin-icons/resolver';
 import { visualizer } from 'rollup-plugin-visualizer';
 import viteCompression from 'vite-plugin-compression';
-
+// import vueDevTools from 'vite-plugin-vue-devtools'
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, __dirname);
@@ -20,6 +20,7 @@ export default defineConfig(({ mode }) => {
         base:'/log-lottery/',
         plugins: [
             vue(),
+            // vueDevTools(),
             viteCompression({
                 verbose: true,
                 disable: false,
