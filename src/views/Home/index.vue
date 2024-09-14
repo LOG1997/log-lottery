@@ -574,6 +574,9 @@ const randomBallData = (mod: 'default' | 'lucky' | 'sphere' = 'default') => {
             personRandomIndexArr.push(Math.round(Math.random() * (allPersonList.value.length - 1)))
         }
         for (let i = 0; i < cardRandomIndexArr.length; i++) {
+            if (!objects.value[cardRandomIndexArr[i]]) {
+                continue;
+            }
             objects.value[cardRandomIndexArr[i]].element = useElementStyle(objects.value[cardRandomIndexArr[i]].element, allPersonList.value[personRandomIndexArr[i]], cardRandomIndexArr[i], patternList.value, patternColor.value, cardColor.value, { width: cardSize.value.width, height: cardSize.value.height }, textSize.value, mod)
         }
     }, 200)
