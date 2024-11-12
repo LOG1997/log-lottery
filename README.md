@@ -20,7 +20,7 @@ log-lottery是一个可配置可定制化的抽奖应用，炫酷3D球体，可�
 
 访问地址：
 
-https://24years.top/log-lottery
+https://1kw20.fun/log-lottery
 
 or
 
