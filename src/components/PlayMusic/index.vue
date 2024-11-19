@@ -94,7 +94,7 @@ watch(currentMusic, (val: any) => {
 
 <template>
     <div class="flex flex-col gap-3" ref="settingRef">
-        <div v-if="route.path.includes('/config')" class="tooltip tooltip-left" data-tip="主页">
+        <div v-if="route.path.includes('/config')" class="tooltip tooltip-left" :data-tip="$t('tooltip.toHome')">
             <div class="flex items-center justify-center w-10 h-10 p-0 m-0 cursor-pointer setting-container bg-slate-500/50 rounded-l-xl hover:bg-slate-500/80 hover:text-blue-400/90"
                 @click="enterHome">
                 <svg-icon name="home"></svg-icon>

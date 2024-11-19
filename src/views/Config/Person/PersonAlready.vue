@@ -106,17 +106,17 @@ const tableColumnsDetail = [
 <template>
     <div class="overflow-y-auto">
         
-        <h2>已中奖人员管理</h2>
+        <h2>{{ $t('viewTitle.winnerManagement') }}</h2>
         <div class="flex items-center justify-start gap-10">
             <!-- <button class="btn btn-error btn-sm" @click="deleteAll">全部删除</button> -->
             <div>
-                <span>中奖人数：</span>
+                <span>{{$t('table.luckyPeopleNumber')}}：</span>
                 <span>{{ alreadyPersonList.length }}</span>
             </div>
             <div class="flex flex-col">
                 <div class="form-control">
                     <label class="cursor-pointer label">
-                        <span class="label-text">详细信息:</span>
+                        <span class="label-text">{{$t('table.detail')}}:</span>
                         <input type="checkbox" class="border-solid toggle toggle-primary border-1" v-model="isDetail" />
                     </label>
                 </div>

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Layout from '@/layout/index.vue';
 import Home from '@/views/Home/index.vue';
+import i18n from '@/locales/i18n'
 export const configRoutes={
     path: '/log-lottery/config',
     name: 'Config',
@@ -15,7 +16,7 @@ export const configRoutes={
         name: 'PersonConfig',
         component: () => import('@/views/Config/Person/PersonConfig.vue'),
         meta: {
-          title: '人员配置',
+          title: i18n.global.t('sidebar.personConfiguration'),
           icon: 'person',
         },
         children:[
@@ -28,7 +29,7 @@ export const configRoutes={
                 name:'AllPersonConfig',
                 component:()=>import('@/views/Config/Person/PersonAll.vue'),
                 meta:{
-                    title:'人员名单',
+                    title:i18n.global.t('sidebar.personList'),
                     icon:'all'
                 }
             },
@@ -37,7 +38,7 @@ export const configRoutes={
                 name:'AlreadyPerson',
                 component:()=>import('@/views/Config/Person/PersonAlready.vue'),
                 meta:{
-                    title:'中奖名单人员',
+                    title:i18n.global.t('sidebar.winnerList'),
                     icon:'already'
                 }
             },
@@ -57,7 +58,7 @@ export const configRoutes={
         name: 'PrizeConfig',
         component: () => import('@/views/Config/Prize/PrizeConfig.vue'),
         meta:{
-            title: '奖品配置',
+            title: i18n.global.t('sidebar.prizeConfiguration'),
             icon: 'prize'
         }
       },
@@ -66,7 +67,7 @@ export const configRoutes={
         name:'GlobalConfig',
         redirect: '/log-lottery/config/global/all',
         meta:{
-            title:'全局配置',
+            title:i18n.global.t('sidebar.globalSetting'),
             icon:'global'
         },
         children:[
@@ -75,7 +76,7 @@ export const configRoutes={
                 name:'FaceConfig',
                 component:()=>import('@/views/Config/Global/FaceConfig.vue'),
                 meta:{
-                    title:'界面配置',
+                    title:i18n.global.t('sidebar.viewSetting'),
                     icon:'face'
                 }
             },
@@ -84,7 +85,7 @@ export const configRoutes={
                 name:'ImageConfig',
                 component:()=>import('@/views/Config/Global/ImageConfig.vue'),
                 meta:{
-                    title:'图片列表',
+                    title:i18n.global.t('sidebar.imagesManagement'),
                     icon:'image'
                 }
             },
@@ -93,7 +94,7 @@ export const configRoutes={
                 name:'MusicConfig',
                 component:()=>import('@/views/Config/Global/MusicConfig.vue'),
                 meta:{
-                    title:'音乐列表',
+                    title:i18n.global.t('sidebar.musicManagement'),
                     icon:'music'
                 }
             }
@@ -104,7 +105,7 @@ export const configRoutes={
         name: 'Readme',
         component: () => import('@/views/Config/Readme/index.vue'),
         meta:{
-            title: '操作说明',
+            title: i18n.global.t('sidebar.operatingInstructions')  ,
             icon: 'readme'
         }
       },

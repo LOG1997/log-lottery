@@ -30,6 +30,7 @@
         "three-css3d": "^1.0.6",
         "vue": "^3.4.31",
         "vue-dompurify-html": "^5.1.0",
+        "vue-i18n": "^10.0.4",
         "vue-router": "^4.4.0",
         "vue-toast-notification": "^3",
         "vue3-colorpicker": "^2.3.0",

@@ -64,10 +64,10 @@ const skip = (path: string) => {
     </div>
     <footer class="p-10 rounded footer footer-center bg-base-200 text-base-content">
         <nav class="grid grid-flow-col gap-4">
-            <a class="cursor-pointer link link-hover text-inherit" target="_blank" href="https://1kw20.fun">行有不得，反求诸己</a>
+            <a class="cursor-pointer link link-hover text-inherit" target="_blank" href="https://1kw20.fun">{{ $t('footer.self-reflection') }}</a>
         </nav>
         <nav>
-            <a class="cursor-pointer link link-hover text-inherit" target="_blank" href="https://1kw20.fun">破山中贼易，破心中贼难</a>
+            <a class="cursor-pointer link link-hover text-inherit" target="_blank" href="https://1kw20.fun">{{ $t('footer.thiefEasy') }}</a>
         </nav>
         <nav>
             <div class="grid grid-flow-col gap-4">

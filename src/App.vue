@@ -66,13 +66,13 @@ onMounted(() => {
 <template>
      <dialog id="my_modal_1" ref="tipDialog" class="border-none modal">
         <div class="modal-box">
-            <h3 class="text-lg font-bold">提示!</h3>
-            <p class="py-4" v-if="judgeMobile()">请使用PC进行访问以获得最佳显示效果</p>
-            <p class="py-4" v-if=" !judgeChromeOrEdge()">请使用最新版Chrome或者Edge浏览器</p>
+            <h3 class="text-lg font-bold">{{ $t('dialog.titleTip') }}</h3>
+            <p class="py-4" v-if="judgeMobile()">{{ $t('dialog.dialogPCWeb') }}</p>
+            <p class="py-4" v-if=" !judgeChromeOrEdge()">{{ $t('dialog.dialogLatestBrowser') }}</p>
             <div class="modal-action">
                 <form method="dialog" class="flex justify-start w-full gap-3">
                     <!-- if there is a button in form, it will close the modal -->
-                    <button class="btn">确定</button>
+                    <button class="btn">{{ $t('button.confirm') }}</button>
                 </form>
             </div>
         </div>

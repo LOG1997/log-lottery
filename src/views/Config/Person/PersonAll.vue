@@ -130,26 +130,26 @@ onMounted(() => {
 <template>
     <dialog id="my_modal_1" ref="resetDataDialog" class="border-none modal">
         <div class="modal-box">
-            <h3 class="text-lg font-bold">提示!</h3>
-            <p class="py-4">该操作会清空人员中奖信息，是否继续？</p>
+            <h3 class="text-lg font-bold">{{ $t('dialog.titleTip') }}</h3>
+            <p class="py-4">{{ $t('dialog.dialogResetWinner') }}</p>
             <div class="modal-action">
                 <form method="dialog" class="flex gap-3">
                     <!-- if there is a button in form, it will close the modal -->
-                    <button class="btn" @click="resetDataDialog.close()">取消</button>
-                    <button class="btn" @click="resetData">确定</button>
+                    <button class="btn" @click="resetDataDialog.close()">{{ $t('button.cancel') }}</button>
+                    <button class="btn" @click="resetData">{{ $t('dialog.confirm') }}</button>
                 </form>
             </div>
         </div>
     </dialog>
     <dialog id="my_modal_1" ref="delAllDataDialog" class="border-none modal">
         <div class="modal-box">
-            <h3 class="text-lg font-bold">提示!</h3>
-            <p class="py-4">该操作会删除所有人员数据，是否继续？</p>
+            <h3 class="text-lg font-bold">{{ $t('dialog.titleTip') }}</h3>
+            <p class="py-4">{{ $t('dialog.dialogDelAllPerson') }}</p>
             <div class="modal-action">
                 <form method="dialog" class="flex gap-3">
                     <!-- if there is a button in form, it will close the modal -->
-                    <button class="btn" @click="delAllDataDialog.close()">取消</button>
-                    <button class="btn" @click="deleteAll">确定</button>
+                    <button class="btn" @click="delAllDataDialog.close()">{{ $t('button.cancel') }}</button>
+                    <button class="btn" @click="deleteAll">{{ $t('button.confirm') }}</button>
                 </form>
             </div>
         </div>
@@ -158,28 +158,28 @@ onMounted(() => {
 
         <h2>人员管理</h2>
         <div class="flex gap-3">
-            <button class="btn btn-error btn-sm" @click="delAllDataDialog.showModal()">全部删除</button>
-            <div class="tooltip tooltip-bottom" data-tip="下载文件后，请在excel中填写数据，并保存为xlsx格式">
+            <button class="btn btn-error btn-sm" @click="delAllDataDialog.showModal()">{{ $t('button.allDelete') }}</button>
+            <div class="tooltip tooltip-bottom" :data-tip="$t('tooltip.downloadTemplateTip')">
                 <a class="no-underline btn btn-secondary btn-sm" download="人口登记表.xlsx" target="_blank"
-                    href="/log-lottery/人口登记表.xlsx">下载模板</a>
+                    href="/log-lottery/人口登记表.xlsx">{{ $t('button.downloadTemplate') }}</a>
             </div>
             <div class="">
                 <label for="explore">
 
-                    <div class="tooltip tooltip-bottom" data-tip="上传修改好的excel文件">
+                    <div class="tooltip tooltip-bottom" :data-tip="$t('tooltip.uploadExcelTip')">
                         <input type="file" class="" id="explore" style="display: none" @change="handleFileChange"
                             :accept="limitType" />
 
-                        <span class="btn btn-primary btn-sm">导入人员数据</span>
+                        <span class="btn btn-primary btn-sm">{{ $t('button.importData') }}</span>
                     </div>
                 </label>
                 <!-- <button class="btn btn-primary btn-sm">上传excel</button> -->
 
             </div>
-            <button class="btn btn-error btn-sm" @click="resetDataDialog.showModal()">重置人员数据</button>
-            <button class="btn btn-accent btn-sm" @click="exportData">导出结果</button>
+            <button class="btn btn-error btn-sm" @click="resetDataDialog.showModal()">{{ $t('button.resetData') }}</button>
+            <button class="btn btn-accent btn-sm" @click="exportData">{{ $t('button.exportResult') }}</button>
             <div>
-                <span>中奖人数：</span>
+                <span>{{$t('table.luckyPeopleNumber')}}:</span>
                 <span>{{ alreadyPersonList.length }}</span>
                 <span>&nbsp;/&nbsp;</span>
                 <span>{{ allPersonList.length }}</span>

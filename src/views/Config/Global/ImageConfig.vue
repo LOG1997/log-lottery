@@ -84,7 +84,7 @@ watch(() => imgUploadToast.value, (val) => {
             <label for="explore">
                 <input type="file" class="" id="explore" style="display: none" @change="handleFileChange"
                     :accept="limitType" />
-                <span class="btn btn-primary btn-sm">上传图片</span>
+                <span class="btn btn-primary btn-sm">{{ $t('button.upload') }}</span>
             </label>
         </div>
         <ul class="p-0">
@@ -100,7 +100,7 @@ watch(() => imgUploadToast.value, (val) => {
                         <div class="overflow-hidden font-bold whitespace-nowrap text-ellipsis">{{ item.name}}</div>
                     </div>
                     <div>
-                        <button class="btn btn-error btn-xs" @click="removeImage(item)">删除</button>
+                        <button class="btn btn-error btn-xs" @click="removeImage(item)">{{ $t('button.upload') }}</button>
                     </div>
                 </div>
             </li>

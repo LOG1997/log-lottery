@@ -147,11 +147,11 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
 
 <template>
     <div>
-        <h2>奖项配置</h2>
+        <h2>{{ $t('viewTitle.prizeManagement') }}</h2>
         <div class="flex w-full gap-3">
-            <button class="btn btn-info btn-sm" @click="addPrize">添加</button>
-            <button class="btn btn-info btn-sm" @click="resetDefault">默认列表</button>
-            <button class="btn btn-error btn-sm" @click="delAll">全部删除</button>
+            <button class="btn btn-info btn-sm" @click="addPrize">{{$t('button.add')}}</button>
+            <button class="btn btn-info btn-sm" @click="resetDefault">{{$t('button.resetDefault')}}</button>
+            <button class="btn btn-error btn-sm" @click="delAll">{{$t('button.allDelete')}}</button>
 
         </div>
         <div role="alert" class="w-full my-4 alert alert-info">
@@ -159,7 +159,7 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <span>进行操作可能会重置数据，请谨慎操作</span>
+            <span>{{$t('dialog.tipResetPrize')}}</span>
         </div>
         <ul class="p-0 m-0">
             <li v-for="item in prizeList" :key="item.id" class="flex gap-10"
@@ -176,25 +176,25 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
                 </label>
                 <label class="w-1/2 max-w-xs mb-10 form-control">
                     <div class="label">
-                        <span class="label-text">名称</span>
+                        <span class="label-text">{{ $t('table.prizeName') }}</span>
                     </div>
                     <input type="text" v-model="item.name" placeholder="名称"
                         class="w-full max-w-xs input-sm input input-bordered" />
                 </label>
                 <label class="w-1/2 max-w-xs mb-10 form-control">
                     <div class="label">
-                        <span class="label-text">全员参加</span>
+                        <span class="label-text">{{ $t('table.fullParticipation') }}</span>
                     </div>
                     <input type="checkbox" :checked="item.isAll" @change="item.isAll = !item.isAll"
                         class="mt-2 border-solid checkbox checkbox-secondary border-1" />
                 </label>
                 <label class="w-1/2 max-w-xs mb-10 form-control">
                     <div class="label">
-                        <span class="label-text">抽奖人数</span>
+                        <span class="label-text">{{ $t('table.numberParticipants') }}</span>
                     </div>
                     <input type="number" v-model="item.count" placeholder="获奖人数" @change="changePrizePerson(item)"
                         class="w-full max-w-xs p-0 m-0 input-sm input input-bordered" />
-                    <div class="tooltip tooltip-bottom" :data-tip="'已抽取:' + item.isUsedCount + '/' + item.count">
+                    <div class="tooltip tooltip-bottom" :data-tip="$t('table.isDone') + item.isUsedCount + '/' + item.count">
                         <progress class="w-full progress" :value="item.isUsedCount" :max="item.count"></progress>
                     </div>
                 </label>
@@ -207,14 +207,14 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
                 </label> -->
                 <label class="w-1/2 max-w-xs mb-10 form-control">
                     <div class="label">
-                        <span class="label-text">已抽取</span>
+                        <span class="label-text">{{ $t('table.isDone') }}</span>
                     </div>
                     <input type="checkbox" :checked="item.isUsed" @change="changePrizeStatus(item)"
                         class="mt-2 border-solid checkbox checkbox-secondary border-1" />
                 </label>
                 <label class="w-full max-w-xs mb-10 form-control">
                     <div class="label">
-                        <span class="label-text">图片</span>
+                        <span class="label-text">{{ $t('table.image') }}</span>
                     </div>
                     <select class="w-full max-w-xs select select-warning select-sm" v-model="item.picture">
                         <option v-if="item.picture.id" :value="{ id: '', name: '', url: '' }"><span>❌</span></option>
@@ -225,7 +225,7 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
                 </label>
                 <label class="w-full max-w-xs mb-10 form-control" v-if="item.separateCount">
                     <div class="label">
-                        <span class="label-text">单次抽取个数</span>
+                        <span class="label-text">{{ $t('table.onceNumber') }}</span>
                     </div>
                     <div class="flex justify-start w-full h-full" @click="selectPrize(item)">
                         <ul class="flex flex-wrap w-full h-full gap-1 p-0 pt-1 m-0 cursor-pointer"
@@ -240,15 +240,15 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
                                 </div>
                             </li>
                         </ul>
-                        <button v-else class="btn btn-secondary btn-xs">设置</button>
+                        <button v-else class="btn btn-secondary btn-xs">{{ $t('button.setting') }}</button>
                     </div>
                 </label>
                 <label class="w-full max-w-xs mb-10 form-control">
                     <div class="label">
-                        <span class="label-text">操作</span>
+                        <span class="label-text">{{ $t('table.operation') }}</span>
                     </div>
                     <div class="flex gap-2">
-                        <button class="btn btn-error btn-sm" @click="delItem(item)">删除</button>
+                        <button class="btn btn-error btn-sm" @click="delItem(item)">{{ $t('button.delete') }}</button>
                     </div>
                 </label>
             </li>

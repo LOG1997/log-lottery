@@ -74,13 +74,13 @@ onMounted(() => {
 <template>
     <div>
         <div class="flex gap-3">
-            <button class="btn btn-primary btn-sm" @click="resetMusic">重置音乐列表</button>
+            <button class="btn btn-primary btn-sm" @click="resetMusic">{{ $t('button.reset') }}</button>
             <label for="explore">
                 <input type="file" class="" id="explore" style="display: none" @change="handleFileChange"
                     :accept="limitType" />
-                <span class="btn btn-primary btn-sm">上传音乐</span>
+                <span class="btn btn-primary btn-sm">{{ $t('button.upload') }}</span>
             </label>
-            <button class="btn btn-error btn-sm" @click="deleteAll">删除所有</button>
+            <button class="btn btn-error btn-sm" @click="deleteAll">{{ $t('button.allDelete') }}</button>
         </div>
         <div>
             <ul class="p-0">
@@ -90,8 +90,8 @@ onMounted(() => {
                             {{ item.name }}</span>
                     </div>
                     <div class="flex gap-3">
-                        <button class="btn btn-primary btn-xs" @click="play(item)">播放</button>
-                        <button class="btn btn-error btn-xs" @click="deleteMusic(item)">删除</button>
+                        <button class="btn btn-primary btn-xs" @click="play(item)">{{ $t('button.play') }}</button>
+                        <button class="btn btn-error btn-xs" @click="deleteMusic(item)">{{ $t('button.delete') }}</button>
                     </div>
                 </li>
             </ul>

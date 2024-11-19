@@ -9,11 +9,12 @@ import { ColorPicker } from 'vue3-colorpicker';
 import 'vue3-colorpicker/style.css';
 import { isRgbOrRgba, isHex } from '@/utils/color'
 import PatternSetting from './components/PatternSetting.vue'
-
+import {languageList} from '@/locales/i18n'
+import {Language} from '@/locales/i18n'
 const globalConfig = useStore().globalConfig
 const personConfig = useStore().personConfig
 const prizeConfig= useStore().prizeConfig
-const { getTopTitle: topTitle, getTheme: localTheme, getPatterColor: patternColor, getPatternList: patternList, getCardColor: cardColor, getLuckyColor: luckyCardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowPrizeList: isShowPrizeList } = storeToRefs(globalConfig)
+const { getTopTitle: topTitle, getTheme: localTheme, getPatterColor: patternColor, getPatternList: patternList, getCardColor: cardColor, getLuckyColor: luckyCardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowPrizeList: isShowPrizeList,getLanguage:userLanguage } = storeToRefs(globalConfig)
 const { getAlreadyPersonList: alreadyPersonList, getNotPersonList: notPersonList } = storeToRefs(personConfig)
 const colorPickerRef = ref()
 const resetDataDialogRef=ref()
@@ -29,6 +30,7 @@ const textColorValue = ref(structuredClone(textColor.value))
 const cardSizeValue = ref(structuredClone(cardSize.value))
 const textSizeValue = ref(structuredClone(textSize.value))
 const rowCountValue = ref(structuredClone(rowCount.value))
+const languageValue=ref(structuredClone(userLanguage.value))
 const isShowPrizeListValue = ref(structuredClone(isShowPrizeList.value))
 const patternColorValue = ref(structuredClone(patternColor.value))
 const themeList = ref(Object.keys(daisyuiThemes))
@@ -145,6 +147,9 @@ watch(cardSizeValue, (val: { width: number; height: number; }) => {
     watch(isShowPrizeListValue, () => {
         globalConfig.setIsShowPrizeList(isShowPrizeListValue.value)
     })
+watch(languageValue,(val:string)=>{
+    globalConfig.setLanguage(val)
+})
 onMounted(() => {
 })
 </script>
@@ -152,13 +157,13 @@ onMounted(() => {
 <template>
      <dialog id="my_modal_1" ref="resetDataDialogRef" class="border-none modal">
         <div class="modal-box">
-            <h3 class="text-lg font-bold">提示!</h3>
-            <p class="py-4">该操作会重置所有数据，是否继续？</p>
+            <h3 class="text-lg font-bold">{{$t('dialog.titleTip')}}</h3>
+            <p class="py-4">{{ $t('dialog.dialogResetAllData') }}</p>
             <div class="modal-action">
                 <form method="dialog" class="flex gap-3">
                     <!-- if there is a button in form, it will close the modal -->
-                    <button class="btn" @click="resetDataDialogRef.close()">取消</button>
-                    <button class="btn" @click="resetData">确定</button>
+                    <button class="btn" @click="resetDataDialogRef.close()">{{$t(`button.cancel`)}}</button>
+                    <button class="btn" @click="resetData">{{$t('button.confirm')}}</button>
                 </form>
             </div>
         </div>
@@ -166,12 +171,12 @@ onMounted(() => {
     <div>
         <h2>全局配置</h2>
         <div class="mb-8">
-            <button class="btn btn-sm btn-primary" @click="resetDataDialogRef.showModal()">重置所有数据</button>
+            <button class="btn btn-sm btn-primary" @click="resetDataDialogRef.showModal()">{{$t('button.resetAllData')}}</button>
         </div>
         <label class="flex flex-row items-center w-full gap-24 mb-10 form-control">
             <div class="">
                 <div class="label">
-                    <span class="label-text">标题</span>
+                    <span class="label-text">{{$t('table.title')}}</span>
                 </div>
                 <input type="text" v-model="topTitleValue" placeholder="输入标题"
                     class="w-full max-w-xs input input-bordered" />
@@ -180,7 +185,7 @@ onMounted(() => {
         <label class="flex flex-row items-center w-full gap-24 mb-10 form-control">
             <div class="">
                 <div class="label">
-                    <span class="label-text">列数</span>
+                    <span class="label-text">{{$t('table.columnNumber')}}</span>
                 </div>
                 <input type="number" v-model="formData.rowCount" placeholder="Type here"
                     class="w-full max-w-xs input input-bordered" />
@@ -191,9 +196,9 @@ onMounted(() => {
                 </div>
             </div>
             <div>
-                <div class="tooltip" data-tip="该项比较耗费时间和性能">
+                <div class="tooltip" :data-tip="$t('tooltip.resetLayout')">
                     <button class="mt-5 btn btn-info btn-sm" :disabled="isRowCountChange != 1" @click="resetPersonLayout">
-                        <span>重设布局</span>
+                        <span>{{$t('button.setLayout')}}</span>
                         <span class="loading loading-ring loading-md" v-show="isRowCountChange == 2"></span>
                     </button>
                 </div>
@@ -201,22 +206,31 @@ onMounted(() => {
         </label>
         <label class="w-full max-w-xs form-control">
             <div class="label">
-                <span class="label-text">选择主题</span>
+                <span class="label-text">{{$t('table.language')}}</span>
+            </div>
+            <select data-choose-theme class="w-full max-w-xs border-solid select border-1" v-model="languageValue">
+                <option disabled selected>{{$t('table.language')}}</option>
+                <option v-for="item in languageList" :key="item.key" :value="item.key">{{ item.name }}</option>
+            </select>
+        </label>
+        <label class="w-full max-w-xs form-control">
+            <div class="label">
+                <span class="label-text">{{$t('table.theme')}}</span>
             </div>
             <select data-choose-theme class="w-full max-w-xs border-solid select border-1" v-model="themeValue">
-                <option disabled selected>选取主题</option>
+                <option disabled selected>{{$t('table.theme')}}</option>
                 <option v-for="(item, index) in themeList" :key="index" :value="item">{{ item }}</option>
             </select>
         </label>
         <label class="w-full max-w-xs form-control">
             <div class="label">
-                <span class="label-text">卡片颜色</span>
+                <span class="label-text">{{$t('table.cardColor')}}</span>
             </div>
             <ColorPicker ref="colorPickerRef" v-model="cardColorValue" v-model:pure-color="cardColorValue"></ColorPicker>
         </label>
         <label class="w-full max-w-xs form-control">
             <div class="label">
-                <span class="label-text">中奖卡片颜色</span>
+                <span class="label-text">{{$t('table.winnerColor')}}</span>
             </div>
             <ColorPicker ref="colorPickerRef" v-model="luckyCardColorValue" v-model:pure-color="luckyCardColorValue">
             </ColorPicker>
@@ -224,21 +238,21 @@ onMounted(() => {
 
         <label class="w-full max-w-xs form-control">
             <div class="label">
-                <span class="label-text">文字颜色</span>
+                <span class="label-text">{{$t('table.textColor')}}</span>
             </div>
             <ColorPicker ref="colorPickerRef" v-model="textColorValue" v-model:pure-color="textColorValue"></ColorPicker>
         </label>
         <label class="flex flex-row w-full max-w-xs gap-10 mb-10 form-control">
             <div>
                 <div class="label">
-                    <span class="label-text">卡片宽度</span>
+                    <span class="label-text">{{$t('table.cardWidth')}}</span>
                 </div>
                 <input type="number" v-model="cardSizeValue.width" placeholder="Type here"
                     class="w-full max-w-xs input input-bordered" />
             </div>
             <div>
                 <div class="label">
-                    <span class="label-text">卡片高度</span>
+                    <span class="label-text">{{$t('table.cardHeight')}}</span>
                 </div>
                 <input type="number" v-model="cardSizeValue.height" placeholder="Type here"
                     class="w-full max-w-xs input input-bordered" />
@@ -246,14 +260,14 @@ onMounted(() => {
         </label>
         <label class="w-full max-w-xs mb-10 form-control">
             <div class="label">
-                <span class="label-text">文字大小</span>
+                <span class="label-text">{{$t('table.textSize')}}</span>
             </div>
             <input type="number" v-model="textSizeValue" placeholder="Type here"
                 class="w-full max-w-xs input input-bordered" />
         </label>
         <label class="w-full max-w-xs form-control">
             <div class="label">
-                <span class="label-text">高亮颜色</span>
+                <span class="label-text">{{$t('table.highlightColor')}}</span>
             </div>
             <ColorPicker ref="colorPickerRef" v-model="patternColorValue" v-model:pure-color="patternColorValue">
             </ColorPicker>
@@ -261,7 +275,7 @@ onMounted(() => {
         <label class="flex flex-row items-center w-full gap-24 mb-0 form-control">
             <div>
                 <div class="label">
-                    <span class="label-text">图案设置</span>
+                    <span class="label-text">{{$t('table.patternSetting')}}</span>
                 </div>
                 <div class="h-auto">
                     <PatternSetting :rowCount="rowCount" :cardColor="cardColor" :patternColor="patternColor"
@@ -271,18 +285,18 @@ onMounted(() => {
         </label>
         <div class="flex w-full h-24 gap-3 m-0">
             <button class="mt-5 btn btn-info btn-sm" @click.stop="clearPattern">
-                <span>清空图案设置</span>
+                <span>{{ $t('button.clearPattern') }}</span>
             </button>
-            <div class="tooltip" data-tip="默认图案设置针对17列时有效，其他列数请自行设置">
+            <div class="tooltip" :data-tip="$t('tooltip.defaultLayout')">
                 <button class="mt-5 btn btn-info btn-sm" @click="resetPattern">
-                    <span>默认图案设置</span>
+                    <span>{{ $t('button.DefaultPattern') }}</span>
                 </button>
             </div>
         </div>
 
         <label class="w-full max-w-xs mb-10 form-control">
             <div class="label">
-                <span class="label-text">是否常显奖品列表</span>
+                <span class="label-text">{{$t('table.alwaysDisplay')}}</span>
             </div>
             <input type="checkbox" :checked="isShowPrizeListValue" @change="isShowPrizeListValue = !isShowPrizeListValue"
                 class="mt-2 border-solid checkbox checkbox-secondary border-1" />

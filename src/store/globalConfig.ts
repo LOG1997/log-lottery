@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { defaultMusicList, defaultImageList, defaultPatternList } from './data'
 import { IMusic, IImage } from '@/types/storeType';
+import i18n,{Language} from '@/locales/i18n'
 // import { IPrizeConfig } from '@/types/storeType';
 export const useGlobalConfig = defineStore('global', {
     state() {
@@ -9,6 +10,7 @@ export const useGlobalConfig = defineStore('global', {
                 rowCount: 17,
                 isSHowPrizeList: true,
                 topTitle: '大明内阁六部御前奏对',
+                language:'zhCn',
                 theme: {
                     name: 'dracula',
                     detail: { primary: '#0f5fd3' },
@@ -93,8 +95,11 @@ export const useGlobalConfig = defineStore('global', {
         // 获取是否显示奖品列表
         getIsShowPrizeList(state) {
             return state.globalConfig.isSHowPrizeList;
+        },
+        // 获取当前语言
+        getLanguage(state) {
+            return state.globalConfig.language;
         }
-
     },
     actions: {
         // 设置rowCount
@@ -208,12 +213,18 @@ export const useGlobalConfig = defineStore('global', {
         setIsShowPrizeList(isShowPrizeList: boolean) {
             this.globalConfig.isSHowPrizeList = isShowPrizeList;
         },
+        // 设置
+        setLanguage(language: string) {
+            this.globalConfig.language = language;
+            i18n.global.locale.value=language
+        },
         // 重置所有配置
         reset() {
             this.globalConfig = {
                 rowCount: 17,
                 isSHowPrizeList: true,
                 topTitle: '大明内阁六部御前奏对',
+                language: 'zhCn',
                 theme: {
                     name: 'dracula',
                     detail: { primary: '#0f5fd3' },
