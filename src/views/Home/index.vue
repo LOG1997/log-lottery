@@ -5,6 +5,7 @@ import { useElementStyle, useElementPosition } from '@/hooks/useElement'
 import StarsBackground from '@/components/StarsBackground/index.vue'
 import confetti from 'canvas-confetti'
 import { filterData, selectCard } from '@/utils'
+import i18n from '@/locales/i18n'
 import { rgba } from '@/utils/color'
 import { IPersonConfig } from '@/types/storeType'
 // import * as THREE from 'three'
@@ -375,7 +376,7 @@ const startLottery = () => {
     // 验证是否已抽完全部奖项
     if (currentPrize.value.isUsed || !currentPrize.value) {
         toast.open({
-            message: '抽奖抽完了',
+            message: i18n.global.t('error.personIsAllDone'),
             type: 'warning',
             position: 'top-right',
             duration: 10000
@@ -387,7 +388,7 @@ const startLottery = () => {
     // 验证抽奖人数是否还够
     if (personPool.value.length < currentPrize.value.count - currentPrize.value.isUsedCount) {
         toast.open({
-            message: '抽奖人数不够',
+            message: i18n.global.t('error.personNotEnough'),
             type: 'warning',
             position: 'top-right',
             duration: 10000
@@ -417,7 +418,8 @@ const startLottery = () => {
         }
     }
     toast.open({
-        message: `现在抽取${currentPrize.value.name} ${leftover}人`,
+        // message: `现在抽取${currentPrize.value.name} ${leftover}人`,
+        message:i18n.global.t('error.startDraw',{count:currentPrize.value.name,leftover:leftover}),
         type:'default',
         position: 'top-right',
         duration: 8000
@@ -637,19 +639,19 @@ onUnmounted(() => {
             :style="{ fontSize: textSize * 1.5 + 'px', color: textColor }">{{ topTitle }}</h2>
         <div class="flex gap-3">
             <button v-if="tableData.length <= 0" class="cursor-pointer btn btn-outline btn-secondary btn-lg"
-                @click="router.push('config')">暂无人员信息，前往导入</button>
+                @click="router.push('config')">{{$t('button.noInfoAndImport')}}</button>
             <button v-if="tableData.length <= 0" class="cursor-pointer btn btn-outline btn-secondary btn-lg"
-                @click="setDefaultPersonList">使用默认数据</button>
+                @click="setDefaultPersonList">{{$t('button.useDefault')}}</button>
         </div>
     </div>
     <div id="container" ref="containerRef" class="3dContainer">
 
         <!-- 选中菜单结构 start-->
         <div id="menu">
-            <button class="btn-end " @click="enterLottery" v-if="currentStatus == 0 && tableData.length > 0">进入抽奖</button>
+            <button class="btn-end " @click="enterLottery" v-if="currentStatus == 0 && tableData.length > 0">{{$t('button.enterLottery')}}</button>
 
             <div class="start" v-if="currentStatus == 1">
-                <button class="btn-start" @click="startLottery"><strong>开始</strong>
+                <button class="btn-start" @click="startLottery"><strong>{{$t('button.start')}}</strong>
                     <div id="container-stars">
                         <div id="stars"></div>
                     </div>
@@ -661,11 +663,11 @@ onUnmounted(() => {
                 </button>
             </div>
 
-            <button class="btn-end btn glass btn-lg" @click="stopLottery" v-if="currentStatus == 2">抽取幸运儿</button>
+            <button class="btn-end btn glass btn-lg" @click="stopLottery" v-if="currentStatus == 2">{{$t('button.selectLucky')}}</button>
 
             <div v-if="currentStatus == 3" class="flex justify-center gap-6 enStop">
                 <div class="start">
-                    <button class="btn-start" @click="continueLottery"><strong>继续！</strong>
+                    <button class="btn-start" @click="continueLottery"><strong>{{$t('button.continue')}}</strong>
                         <div id="container-stars">
                             <div id="stars"></div>
                         </div>
@@ -678,7 +680,7 @@ onUnmounted(() => {
                 </div>
 
                 <div class="start">
-                    <button class="btn-cancel" @click="quitLottery"><strong>取消</strong>
+                    <button class="btn-cancel" @click="quitLottery"><strong>{{$t('button.cancel')}}</strong>
                         <div id="container-stars">
                             <div id="stars"></div>
                         </div>

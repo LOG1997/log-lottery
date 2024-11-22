@@ -5,7 +5,7 @@ import useStore from '@/store'
 import { IPersonConfig } from '@/types/storeType';
 import { storeToRefs } from 'pinia';
 import DaiysuiTable from '@/components/DaiysuiTable/index.vue'
-
+import i18n from '@/locales/i18n'
 const personConfig = useStore().personConfig
 
 const { getAlreadyPersonList: alreadyPersonList, getAlreadyPersonDetail: alreadyPersonDetail } = storeToRefs(personConfig)
@@ -25,32 +25,32 @@ const handleMoveNotPerson = (row: IPersonConfig) => {
 
 const tableColumnsList = [
     {
-        label: '编号',
+        label: i18n.global.t('data.number'),
         props: 'uid',
         sort: true
     },
     {
-        label: '姓名',
+        label: i18n.global.t('data.number'),
         props: 'name',
     },
     {
-        label: '部门',
+        label: i18n.global.t('data.department'),
         props: 'department',
     },
     {
-        label: '身份',
+        label: i18n.global.t('data.identity'),
         props: 'identity',
     },
     {
-        label: '奖品',
+        label: i18n.global.t('data.prizeName'),
         props: 'prizeName',
         sort: true
     },
     {
-        label: '操作',
+        label:  i18n.global.t('data.operation'),
         actions: [
             {
-                label: '移入未中奖名单',
+                label: i18n.global.t('data.removePerson'),
                 type: 'btn-info',
                 onClick: (row: IPersonConfig) => {
                     handleMoveNotPerson(row)
@@ -61,37 +61,37 @@ const tableColumnsList = [
 ]
 const tableColumnsDetail = [
     {
-        label: '编号',
+        label: i18n.global.t('data.number'),
         props: 'uid',
         sort: true
     },
     {
-        label: '姓名',
+        label: i18n.global.t('data.number'),
         props: 'name',
     },
     {
-        label: '部门',
+        label: i18n.global.t('data.department'),
         props: 'department',
     },
     {
-        label: '身份',
+        label: i18n.global.t('data.identity'),
         props: 'identity',
     },
     {
-        label: '奖品',
+        label: i18n.global.t('data.prizeName'),
         props: 'prizeName',
         sort: true
     },
     {
-        label: '中奖时间',
+        label: i18n.global.t('data.prizeTime'),
         props: 'prizeTime',
 
     },
     {
-        label: '操作',
+        label: i18n.global.t('data.operation'),
         actions: [
             {
-                label: '移入未中奖名单',
+                label: i18n.global.t('data.removePerson'),
                 type: 'btn-info',
                 onClick: (row: IPersonConfig) => {
                     handleMoveNotPerson(row)
@@ -108,7 +108,6 @@ const tableColumnsDetail = [
         
         <h2>{{ $t('viewTitle.winnerManagement') }}</h2>
         <div class="flex items-center justify-start gap-10">
-            <!-- <button class="btn btn-error btn-sm" @click="deleteAll">全部删除</button> -->
             <div>
                 <span>{{$t('table.luckyPeopleNumber')}}：</span>
                 <span>{{ alreadyPersonList.length }}</span>

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { defaultMusicList, defaultImageList, defaultPatternList } from './data'
 import { IMusic, IImage } from '@/types/storeType';
-import i18n,{Language} from '@/locales/i18n'
+import i18n,{browserLanguage} from '@/locales/i18n'
 // import { IPrizeConfig } from '@/types/storeType';
 export const useGlobalConfig = defineStore('global', {
     state() {
@@ -9,8 +9,8 @@ export const useGlobalConfig = defineStore('global', {
             globalConfig: {
                 rowCount: 17,
                 isSHowPrizeList: true,
-                topTitle: '大明内阁六部御前奏对',
-                language:'zhCn',
+                topTitle: i18n.global.t('data.defaultTitle'),
+                language:browserLanguage,
                 theme: {
                     name: 'dracula',
                     detail: { primary: '#0f5fd3' },
@@ -223,8 +223,8 @@ export const useGlobalConfig = defineStore('global', {
             this.globalConfig = {
                 rowCount: 17,
                 isSHowPrizeList: true,
-                topTitle: '大明内阁六部御前奏对',
-                language: 'zhCn',
+                topTitle: i18n.global.t('data.defaultTitle'),
+                language: browserLanguage,
                 theme: {
                     name: 'dracula',
                     detail: { primary: '#0f5fd3' },

@@ -8,7 +8,7 @@ import * as XLSX from 'xlsx'
 import { readFileBinary } from '@/utils/file'
 import { addOtherInfo } from '@/utils'
 import DaiysuiTable from '@/components/DaiysuiTable/index.vue'
-
+import i18n from '@/locales/i18n'
 const personConfig = useStore().personConfig
 const { getAllPersonList: allPersonList, getAlreadyPersonList: alreadyPersonList } = storeToRefs(personConfig)
 const limitType = '.xlsx,.xls'
@@ -38,9 +38,9 @@ const exportData = () => {
         delete data[i].prizeId
         // 修改字段名称
         if (data[i].isWin) {
-            data[i].isWin = '是'
+            data[i].isWin = i18n.global.t('data.yes')
         } else {
-            data[i].isWin = '否'
+            data[i].isWin = i18n.global.t('data.no')
         }
         // 格式化数组为
         data[i].prizeTime = data[i].prizeTime.join(',')
@@ -48,13 +48,13 @@ const exportData = () => {
     }
     let dataString = JSON.stringify(data)
     dataString = dataString
-        .replaceAll(/uid/g, '编号')
-        .replaceAll(/isWin/g, '是否中奖')
-        .replaceAll(/department/g, '部门')
-        .replaceAll(/name/g, '姓名')
-        .replaceAll(/identity/g, '身份')
-        .replaceAll(/prizeName/g, '获奖')
-        .replaceAll(/prizeTime/g, '获奖时间')
+        .replaceAll(/uid/g, i18n.global.t('data.number'))
+        .replaceAll(/isWin/g, i18n.global.t('data.isWin'))
+        .replaceAll(/department/g, i18n.global.t('data.department'))
+        .replaceAll(/name/g, i18n.global.t('data.name'))
+        .replaceAll(/identity/g, i18n.global.t('data.identity'))
+        .replaceAll(/prizeName/g, i18n.global.t('data.prizeName'))
+        .replaceAll(/prizeTime/g, i18n.global.t('data.prizeTime'))
 
     data = JSON.parse(dataString)
 
@@ -80,30 +80,30 @@ const delPersonItem = (row: IPersonConfig) => {
 
 const tableColumns = [
     {
-        label: '编号',
+        label: i18n.global.t('data.number'),
         props: 'uid',
     },
     {
-        label: '姓名',
+        label: i18n.global.t('data.name'),
         props: 'name',
     },
     {
-        label: '部门',
+        label: i18n.global.t('data.department'),
         props: 'department',
     },
     {
-        label: '身份',
+        label: i18n.global.t('data.identity'),
         props: 'identity',
     },
     {
-        label: '是否已中奖',
+        label: i18n.global.t('data.isWin'),
         props: 'isWin',
         formatValue(row: IPersonConfig) {
-            return row.isWin ? '是' : '否'
+            return row.isWin ? i18n.global.t('data.yes') : i18n.global.t('data.no')
         }
     },
     {
-        label: '操作',
+        label: i18n.global.t('data.operation'),
         actions: [
             // {
             //     label: '编辑',
@@ -113,7 +113,7 @@ const tableColumns = [
             //     }
             // },
             {
-                label: '删除',
+                label: i18n.global.t('data.delete'),
                 type: 'btn-error',
                 onClick: (row: IPersonConfig) => {
                     delPersonItem(row)
@@ -156,12 +156,12 @@ onMounted(() => {
     </dialog>
     <div class="min-w-1000px">
 
-        <h2>人员管理</h2>
+        <h2>{{ $t('viewTitle.personManagement') }}</h2>
         <div class="flex gap-3">
             <button class="btn btn-error btn-sm" @click="delAllDataDialog.showModal()">{{ $t('button.allDelete') }}</button>
             <div class="tooltip tooltip-bottom" :data-tip="$t('tooltip.downloadTemplateTip')">
-                <a class="no-underline btn btn-secondary btn-sm" download="人口登记表.xlsx" target="_blank"
-                    href="/log-lottery/人口登记表.xlsx">{{ $t('button.downloadTemplate') }}</a>
+                <a class="no-underline btn btn-secondary btn-sm" :download="$t('data.xlsxName')" target="_blank"
+                    :href="'/log-lottery/'+$t('data.xlsxName')">{{ $t('button.downloadTemplate') }}</a>
             </div>
             <div class="">
                 <label for="explore">
@@ -173,8 +173,6 @@ onMounted(() => {
                         <span class="btn btn-primary btn-sm">{{ $t('button.importData') }}</span>
                     </div>
                 </label>
-                <!-- <button class="btn btn-primary btn-sm">上传excel</button> -->
-
             </div>
             <button class="btn btn-error btn-sm" @click="resetDataDialog.showModal()">{{ $t('button.resetData') }}</button>
             <button class="btn btn-accent btn-sm" @click="exportData">{{ $t('button.exportResult') }}</button>

@@ -22,7 +22,9 @@ export default {
         reset: '重置',
         play: '播放',
         setLayout:'重设布局',
-        close:'关闭'
+        close:'关闭',
+        noInfoAndImport:'暂无人员信息，前往导入',
+        useDefault:'使用默认数据'
     },
     sidebar:{
         personConfiguration:'人员配置',
@@ -51,9 +53,11 @@ export default {
         identity:'身份',
         isLucky:'是否中奖',
         operation:'操作',
+        setLuckyNumber:'设置中奖人数',
         luckyPeopleNumber:'中奖人数',
 
         detail:'详细信息',
+        noneData:'暂无数据',
         // prize configuration
         fullParticipation:'全员参加',
         numberParticipants:'抽奖人数',
@@ -75,6 +79,7 @@ export default {
         highlightColor:'高亮颜色',
         patternSetting:'图案设置',
         alwaysDisplay:'常显奖项列表',
+        selectPicture:'选择一张图片'
     },
     dialog:{
         titleTip:'提示!',
@@ -103,7 +108,41 @@ export default {
         edit:'编辑',
         delete:'删除'
     },
-    
+    error:{
+        require:'必填项',
+        requireNumber:'请输入数字',
+        minNumber1:'最小为1',
+        maxNumber100:'最大为100',
+        uploadSuccess:'上传成功',
+        uploadFail:'上传失败',
+        notImage:'不是图片',
+        personIsAllDone:'抽奖抽完了',
+        personNotEnough:'抽奖人数不足',
+        startDraw:'现在抽取{count}{leftover}人',
+        completeInformation:'请填写完整信息'
+    },
+    placeHolder:{
+        enterTitle:'输入标题',
+        name:'名称',
+        winnerCount:'中奖人数',
+    },
+    data:{
+        yes:'是',
+        no:'否',
+        number:'编号',
+        isWin:'是否中奖',
+        department:'部门',
+        name:'姓名',
+        identity:'身份',
+        prizeName:'获奖',
+        prizeTime:'获奖时间',
+        operation:'操作',
+        delete:'删除',
+        removePerson:'移入未中奖名单',
+        defaultTitle:'大明内阁六部御前奏对',
+        xlsxName:'人口登记表-zhCn.xlsx',
+        readmeName:'readme-zhCn.md'
+    },
     footer:{
         'self-reflection':'行有不得，反求诸己',
         'thiefEasy':'破山中贼易，破心中贼难'

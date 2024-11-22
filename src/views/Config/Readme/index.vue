@@ -1,10 +1,11 @@
 <script setup lang='ts'>
 import {ref,onMounted} from 'vue'
 import markdownit from 'markdown-it'
+import i18n from '@/locales/i18n'
 const md = markdownit()
 const readmeHtml=ref('')
 const readMd=()=>{
-    fetch('/log-lottery/readme.md')
+    fetch('/log-lottery/'+i18n.global.t('data.readmeName'))
     .then(res=>res.text())
     .then(res=>{
         readmeHtml.value = md.render(res)

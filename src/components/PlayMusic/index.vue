@@ -100,20 +100,19 @@ watch(currentMusic, (val: any) => {
                 <svg-icon name="home"></svg-icon>
             </div>
         </div>
-        <div v-else class="tooltip tooltip-left" data-tip="设置/配置">
+        <div v-else class="tooltip tooltip-left" :data-tip="$t('tooltip.settingConfiguration')">
             <div class="flex items-center justify-center w-10 h-10 p-0 m-0 cursor-pointer setting-container bg-slate-500/50 rounded-l-xl hover:bg-slate-500/80 hover:text-blue-400/90"
                 @click="enterConfig">
                 <svg-icon name="setting"></svg-icon>
             </div>
         </div>
 
-        <div class="tooltip tooltip-left" :data-tip="currentMusic.item ? currentMusic.item.name+'\n\r &nbsp; 右键下一曲' : '没有音乐可以播放'">
+        <div class="tooltip tooltip-left" :data-tip="currentMusic.item ? currentMusic.item.name+'\n\r &nbsp;'+$t('tooltip.nextSong') : $t('tooltip.noSongPlay')">
             <div class="flex items-center justify-center w-10 h-10 p-0 m-0 cursor-pointer setting-container bg-slate-500/50 rounded-l-xl hover:bg-slate-500/80 hover:text-blue-400/90"
                 @click="playMusic(currentMusic.item)" @click.right.prevent="nextPlay">
                 <svg-icon :name="currentMusic.paused ? 'play' : 'pause'"></svg-icon>
             </div>
         </div>
-        <!-- <div class="bg-blue-300 cursor-pointer" @click="nextPlay">下一首</div> -->
     </div>
 </template>
 

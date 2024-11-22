@@ -69,13 +69,13 @@ watch(() => imgUploadToast.value, (val) => {
 <template>
     <div class="toast toast-top toast-end">
         <div class="alert alert-error" v-if="imgUploadToast == 2">
-            <span>上传失败</span>
+            <span>{{ $t('error.uploadFail') }}</span>
         </div>
         <div class="alert alert-success" v-if="imgUploadToast == 1">
-            <span>上传成功</span>
+            <span>{{ $t('error.uploadSuccess') }}</span>
         </div>
         <div class="alert alert-error" v-if="imgUploadToast == 3">
-            <span>不是图片</span>
+            <span>{{ $t('error.notImage') }}</span>
         </div>
     </div>
 

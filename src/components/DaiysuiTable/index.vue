@@ -35,7 +35,7 @@ const actionsColumns = computed<any[]>(() => {
                 <tr>
                     <th></th>
                     <th v-for="(item, index) in dataColumns" :key="index">{{ item.label }}</th>
-                    <th v-for="(item, index) in actionsColumns" :key="index">操作</th>
+                    <th v-for="(item, index) in actionsColumns" :key="index">{{ $t('table.operation') }}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -56,7 +56,7 @@ const actionsColumns = computed<any[]>(() => {
             </tbody>
             <tbody v-else>
                 <tr>
-                    <td colspan="5" class="text-center">暂无数据</td>
+                    <td colspan="5" class="text-center">{{ $t('table.noneData') }}</td>
                 </tr>
             </tbody>
             <!-- foot -->

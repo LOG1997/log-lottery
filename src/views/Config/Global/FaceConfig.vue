@@ -10,7 +10,7 @@ import 'vue3-colorpicker/style.css';
 import { isRgbOrRgba, isHex } from '@/utils/color'
 import PatternSetting from './components/PatternSetting.vue'
 import {languageList} from '@/locales/i18n'
-import {Language} from '@/locales/i18n'
+import i18n from '@/locales/i18n'
 const globalConfig = useStore().globalConfig
 const personConfig = useStore().personConfig
 const prizeConfig= useStore().prizeConfig
@@ -44,11 +44,11 @@ const formErr = ref({
 
 const schema = zod.object({
     rowCount: zod.number({
-        required_error: '必填项',
-        invalid_type_error: '必须填入数字',
+        required_error: i18n.global.t('error.require'),
+        invalid_type_error: i18n.global.t('error.requireNumber'),
     })
-        .min(1, '最小为1')
-        .max(100, '最大为100')
+        .min(1, i18n.global.t('error.minNumber1'))
+        .max(100, i18n.global.t('error.maxNumber100'))
     // 格式化
 
 
@@ -169,7 +169,7 @@ onMounted(() => {
         </div>
     </dialog>
     <div>
-        <h2>全局配置</h2>
+        <h2>{{$t('viewTitle.globalSetting')}}</h2>
         <div class="mb-8">
             <button class="btn btn-sm btn-primary" @click="resetDataDialogRef.showModal()">{{$t('button.resetAllData')}}</button>
         </div>
@@ -178,7 +178,7 @@ onMounted(() => {
                 <div class="label">
                     <span class="label-text">{{$t('table.title')}}</span>
                 </div>
-                <input type="text" v-model="topTitleValue" placeholder="输入标题"
+                <input type="text" v-model="topTitleValue" :placeholder="$t('placeHolder.enterTitle')"
                     class="w-full max-w-xs input input-bordered" />
             </div>
         </label>

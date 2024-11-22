@@ -9,6 +9,7 @@ import { IPrizeConfig } from '../../types/storeType';
 
 import EditSeparateDialog from '@/components/NumberSeparate/EditSeparateDialog.vue'
 
+import i18n from '@/locales/i18n'
 const prizeConfig = useStore().prizeConfig
 const globalConfig = useStore().globalConfig
 const system = useStore().system
@@ -41,7 +42,7 @@ const deleteTemporaryPrize = () => {
 }
 const submitTemporaryPrize = () => {
     if (!temporaryPrize.value.name || !temporaryPrize.value.count) {
-        alert('请填写完整信息')
+        alert(i18n.global.t('error.completeInformation'))
 
         return
     }
@@ -94,18 +95,18 @@ onMounted(() => {
     <div class="flex items-center">
         <dialog id="my_modal_1" ref="temporaryPrizeRef" class="border-none modal">
             <div class="modal-box">
-                <h3 class="text-lg font-bold">增加临时抽奖</h3>
+                <h3 class="text-lg font-bold">{{$t('dialog.titleTemporary')}}</h3>
                 <div class="flex flex-col gap-3">
                     <label class="flex w-full max-w-xs">
                         <div class="label">
-                            <span class="label-text">名称:</span>
+                            <span class="label-text">{{$t('table.name')}}:</span>
                         </div>
-                        <input type="text" v-model="temporaryPrize.name" placeholder="名称"
+                        <input type="text" v-model="temporaryPrize.name" :placeholder="$t('placeHolder.name')"
                             class="max-w-xs input-sm input input-bordered" />
                     </label>
                     <label class="flex w-full max-w-xs">
                         <div class="label">
-                            <span class="label-text">是否全员参加</span>
+                            <span class="label-text">{{$t('table.fullParticipation')}}</span>
                         </div>
                         <input type="checkbox" :checked="temporaryPrize.isAll"
                             @change="temporaryPrize.isAll = !temporaryPrize.isAll"
@@ -113,21 +114,21 @@ onMounted(() => {
                     </label>
                     <label class="flex w-full max-w-xs">
                         <div class="label">
-                            <span class="label-text">获奖人数</span>
+                            <span class="label-text">{{$t('table.setLuckyNumber')}}</span>
                         </div>
-                        <input type="number" v-model="temporaryPrize.count" @change="changePersonCount" placeholder="获奖人数"
+                        <input type="number" v-model="temporaryPrize.count" @change="changePersonCount" :placeholder="$t('placeHolder.winnerCount')"
                             class="max-w-xs input-sm input input-bordered" />
                     </label>
                     <label class="flex w-full max-w-xs">
                         <div class="label">
-                            <span class="label-text">已获奖人数</span>
+                            <span class="label-text">{{$t('table.luckyPeopleNumber')}}</span>
                         </div>
-                        <input disabled type="number" v-model="temporaryPrize.isUsedCount" placeholder="获奖人数"
+                        <input disabled type="number" v-model="temporaryPrize.isUsedCount" :placeholder="$t('placeHolder.winnerCount')"
                             class="max-w-xs input-sm input input-bordered" />
                     </label>
                     <label class="flex w-full max-w-xs" v-if="temporaryPrize.separateCount">
                     <div class="label">
-                        <span class="label-text">单次抽取个数</span>
+                        <span class="label-text">{{$t('table.onceNumber ')}}</span>
                     </div>
                     <div class="flex justify-start h-full" @click="selectPrize(temporaryPrize)">
                         <ul class="flex flex-wrap w-full h-full gap-1 p-0 pt-1 m-0 cursor-pointer"
@@ -135,24 +136,24 @@ onMounted(() => {
                             <li class="relative flex items-center justify-center w-8 h-8 bg-slate-600/60 separated"
                                 v-for="se in temporaryPrize.separateCount.countList" :key="se.id">
                                 <div class="flex items-center justify-center w-full h-full tooltip"
-                                    :data-tip="'已抽取:' + se.isUsedCount + '/' + se.count">
+                                    :data-tip="$t('tooltip.doneCount') + se.isUsedCount + '/' + se.count">
                                     <div class="absolute left-0 z-50 h-full bg-blue-300/80"
                                         :style="`width:${se.isUsedCount * 100 / se.count}%`"></div>
                                     <span>{{ se.count }}</span>
                                 </div>
                             </li>
                         </ul>
-                        <button v-else class="btn btn-secondary btn-xs">设置</button>
+                        <button v-else class="btn btn-secondary btn-xs">{{$t('button.setting')}}</button>
                     </div>
                 </label>
                     <label class="flex w-full max-w-xs">
                         <div class="label">
-                            <span class="label-text">图片</span>
+                            <span class="label-text">{{$t('table.image')}}</span>
                         </div>
                         <select class="flex-1 w-12 select select-warning select-sm" v-model="temporaryPrize.picture">
                             <option v-if="temporaryPrize.picture.id" :value="{ id: '', name: '', url: '' }"><span>❌</span>
                             </option>
-                            <option disabled selected>选择一张图片</option>
+                            <option disabled selected>{{$t('table.selectPicture')}}</option>
                             <option class="w-auto" v-for="picItem in localImageList" :key="picItem.id" :value="picItem">{{
                                 picItem.name }}
                             </option>
@@ -161,8 +162,8 @@ onMounted(() => {
                 </div>
                 <div class="modal-action">
                     <form method="dialog" class="flex gap-3">
-                        <button class="btn btn-sm" @click="submitTemporaryPrize">确定</button>
-                        <button class="btn btn-sm">取消</button>
+                        <button class="btn btn-sm" @click="submitTemporaryPrize">{{ $t('button.confirm') }}</button>
+                        <button class="btn btn-sm">{{ $t('button.cancel') }}</button>
                     </form>
                 </div>
             </div>
@@ -190,12 +191,12 @@ onMounted(() => {
                         <!-- <p class="p-0 m-0">{{ item.isUsedCount }}/{{ item.count }}</p> -->
                     </div>
                     <div class="flex flex-col gap-1 mr-2">
-                        <div class="tooltip tooltip-left" data-tip="编辑">
+                        <div class="tooltip tooltip-left" :data-tip="$t('tooltip.edit')">
                             <div class="cursor-pointer hover:text-blue-400" @click="addTemporaryPrize">
                                 <svg-icon name="edit"></svg-icon>
                             </div>
                         </div>
-                        <div class="tooltip tooltip-left" data-tip="删除">
+                        <div class="tooltip tooltip-left" :data-tip="$t('tooltip.delete')">
                             <div class="cursor-pointer hover:text-blue-400" @click="deleteTemporaryPrize">
                                 <svg-icon name="delete"></svg-icon>
                             </div>
@@ -234,13 +235,13 @@ onMounted(() => {
                         </li>
                     </ul>
                     <div class="flex flex-col gap-3">
-                        <div class="tooltip tooltip-right" data-tip="奖项列表">
+                        <div class="tooltip tooltip-right" :data-tip="$t('tooltip.prizeList')">
                             <div class="flex items-center w-6 h-8 rounded-r-lg cursor-pointer prize-option bg-slate-500/50"
                                 @click="prizeShow = !prizeShow">
                                 <svg-icon name="arrow_left" class="w-full h-full"></svg-icon>
                             </div>
                         </div>
-                        <div class="tooltip tooltip-right" data-tip="添加抽奖">
+                        <div class="tooltip tooltip-right" :data-tip="$t('tooltip.addActivity')">
                             <div class="flex items-center w-6 h-8 rounded-r-lg cursor-pointer prize-option bg-slate-500/50"
                                 @click="addTemporaryPrize">
                                 <svg-icon name="add" class="w-full h-full"></svg-icon>
@@ -252,7 +253,7 @@ onMounted(() => {
         </div>
 
         <transition name="prize-operate" :appear="true">
-            <div class="tooltip tooltip-right" data-tip="奖项列表" v-show="!prizeShow">
+            <div class="tooltip tooltip-right" :data-tip="$t('tooltip.prizeList')" v-show="!prizeShow">
                 <div class="flex items-center w-6 h-8 rounded-r-lg cursor-pointer prize-option bg-slate-500/50"
                     @click="prizeShow = !prizeShow">
                     <svg-icon name="arrow_right" class="w-full h-full"></svg-icon>

@@ -5,7 +5,7 @@ import { IPrizeConfig } from '@/types/storeType'
 import { storeToRefs } from 'pinia'
 import localforage from 'localforage'
 import EditSeparateDialog from '@/components/NumberSeparate/EditSeparateDialog.vue'
-
+import i18n from '@/locales/i18n'
 const imageDbStore = localforage.createInstance({
     name: 'imgStore'
 })
@@ -22,7 +22,7 @@ const selectedPrize = ref<IPrizeConfig | null>()
 const addPrize = () => {
     const defaultPrizeCOnfig: IPrizeConfig = {
         id: new Date().getTime().toString(),
-        name: '奖项',
+        name: i18n.global.t('data.prizeName'),
         sort: 0,
         isAll: false,
         count: 1,
@@ -178,7 +178,7 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
                     <div class="label">
                         <span class="label-text">{{ $t('table.prizeName') }}</span>
                     </div>
-                    <input type="text" v-model="item.name" placeholder="名称"
+                    <input type="text" v-model="item.name" :placeholder="$t('placeHolder.name')"
                         class="w-full max-w-xs input-sm input input-bordered" />
                 </label>
                 <label class="w-1/2 max-w-xs mb-10 form-control">
@@ -192,19 +192,12 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
                     <div class="label">
                         <span class="label-text">{{ $t('table.numberParticipants') }}</span>
                     </div>
-                    <input type="number" v-model="item.count" placeholder="获奖人数" @change="changePrizePerson(item)"
+                    <input type="number" v-model="item.count" :placeholder="$t('placeHolder.winnerCount')" @change="changePrizePerson(item)"
                         class="w-full max-w-xs p-0 m-0 input-sm input input-bordered" />
                     <div class="tooltip tooltip-bottom" :data-tip="$t('table.isDone') + item.isUsedCount + '/' + item.count">
                         <progress class="w-full progress" :value="item.isUsedCount" :max="item.count"></progress>
                     </div>
                 </label>
-                <!-- <label class="w-1/2 max-w-xs mb-10 form-control">
-                    <div class="label">
-                        <span class="label-text">已获奖人数</span>
-                    </div>
-                    <input disabled type="number" v-model="item.isUsedCount" placeholder="获奖人数"
-                        class="w-full max-w-xs input-sm input input-bordered" />
-                </label> -->
                 <label class="w-1/2 max-w-xs mb-10 form-control">
                     <div class="label">
                         <span class="label-text">{{ $t('table.isDone') }}</span>
@@ -218,7 +211,7 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
                     </div>
                     <select class="w-full max-w-xs select select-warning select-sm" v-model="item.picture">
                         <option v-if="item.picture.id" :value="{ id: '', name: '', url: '' }"><span>❌</span></option>
-                        <option disabled selected>选择一张图片</option>
+                        <option disabled selected>{{ $t('table.selectPicture') }}</option>
                         <option v-for="picItem in localImageList" :key="picItem.id" :value="picItem">{{ picItem.name }}
                         </option>
                     </select>
@@ -233,7 +226,7 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
                             <li class="relative flex items-center justify-center w-8 h-8 bg-slate-600/60 separated"
                                 v-for="se in item.separateCount.countList" :key="se.id">
                                 <div class="flex items-center justify-center w-full h-full tooltip"
-                                    :data-tip="'已抽取:' + se.isUsedCount + '/' + se.count">
+                                    :data-tip="$t('tooltip.doneCount') + se.isUsedCount + '/' + se.count">
                                     <div class="absolute left-0 z-50 h-full bg-blue-300/80"
                                         :style="`width:${se.isUsedCount * 100 / se.count}%`"></div>
                                     <span>{{ se.count }}</span>
