@@ -33,7 +33,7 @@ function skip(path: string) {
 
 <template>
   <div class="flex min-h-[calc(100%-280px)]">
-    <ul class="w-56 m-0 mr-3 menu bg-base-200 pt-14">
+    <ul class="w-56 m-0 mr-3 min-w-56 menu bg-base-200 pt-14">
       <li v-for="item in menuList" :key="item.name">
         <details v-if="item.children" open>
           <summary>{{ item.meta.title }}</summary>
@@ -65,7 +65,7 @@ function skip(path: string) {
         >{{ item.meta!.title }}</a>
       </li>
     </ul>
-    <router-view class="mt-5" />
+    <router-view class="flex-1 mt-5" />
   </div>
   <footer class="p-10 rounded footer footer-center bg-base-200 text-base-content">
     <nav class="grid grid-flow-col gap-4">
