@@ -88,6 +88,13 @@ const tableColumns = [
         props: 'name',
     },
     {
+        label: '头像',
+        props: 'avatar',
+        formatValue(row: any) {
+            return row.avatar ? `<img src="${row.avatar}" alt="avatar" style="width: 50px; height: 50px;"/>` : '-';
+        }
+    },
+    {
         label: '部门',
         props: 'department',
     },

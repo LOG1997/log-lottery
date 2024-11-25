@@ -131,6 +131,16 @@ const init = () => {
         detail.innerHTML = `${tableData.value[i].department}<br/>${tableData.value[i].identity}`;
         element.appendChild(detail);
 
+        const avatar = document.createElement('div');
+        avatar.className = 'card-avatar';
+        const img = document.createElement('img');
+        img.src = tableData.value[i].avatar;
+        img.alt = 'avatar';
+        img.style.width = '140px';
+        img.style.height = '140px';
+        avatar.appendChild(img);
+        element.appendChild(avatar);
+
         element = useElementStyle(element, tableData.value[i], i, patternList.value, patternColor.value, cardColor.value, cardSize.value, textSize.value)
         const object = new CSS3DObject(element);
         object.position.x = Math.random() * 4000 - 2000;
