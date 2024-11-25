@@ -150,7 +150,7 @@ onMounted(() => {
                             <span class="label-text">图片</span>
                         </div>
                         <select class="flex-1 w-12 select select-warning select-sm" v-model="temporaryPrize.picture">
-                            <option v-if="temporaryPrize.picture.id" :value="{ id: '', name: '', url: '' }"><span>❌</span>
+                            <option v-if="temporaryPrize.picture.id" :value="{ id: '', name: '', url: '' }">❌
                             </option>
                             <option disabled selected>选择一张图片</option>
                             <option class="w-auto" v-for="picItem in localImageList" :key="picItem.id" :value="picItem">{{
