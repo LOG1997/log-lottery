@@ -233,7 +233,7 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
             <span class="label-text">{{ t('table.image') }}</span>
           </div>
           <select v-model="item.picture" class="w-full max-w-xs select select-warning select-sm">
-            <option v-if="item.picture.id" :value="{ id: '', name: '', url: '' }"><span>❌</span></option>
+            <option v-if="item.picture.id" :value="{ id: '', name: '', url: '' }">❌</option>
             <option disabled selected>{{ t('table.selectPicture') }}</option>
             <option v-for="picItem in localImageList" :key="picItem.id" :value="picItem">{{ picItem.name }}
             </option>

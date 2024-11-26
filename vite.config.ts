@@ -41,104 +41,104 @@ export default defineConfig(({ mode }) => {
         brotliSize: true, // 从源代码中收集 brotli 大小并将其显示在图表中
       }),
 
-      createSvgIconsPlugin({
-        // 指定需要缓存的图标文件夹
-        iconDirs: [path.resolve(process.cwd(), 'src/icons')],
-        // 指定symbolId格式
-        symbolId: 'icon-[dir]-[name]',
-      }),
-      AutoImport({
-        resolvers: [
-          // 自动导入图标组件
-          IconsResolver({
-            prefix: 'Icon',
-          }),
+            createSvgIconsPlugin({
+                // 指定需要缓存的图标文件夹
+                iconDirs: [path.resolve(process.cwd(), 'src/icons')],
+                // 指定symbolId格式
+                symbolId: 'icon-[dir]-[name]',
+            }),
+            AutoImport({
+                resolvers: [
+                    // 自动导入图标组件
+                    IconsResolver({
+                        prefix: 'Icon',
+                    }),
+                ],
+                dts: path.resolve(path.resolve(__dirname, 'src'), 'auto-imports.d.ts'),
+            }),
+            Components({
+                resolvers: [
+                    // 自动注册图标组件
+                    IconsResolver({
+                        enabledCollections: ['ep'],
+                    }),
+                ],
+                dts: path.resolve(path.resolve(__dirname, 'src'), 'components.d.ts'),
+            }),
+            Icons({
+                autoInstall: true,
+            }),
         ],
-        dts: path.resolve(path.resolve(__dirname, 'src'), 'auto-imports.d.ts'),
-      }),
-      Components({
-        resolvers: [
-          // 自动注册图标组件
-          IconsResolver({
-            enabledCollections: ['ep'],
-          }),
-        ],
-        dts: path.resolve(path.resolve(__dirname, 'src'), 'components.d.ts'),
-      }),
-      Icons({
-        autoInstall: true,
-      }),
-    ],
-    css: {
-      preprocessorOptions: {
-        scss: {
-          additionalData: '@import "@/style/global.scss";',
+        css: {
+            preprocessorOptions: {
+                scss: {
+                    additionalData: '@use "@/style/global.scss" as *;',
+                },
+            },
+            // postcss: {
+            //     plugins: [
+            //         require('tailwindcss'),
+            //         require('autoprefixer'),
+            //     ]
+            // }
         },
-      },
-      // postcss: {
-      //     plugins: [
-      //         require('tailwindcss'),
-      //         require('autoprefixer'),
-      //     ]
-      // }
-    },
-    server: {
-      host: 'localhost',
-      port: 6719,
-      proxy: {
-        '/api': {
-          target: env.VITE_BASE_URL,
-          // 是否跨域
-          changeOrigin: true,
-          // 路径重写
-          rewrite: path => path.replace(/^\/api/, ''),
+        server: {
+            host: 'localhost',
+            port: 6719,
+            proxy: {
+                '/api': {
+                    target: env.VITE_BASE_URL,
+                    // 是否跨域
+                    changeOrigin: true,
+                    // 路径重写
+                    rewrite: (path) => path.replace(/^\/api/, ''),
+                },
+            },
         },
-      },
-    },
-    resolve: {
-      alias: {
-        '@': path.resolve(__dirname, './src'),
-      },
-    },
-    build: {
-      minify: 'terser',
-      terserOptions: {
-        compress: {
-          // 生产环境时移除console
-          drop_console: true,
-          drop_debugger: true,
+        resolve: {
+            alias: {
+                '@': path.resolve(__dirname, './src'),
+            },
         },
-      },
-      //   关闭文件计算
-      reportCompressedSize: false,
-      //   关闭生成map文件 可以达到缩小打包体积
-      sourcemap: false, // 这个生产环境一定要关闭，不然打包的产物会很大
-      rollupOptions: {
-        output: {
-          chunkFileNames: `js/${chunkName}-[hash].js`, // 引入文件名的名称
-          entryFileNames: `js/${chunkName}-[hash].js`, // 包的入口文件名称
-          assetFileNames: `[ext]/${chunkName}-[hash].[ext]`, // 资源文件像 字体，图片等
-          manualChunks(id: any): string {
-            if (id.includes('node_modules')) {
-              return id
-                .toString()
-                .split('node_modules/')[1]
-                .split('/')[0]
-                .toString()
-            }
-          },
+        build: {
+            minify: 'terser',
+            terserOptions: {
+                compress: {
+                    //生产环境时移除console
+                    drop_console: true,
+                    drop_debugger: true,
+                },
+            },
+            //   关闭文件计算
+            reportCompressedSize: false,
+            //   关闭生成map文件 可以达到缩小打包体积
+            sourcemap: false, // 这个生产环境一定要关闭，不然打包的产物会很大
+            rollupOptions: {
+                output: {
+                    chunkFileNames: `js/${chunkName}-[hash].js`, // 引入文件名的名称
+                    entryFileNames: `js/${chunkName}-[hash].js`, // 包的入口文件名称
+                    assetFileNames: `[ext]/${chunkName}-[hash].[ext]`, // 资源文件像 字体，图片等
+                    manualChunks(id: any): string {
+                        if (id.includes('node_modules')) {
+                            return id
+                                .toString()
+                                .split('node_modules/')[1]
+                                .split('/')[0]
+                                .toString();
+                        }
+                    },
+                },
+            },
         },
-      },
-    },
-    // 使用这个必须在上面加/// <reference types="vitest" /> 不然会有类型报错
-    test: {
-      globals: true, // --> 0.8.1+  请修改成globals
-      environment: 'jsdom',
-      // include: ['**/__tests__/**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-      // passWithNoTests: true,
-      transformMode: {
-        web: [/\.[jt]sx$/],
-      },
-    },
-  }
-})
+        // 使用这个必须在上面加/// <reference types="vitest" /> 不然会有类型报错
+        test: {
+            globals: true, // --> 0.8.1+  请修改成globals
+            environment: 'jsdom',
+            // include: ['**/__tests__/**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+            // passWithNoTests: true,
+            transformMode: {
+                web: [/\.[jt]sx$/],
+            },
+        },
+    };
+});

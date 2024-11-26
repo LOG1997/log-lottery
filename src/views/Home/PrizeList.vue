@@ -172,7 +172,7 @@ onMounted(() => {
               <span class="label-text">{{ t('table.image') }}</span>
             </div>
             <select v-model="temporaryPrize.picture" class="flex-1 w-12 select select-warning select-sm">
-              <option v-if="temporaryPrize.picture.id" :value="{ id: '', name: '', url: '' }"><span>❌</span>
+              <option v-if="temporaryPrize.picture.id" :value="{ id: '', name: '', url: '' }">❌
               </option>
               <option disabled selected>{{ t('table.selectPicture') }}</option>
               <option v-for="picItem in localImageList" :key="picItem.id" class="w-auto" :value="picItem">{{
