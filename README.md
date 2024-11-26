@@ -12,8 +12,9 @@
 
 log-lottery是一个可配置可定制化的抽奖应用，炫酷3D球体，可用于年会抽奖等活动，支持奖品、人员、界面、图片音乐配置。
 
-> 因原域名到期，现将原域名(https://24years.top/log-lottery)迁移到(https://1kw20.fun/log-lottery)。如果进入到新域名遇到图片无法访问的情况，请到【全局配置】-【界面配置】菜单中点击【重置所有数据】按钮进行更新
-
+> 因原域名到期，现将原域名 (<https://24years.top/log-lottery>)
+迁移到 (<https://1kw20.fun/log-lottery>) 。
+如果进入到新域名遇到图片无法访问的情况，请到【全局配置】-【界面配置】菜单中点击【重置所有数据】按钮进行更新
 
 ## 要求
 
@@ -21,28 +22,24 @@ log-lottery是一个可配置可定制化的抽奖应用，炫酷3D球体，可�
 
 访问地址：
 
-https://1kw20.fun/log-lottery
+<https://1kw20.fun/log-lottery>
 
 or
 
- https://log1997.github.io/log-lottery/
-
-## 功能描述
-
-- 🕍 炫酷3D球体，年会抽奖必备，开箱即用
-- 🧿 持久化存储，数据不丢失
-- 🎁 奖品奖项配置
-- 👱 抽奖名单设置管理
-- 🛞 界面信息自定义
-- 🎼 播放背景音乐
-- 💾 图片、背景音乐管理，使用本地存储，有默认资源可直接使用
-- 🖼️ excel表格导入人员名单、抽奖结果使用excel导出
-- 🎈 可增加临时抽奖
+<https://log1997.github.io/log-lottery/>
 
 ## TODO
 
+- [x] 🕍 炫酷3D球体，年会抽奖必备，开箱即用
+- [x] 💾 本地持久化存储
+- [x] 🎁 奖品奖项配置
+- [x] 👱 抽奖名单设置管理
+- [x] 🎼 播放背景音乐
+- [x] 🖼️ excel表格导入人员名单、抽奖结果使用excel导出
+- [x] 🎈 可增加临时抽奖
+- [x] 🧨 国际化多语言
 - [ ] 添加docker构建部署和镜像
-- [ ] 国际化多语言
+- [ ] 更换背景图片
 ...
 需要更多功能请留言
 
@@ -122,7 +119,7 @@ pnpm dev
 pnpm build
 ```
 
-> 项目思路来源于 https://github.com/moshang-xc/lottery
+> 项目思路来源于 <https://github.com/moshang-xc/lottery>
 
 ## License
 
