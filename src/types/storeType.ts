@@ -4,6 +4,7 @@ export interface IPersonConfig {
     name: string;
     department: string;
     identity: string;
+    avatar: string;
     isWin: boolean;
     x: number;
     y: number

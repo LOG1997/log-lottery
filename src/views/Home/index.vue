@@ -131,14 +131,12 @@ const init = () => {
         detail.innerHTML = `${tableData.value[i].department}<br/>${tableData.value[i].identity}`;
         element.appendChild(detail);
 
-        const avatar = document.createElement('div');
+        const avatar = document.createElement('img');
         avatar.className = 'card-avatar';
-        const img = document.createElement('img');
-        img.src = tableData.value[i].avatar;
-        img.alt = 'avatar';
-        img.style.width = '140px';
-        img.style.height = '140px';
-        avatar.appendChild(img);
+        avatar.src = tableData.value[i].avatar;
+        avatar.alt = 'avatar';
+        avatar.style.width = '140px';
+        avatar.style.height = '140px';
         element.appendChild(avatar);
 
         element = useElementStyle(element, tableData.value[i], i, patternList.value, patternColor.value, cardColor.value, cardSize.value, textSize.value)

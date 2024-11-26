@@ -48,7 +48,7 @@ export const useElementStyle = (element: any, person: IPersonConfig, index: numb
     if (person.department || person.identity) {
         element.children[2].innerHTML = `${person.department ? person.department : ''}<br/>${person.identity ? person.identity : ''}`
     }
-
+    element.children[3].src = person.avatar
     return element
 }
 
