@@ -20,6 +20,7 @@ export const useGlobalConfig = defineStore('global', {
                     textSize: 30,
                     patternColor: '#1b66c9',
                     patternList: defaultPatternList as number[],
+                    background:{}, // 背景颜色或图片
                 },
                 musicList: defaultMusicList as IMusic[],
                 imageList: defaultImageList as IImage[],
@@ -93,8 +94,11 @@ export const useGlobalConfig = defineStore('global', {
         // 获取是否显示奖品列表
         getIsShowPrizeList(state) {
             return state.globalConfig.isSHowPrizeList;
-        }
-
+        },
+        // 获取背景图片设置
+        getBackground(state){
+            return state.globalConfig.theme.background
+        },
     },
     actions: {
         // 设置rowCount
@@ -208,6 +212,10 @@ export const useGlobalConfig = defineStore('global', {
         setIsShowPrizeList(isShowPrizeList: boolean) {
             this.globalConfig.isSHowPrizeList = isShowPrizeList;
         },
+        // 设置背景图片
+        setBackground(background:{}){
+            this.globalConfig.theme.background = background
+        },
         // 重置所有配置
         reset() {
             this.globalConfig = {
@@ -225,6 +233,7 @@ export const useGlobalConfig = defineStore('global', {
                     textSize: 30,
                     patternColor: '#1b66c9',
                     patternList: defaultPatternList as number[],
+                    background:{}, // 背景图片
                 },
                 musicList: defaultMusicList as IMusic[],
                 imageList: defaultImageList as IImage[],

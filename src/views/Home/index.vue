@@ -29,9 +29,22 @@ const personConfig = useStore().personConfig
 const globalConfig = useStore().globalConfig
 const prizeConfig = useStore().prizeConfig
 
-const { getAllPersonList: allPersonList, getNotPersonList: notPersonList, getNotThisPrizePersonList: notThisPrizePersonList } = storeToRefs(personConfig)
+const { getAllPersonList: allPersonList,
+    getNotPersonList: notPersonList,
+    getNotThisPrizePersonList: notThisPrizePersonList
+} = storeToRefs(personConfig)
 const { getCurrentPrize: currentPrize } = storeToRefs(prizeConfig)
-const { getTopTitle: topTitle, getCardColor: cardColor, getPatterColor: patternColor, getPatternList: patternList, getTextColor: textColor, getLuckyColor: luckyColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount } = storeToRefs(globalConfig)
+const { getTopTitle: topTitle,
+    getCardColor: cardColor,
+    getPatterColor: patternColor,
+    getPatternList: patternList,
+    getTextColor: textColor,
+    getLuckyColor: luckyColor,
+    getCardSize: cardSize,
+    getTextSize: textSize,
+    getRowCount: rowCount,
+    getBackground: homeBackground,
+} = storeToRefs(globalConfig)
 const tableData = ref<any[]>([])
 // const tableData = ref<any[]>(JSON.parse(JSON.stringify(alreadyPersonList.value)).concat(JSON.parse(JSON.stringify(notPersonList.value))))
 const currentStatus = ref(0) // 0为初始状态， 1为抽奖准备状态，2为抽奖中状态，3为抽奖结束状态
@@ -77,8 +90,8 @@ function initTableData() {
             tableData.value = tableData.value.concat(JSON.parse(JSON.stringify(orginPersonData)))
         }
     }
-    else{
-        tableData.value=orginPersonData.slice(0, totalCount)
+    else {
+        tableData.value = orginPersonData.slice(0, totalCount)
     }
     tableData.value = filterData(tableData.value.slice(0, totalCount), rowCount.value)
 }
@@ -356,9 +369,9 @@ const enterLottery = async () => {
         randomBallData()
     }
     if (patternList.value.length) {
-        for(let i=0;i<patternList.value.length;i++){
-            if(i<rowCount.value*7){
-                objects.value[patternList.value[i]-1].element.style.backgroundColor = rgba(cardColor.value, Math.random() * 0.5 + 0.25)
+        for (let i = 0; i < patternList.value.length; i++) {
+            if (i < rowCount.value * 7) {
+                objects.value[patternList.value[i] - 1].element.style.backgroundColor = rgba(cardColor.value, Math.random() * 0.5 + 0.25)
             }
         }
     }
@@ -418,7 +431,7 @@ const startLottery = () => {
     }
     toast.open({
         message: `现在抽取${currentPrize.value.name} ${leftover}人`,
-        type:'default',
+        type: 'default',
         position: 'top-right',
         duration: 8000
     })
@@ -646,7 +659,8 @@ onUnmounted(() => {
 
         <!-- 选中菜单结构 start-->
         <div id="menu">
-            <button class="btn-end " @click="enterLottery" v-if="currentStatus == 0 && tableData.length > 0">进入抽奖</button>
+            <button class="btn-end " @click="enterLottery"
+                v-if="currentStatus == 0 && tableData.length > 0">进入抽奖</button>
 
             <div class="start" v-if="currentStatus == 1">
                 <button class="btn-start" @click="startLottery"><strong>开始</strong>
@@ -696,7 +710,7 @@ onUnmounted(() => {
         </div>
         <!-- end -->
     </div>
-    <StarsBackground></StarsBackground>
+    <StarsBackground :home-background="homeBackground"></StarsBackground>
 
     <!-- <LuckyView :luckyPersonList="luckyTargets"  ref="LuckyViewRef"></LuckyView> -->
     <!-- <PlayMusic class="absolute right-0 bottom-1/2"></PlayMusic> -->

@@ -12,11 +12,24 @@ import PatternSetting from './components/PatternSetting.vue'
 
 const globalConfig = useStore().globalConfig
 const personConfig = useStore().personConfig
-const prizeConfig= useStore().prizeConfig
-const { getTopTitle: topTitle, getTheme: localTheme, getPatterColor: patternColor, getPatternList: patternList, getCardColor: cardColor, getLuckyColor: luckyCardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowPrizeList: isShowPrizeList } = storeToRefs(globalConfig)
+const prizeConfig = useStore().prizeConfig
+const { getTopTitle: topTitle,
+    getTheme: localTheme,
+    getPatterColor: patternColor,
+    getPatternList: patternList,
+    getCardColor: cardColor,
+    getLuckyColor: luckyCardColor,
+    getTextColor: textColor,
+    getCardSize: cardSize,
+    getTextSize: textSize,
+    getRowCount: rowCount,
+    getIsShowPrizeList: isShowPrizeList,
+    getBackground: backgroundImage,
+    getImageList: imageList
+} = storeToRefs(globalConfig)
 const { getAlreadyPersonList: alreadyPersonList, getNotPersonList: notPersonList } = storeToRefs(personConfig)
 const colorPickerRef = ref()
-const resetDataDialogRef=ref()
+const resetDataDialogRef = ref()
 interface ThemeDaType {
     [key: string]: any
 }
@@ -33,13 +46,13 @@ const isShowPrizeListValue = ref(structuredClone(isShowPrizeList.value))
 const patternColorValue = ref(structuredClone(patternColor.value))
 const themeList = ref(Object.keys(daisyuiThemes))
 const daisyuiThemeList = ref<ThemeDaType>(daisyuiThemes)
+const backgroundImageValue = ref(backgroundImage.value)
 const formData = ref({
     rowCount: rowCountValue,
 })
 const formErr = ref({
     rowCount: '',
 })
-
 const schema = zod.object({
     rowCount: zod.number({
         required_error: '必填项',
@@ -85,7 +98,7 @@ const resetPattern = () => {
     globalConfig.resetPatternList()
 }
 
-const resetData=()=>{
+const resetData = () => {
     globalConfig.reset();
     personConfig.reset();
     prizeConfig.resetDefault();
@@ -138,19 +151,21 @@ watch(patternColorValue, (val: string) => {
 watch(textColorValue, (val: string) => {
     globalConfig.setTextColor(val)
 }, { deep: true })
-
 watch(cardSizeValue, (val: { width: number; height: number; }) => {
     globalConfig.setCardSize(val)
 }, { deep: true }),
     watch(isShowPrizeListValue, () => {
         globalConfig.setIsShowPrizeList(isShowPrizeListValue.value)
     })
+watch(backgroundImageValue, (val: {}) => {
+    globalConfig.setBackground(val)
+})
 onMounted(() => {
 })
 </script>
 
 <template>
-     <dialog id="my_modal_1" ref="resetDataDialogRef" class="border-none modal">
+    <dialog id="my_modal_1" ref="resetDataDialogRef" class="border-none modal">
         <div class="modal-box">
             <h3 class="text-lg font-bold">提示!</h3>
             <p class="py-4">该操作会重置所有数据，是否继续？</p>
@@ -192,7 +207,8 @@ onMounted(() => {
             </div>
             <div>
                 <div class="tooltip" data-tip="该项比较耗费时间和性能">
-                    <button class="mt-5 btn btn-info btn-sm" :disabled="isRowCountChange != 1" @click="resetPersonLayout">
+                    <button class="mt-5 btn btn-info btn-sm" :disabled="isRowCountChange != 1"
+                        @click="resetPersonLayout">
                         <span>重设布局</span>
                         <span class="loading loading-ring loading-md" v-show="isRowCountChange == 2"></span>
                     </button>
@@ -210,9 +226,21 @@ onMounted(() => {
         </label>
         <label class="w-full max-w-xs form-control">
             <div class="label">
+                <span class="label-text">选择背景图片</span>
+            </div>
+            <select data-choose-theme class="w-full max-w-xs border-solid select border-1"
+                v-model="backgroundImageValue">
+                <option disabled selected>选取背景图片</option>
+                <option v-for="(item, index) in [{ name: '无', url: '', id: '' }, ...imageList]" :key="index"
+                    :value="item">{{ item.name }}</option>
+            </select>
+        </label>
+        <label class="w-full max-w-xs form-control">
+            <div class="label">
                 <span class="label-text">卡片颜色</span>
             </div>
-            <ColorPicker ref="colorPickerRef" v-model="cardColorValue" v-model:pure-color="cardColorValue"></ColorPicker>
+            <ColorPicker ref="colorPickerRef" v-model="cardColorValue" v-model:pure-color="cardColorValue">
+            </ColorPicker>
         </label>
         <label class="w-full max-w-xs form-control">
             <div class="label">
@@ -226,7 +254,8 @@ onMounted(() => {
             <div class="label">
                 <span class="label-text">文字颜色</span>
             </div>
-            <ColorPicker ref="colorPickerRef" v-model="textColorValue" v-model:pure-color="textColorValue"></ColorPicker>
+            <ColorPicker ref="colorPickerRef" v-model="textColorValue" v-model:pure-color="textColorValue">
+            </ColorPicker>
         </label>
         <label class="flex flex-row w-full max-w-xs gap-10 mb-10 form-control">
             <div>
@@ -284,7 +313,8 @@ onMounted(() => {
             <div class="label">
                 <span class="label-text">是否常显奖品列表</span>
             </div>
-            <input type="checkbox" :checked="isShowPrizeListValue" @change="isShowPrizeListValue = !isShowPrizeListValue"
+            <input type="checkbox" :checked="isShowPrizeListValue"
+                @change="isShowPrizeListValue = !isShowPrizeListValue"
                 class="mt-2 border-solid checkbox checkbox-secondary border-1" />
         </label>
 
