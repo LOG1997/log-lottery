@@ -1,0 +1,1 @@
+const e=e=>new Promise((a=>{const r=new FileReader;r.readAsBinaryString(e),r.onload=e=>{a(e.target.result)}})),a=e=>new Promise((a=>{const r=new FileReader;r.readAsDataURL(e),r.onload=r=>{a({dataUrl:r.target.result,fileName:e.name})}}));export{a,e as r};
