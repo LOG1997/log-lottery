@@ -452,8 +452,9 @@ const stopLottery = async () => {
     luckyTargets.value.forEach((person: IPersonConfig, index: number) => {
         let cardIndex = selectCard(luckyCardList.value, tableData.value.length, person.id)
         luckyCardList.value.push(cardIndex)
+        const totalLuckyCount=luckyTargets.value.length
         let item = objects.value[cardIndex]
-        const { xTable, yTable } = useElementPosition(item, rowCount.value, { width: cardSize.value.width * 2, height: cardSize.value.height * 2 }, windowSize, index)
+        const { xTable, yTable } = useElementPosition(item, rowCount.value,totalLuckyCount, { width: cardSize.value.width * 2, height: cardSize.value.height * 2 }, windowSize, index)
         new TWEEN.Tween(item.position)
             .to({
                 x: xTable,
