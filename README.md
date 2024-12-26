@@ -14,7 +14,8 @@ log-lottery是一个可配置可定制化的抽奖应用，炫酷3D球体，可�
 
 > 因原域名到期，现将原域名 (<https://24years.top/log-lottery>)
 迁移到 (<https://1kw20.fun/log-lottery>) 。
-如果进入到新域名遇到图片无法访问的情况，请到【全局配置】-【界面配置】菜单中点击【重置所有数据】按钮进行更新
+如果进入网站遇到图片无法显示或有报错的情况，请先到【全局配置】-【界面配置】菜单中点击【重置所有数据】按钮清除数据后进行更新
+请尽量拉取代码进行构建或部署，本线上网站会保持更新，可能影响原有功能和数据。
 
 ## 要求
 
@@ -41,8 +42,9 @@ or
 - [x] 🍃 更换背景图片
 - [ ] 🧵 卡片组成多种形状
 - [ ] 添加docker构建部署和镜像
-...
-需要更多功能请留言
+
+    ...
+    需要更多功能请留言
 
 ## 详细介绍
 
@@ -106,18 +108,32 @@ or
 
 ```bash
 pnpm i
+or
+npm install
 ```
 
 开发运行
 
 ```bash
 pnpm dev
+or
+npm run dev
 ```
 
 打包
 
 ```bash
 pnpm build
+or
+npm run build
+```
+
+预览
+
+```bash
+pnpm preview
+or
+npm run preview
 ```
 
 > 项目思路来源于 <https://github.com/moshang-xc/lottery>
