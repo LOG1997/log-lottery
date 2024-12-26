@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory,createWebHashHistory } from 'vue-router';
 import Layout from '@/layout/index.vue';
 import Home from '@/views/Home/index.vue';
 export const configRoutes={
@@ -130,9 +130,10 @@ const routes = [
     ],
   },
 ];
-
+const envMode=import.meta.env.MODE;
 const router = createRouter({
-  history: createWebHistory(),
+    // 读取环境变量
+  history: envMode==='file'?createWebHashHistory():createWebHistory(),
   routes,
 });
 
