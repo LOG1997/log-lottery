@@ -10,6 +10,7 @@ import Icons from 'unplugin-icons/vite';
 import IconsResolver from 'unplugin-icons/resolver';
 import { visualizer } from 'rollup-plugin-visualizer';
 import viteCompression from 'vite-plugin-compression';
+import legacy from '@vitejs/plugin-legacy';
 // import vueDevTools from 'vite-plugin-vue-devtools'
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -17,9 +18,12 @@ export default defineConfig(({ mode }) => {
     const chunkName = mode == 'prebuild' ? '[name]' : 'chunk';
 
     return {
-        base:'/log-lottery/',
+        base:mode == 'file'?'./':'/log-lottery/',
         plugins: [
             vue(),
+            mode == 'file'?legacy({
+                additionalLegacyPolyfills: ['regenerator-runtime/runtime']
+              }):null,
             // vueDevTools(),
             viteCompression({
                 verbose: true,
