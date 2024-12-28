@@ -146,6 +146,22 @@ npm run build:file
 
 > 项目思路来源于 <https://github.com/moshang-xc/lottery>
 
+## Docker支持
+
+构建镜像
+
+```bash
+docker build -t log-lottery .
+```
+
+运行容器
+
+```bash
+docker run -d -p 9279:80 log-lottery
+```
+
+容器运行成功后即可在本地通过<http://localhost:9279/log-lottery/>访问
+
 ## License
 
 [MIT](http://opensource.org/licenses/MIT)
