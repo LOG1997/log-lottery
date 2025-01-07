@@ -147,7 +147,7 @@ onMounted(() => {
             {{ t('button.cancel') }}
           </button>
           <button class="btn" @click="resetData">
-            {{ t('dialog.confirm') }}
+            {{ t('button.confirm') }}
           </button>
         </form>
       </div>

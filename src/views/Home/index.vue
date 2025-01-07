@@ -10,8 +10,8 @@ import * as TWEEN from '@tweenjs/tween.js'
 import confetti from 'canvas-confetti'
 import { storeToRefs } from 'pinia'
 import { Object3D, PerspectiveCamera, Scene, Vector3 } from 'three'
-import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js'
 import { CSS3DObject, CSS3DRenderer } from 'three-css3d'
+import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js'
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -26,9 +26,10 @@ const personConfig = useStore().personConfig
 const globalConfig = useStore().globalConfig
 const prizeConfig = useStore().prizeConfig
 
-const { getAllPersonList: allPersonList, getNotPersonList: notPersonList, getNotThisPrizePersonList: notThisPrizePersonList } = storeToRefs(personConfig)
+const { getAllPersonList: allPersonList, getNotPersonList: notPersonList, getNotThisPrizePersonList: notThisPrizePersonList,
+} = storeToRefs(personConfig)
 const { getCurrentPrize: currentPrize } = storeToRefs(prizeConfig)
-const { getTopTitle: topTitle, getCardColor: cardColor, getPatterColor: patternColor, getPatternList: patternList, getTextColor: textColor, getLuckyColor: luckyColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount } = storeToRefs(globalConfig)
+const { getTopTitle: topTitle, getCardColor: cardColor, getPatterColor: patternColor, getPatternList: patternList, getTextColor: textColor, getLuckyColor: luckyColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getBackground: homeBackground } = storeToRefs(globalConfig)
 const tableData = ref<any[]>([])
 const currentStatus = ref(0) // 0为初始状态， 1为抽奖准备状态，2为抽奖中状态，3为抽奖结束状态
 const ballRotationY = ref(0)
@@ -437,8 +438,9 @@ async function stopLottery() {
   luckyTargets.value.forEach((person: IPersonConfig, index: number) => {
     const cardIndex = selectCard(luckyCardList.value, tableData.value.length, person.id)
     luckyCardList.value.push(cardIndex)
+    const totalLuckyCount = luckyTargets.value.length
     const item = objects.value[cardIndex]
-    const { xTable, yTable } = useElementPosition(item, rowCount.value, { width: cardSize.value.width * 2, height: cardSize.value.height * 2 }, windowSize, index)
+    const { xTable, yTable } = useElementPosition(item, rowCount.value, totalLuckyCount, { width: cardSize.value.width * 2, height: cardSize.value.height * 2 }, windowSize, index)
     new TWEEN.Tween(item.position)
       .to({
         x: xTable,
@@ -704,7 +706,7 @@ onUnmounted(() => {
     </div>
     <!-- end -->
   </div>
-  <StarsBackground />
+  <StarsBackground :home-background="homeBackground" />
   <PrizeList class="absolute left-0 top-32" />
 </template>
 

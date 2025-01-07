@@ -1,7 +1,7 @@
 import Layout from '@/layout/index.vue'
 import i18n from '@/locales/i18n'
 import Home from '@/views/Home/index.vue'
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory,createWebHashHistory } from 'vue-router'
 
 export const configRoutes = {
   path: '/log-lottery/config',
@@ -131,10 +131,11 @@ const routes = [
       configRoutes,
     ],
   },
-]
-
+];
+const envMode=import.meta.env.MODE;
 const router = createRouter({
-  history: createWebHistory(),
+    // 读取环境变量
+  history: envMode==='file'?createWebHashHistory():createWebHistory(),
   routes,
 })
 

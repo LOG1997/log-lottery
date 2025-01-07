@@ -7,8 +7,8 @@ import daisyuiThemes from 'daisyui/src/theming/themes'
 import { storeToRefs } from 'pinia'
 import { themeChange } from 'theme-change'
 import { onMounted, ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { ColorPicker } from 'vue3-colorpicker'
+import { useI18n } from 'vue-i18n'
 import zod from 'zod'
 import PatternSetting from './components/PatternSetting.vue'
 import 'vue3-colorpicker/style.css'
@@ -17,7 +17,8 @@ const { t } = useI18n()
 const globalConfig = useStore().globalConfig
 const personConfig = useStore().personConfig
 const prizeConfig = useStore().prizeConfig
-const { getTopTitle: topTitle, getTheme: localTheme, getPatterColor: patternColor, getPatternList: patternList, getCardColor: cardColor, getLuckyColor: luckyCardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowPrizeList: isShowPrizeList, getLanguage: userLanguage } = storeToRefs(globalConfig)
+const { getTopTitle: topTitle, getTheme: localTheme, getPatterColor: patternColor, getPatternList: patternList, getCardColor: cardColor, getLuckyColor: luckyCardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowPrizeList: isShowPrizeList, getLanguage: userLanguage, getBackground: backgroundImage, getImageList: imageList,
+} = storeToRefs(globalConfig)
 const { getAlreadyPersonList: alreadyPersonList, getNotPersonList: notPersonList } = storeToRefs(personConfig)
 const colorPickerRef = ref()
 const resetDataDialogRef = ref()
@@ -38,13 +39,13 @@ const isShowPrizeListValue = ref(structuredClone(isShowPrizeList.value))
 const patternColorValue = ref(structuredClone(patternColor.value))
 const themeList = ref(Object.keys(daisyuiThemes))
 const daisyuiThemeList = ref<ThemeDaType>(daisyuiThemes)
+const backgroundImageValue = ref(backgroundImage.value)
 const formData = ref({
   rowCount: rowCountValue,
 })
 const formErr = ref({
   rowCount: '',
 })
-
 const schema = zod.object({
   rowCount: zod.number({
     required_error: i18n.global.t('error.require'),
@@ -145,8 +146,12 @@ watch(textColorValue, (val: string) => {
 watch(cardSizeValue, (val: { width: number, height: number }) => {
   globalConfig.setCardSize(val)
 }, { deep: true })
+
 watch(isShowPrizeListValue, () => {
   globalConfig.setIsShowPrizeList(isShowPrizeListValue.value)
+})
+watch(backgroundImageValue, (val) => {
+  globalConfig.setBackground(val)
 })
 watch(languageValue, (val: string) => {
   globalConfig.setLanguage(val)
@@ -235,6 +240,21 @@ onMounted(() => {
       <select v-model="themeValue" data-choose-theme class="w-full max-w-xs border-solid select border-1">
         <option disabled selected>{{ t('table.theme') }}</option>
         <option v-for="(item, index) in themeList" :key="index" :value="item">{{ item }}</option>
+      </select>
+    </label>
+    <label class="w-full max-w-xs form-control">
+      <div class="label">
+        <span class="label-text">{{ t('table.backgroundImage') }}</span>
+      </div>
+      <select
+        v-model="backgroundImageValue" data-choose-theme
+        class="w-full max-w-xs border-solid select border-1"
+      >
+        <option disabled selected>{{ t('table.backgroundImage') }}</option>
+        <option
+          v-for="(item, index) in [{ name: '❌', url: '', id: '' }, ...imageList]" :key="index"
+          :value="item"
+        >{{ item.name }}</option>
       </select>
     </label>
     <label class="w-full max-w-xs form-control">

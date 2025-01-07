@@ -80,6 +80,7 @@ export default {
     patternSetting: 'Pattern Setting',
     alwaysDisplay: 'Always Display Prize List',
     selectPicture: 'Select a Picture',
+    backgroundImage: 'Select Background Image',
   },
   dialog: {
     titleTip: 'Tip!',
@@ -118,6 +119,7 @@ export default {
     notImage: 'Not Image',
     personIsAllDone: 'All Person Is Done',
     personNotEnough: 'Person Is Not Enough',
+    startDraw: 'Now Draw {count} {leftover} people',
     completeInformation: 'Please provide complete information',
   },
   placeHolder: {

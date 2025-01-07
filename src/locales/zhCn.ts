@@ -80,6 +80,7 @@ export default {
     patternSetting: '图案设置',
     alwaysDisplay: '常显奖项列表',
     selectPicture: '选择一张图片',
+    backgroundImage: '选择背景图片',
   },
   dialog: {
     titleTip: '提示!',

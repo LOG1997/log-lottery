@@ -22,6 +22,7 @@ export const useGlobalConfig = defineStore('global', {
           textSize: 30,
           patternColor: '#1b66c9',
           patternList: defaultPatternList as number[],
+          background: {}, // 背景颜色或图片
         },
         musicList: defaultMusicList as IMusic[],
         imageList: defaultImageList as IImage[],
@@ -99,6 +100,10 @@ export const useGlobalConfig = defineStore('global', {
     // 获取当前语言
     getLanguage(state) {
       return state.globalConfig.language
+    },
+    // 获取背景图片设置
+    getBackground(state) {
+      return state.globalConfig.theme.background
     },
   },
   actions: {
@@ -218,6 +223,10 @@ export const useGlobalConfig = defineStore('global', {
       this.globalConfig.language = language
       i18n.global.locale.value = language
     },
+    // 设置背景图片
+    setBackground(background: any) {
+      this.globalConfig.theme.background = background
+    },
     // 重置所有配置
     reset() {
       this.globalConfig = {
@@ -236,6 +245,7 @@ export const useGlobalConfig = defineStore('global', {
           textSize: 30,
           patternColor: '#1b66c9',
           patternList: defaultPatternList as number[],
+          background: {}, // 背景颜色或图片
         },
         musicList: defaultMusicList as IMusic[],
         imageList: defaultImageList as IImage[],
