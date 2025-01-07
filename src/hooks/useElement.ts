@@ -1,5 +1,5 @@
+import type { IPersonConfig } from '@/types/storeType'
 import { rgba } from '@/utils/color'
-import { IPersonConfig } from '@/types/storeType'
 
 export const useElementStyle = (element: any, person: IPersonConfig, index: number, patternList: number[], patternColor: string, cardColor: string, cardSize: { width: number, height: number }, textSize: number, mod: 'default' | 'lucky' | 'sphere' = 'default') => {
     if (patternList.includes(index + 1) && mod == 'default') {
@@ -37,19 +37,19 @@ export const useElementStyle = (element: any, person: IPersonConfig, index: numb
         element.children[0].textContent = person.uid;
     }
 
-    element.children[1].style.fontSize = textSize + 'px'
-    element.children[1].style.lineHeight = textSize * 3 + 'px'
-    element.children[1].style.textShadow = `0 0 12px ${rgba(cardColor, 0.95)}`
-    if (person.name) {
-        element.children[1].textContent = person.name
-    }
+  element.children[1].style.fontSize = `${textSize}px`
+  element.children[1].style.lineHeight = `${textSize * 3}px`
+  element.children[1].style.textShadow = `0 0 12px ${rgba(cardColor, 0.95)}`
+  if (person.name) {
+    element.children[1].textContent = person.name
+  }
 
-    element.children[2].style.fontSize = textSize * 0.5 + 'px'
-    if (person.department || person.identity) {
-        element.children[2].innerHTML = `${person.department ? person.department : ''}<br/>${person.identity ? person.identity : ''}`
-    }
+  element.children[2].style.fontSize = `${textSize * 0.5}px`
+  if (person.department || person.identity) {
+    element.children[2].innerHTML = `${person.department ? person.department : ''}<br/>${person.identity ? person.identity : ''}`
+  }
 
-    return element
+  return element
 }
 
 /**

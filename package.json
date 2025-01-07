@@ -12,7 +12,8 @@
         "test": "vitest",
         "test:ui": "vitest --ui",
         "preview": "vite preview",
-        "lint": "eslint ./src --ext .vue,.js,.ts,.jsx,.tsx --fix"
+        "lint": "eslint ./src",
+        "lint:fix": "eslint ./src --fix"
     },
     "dependencies": {
         "@tweenjs/tween.js": "^23.1.2",
@@ -31,6 +32,7 @@
         "three-css3d": "^1.0.6",
         "vue": "^3.5.13",
         "vue-dompurify-html": "^5.2.0",
+        "vue-i18n": "^10.0.4",
         "vue-router": "^4.5.0",
         "vue-toast-notification": "^3",
         "vue3-colorpicker": "^2.3.0",
@@ -38,6 +40,9 @@
         "zod": "^3.23.8"
     },
     "devDependencies": {
+        "@antfu/eslint-config": "^3.9.2",
+        "@eslint/eslintrc": "^3.2.0",
+        "@eslint/js": "^9.15.0",
         "@iconify-json/ep": "^1.2.1",
         "@iconify-json/fluent": "^1.2.8",
         "@tailwindcss/typography": "^0.5.15",
@@ -56,6 +61,7 @@
         "daisyui": "^4.12.14",
         "eslint": "^9.15.0",
         "eslint-plugin-vue": "^9.31.0",
+        "globals": "^15.12.0",
         "happy-dom": "^15.11.6",
         "husky": "^9.1.7",
         "jsdom": "^25.0.1",
