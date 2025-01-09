@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import PlayMusic from '@/components/PlayMusic/index.vue'
 import useStore from '@/store'
+import { themeChange } from '@/utils'
 import { storeToRefs } from 'pinia'
-import { themeChange } from 'theme-change'
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -14,10 +14,6 @@ const { getTheme: localTheme } = storeToRefs(globalConfig)
 const { getPrizeConfig: prizeList } = storeToRefs(prizeConfig)
 
 const tipDialog = ref()
-// const isMobileValue = ref(structuredClone(isMobile.value))
-function setLocalTheme(theme: any) {
-  themeChange(theme.name)
-}
 
 // 设置当前奖列表
 function setCurrentPrize() {
@@ -53,7 +49,7 @@ function judgeChromeOrEdge() {
   return isChrome || isEdge
 }
 onMounted(() => {
-  setLocalTheme(localTheme.value)
+  themeChange(localTheme.value.name)
   setCurrentPrize()
   if (judgeMobile() || !judgeChromeOrEdge()) {
     tipDialog.value.showModal()
