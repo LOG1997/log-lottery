@@ -39,3 +39,12 @@ export function selectCard(cardIndexArr: number[], tableLength: number, personId
 
   return cardIndex
 }
+
+export function themeChange(theme: string) {
+  // 获取根html
+  const html = document.querySelectorAll('html')
+  if (html) {
+    html[0].setAttribute('data-theme', theme)
+    localStorage.setItem('theme', theme)
+  }
+}

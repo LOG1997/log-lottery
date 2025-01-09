@@ -2,10 +2,10 @@
 import i18n, { languageList } from '@/locales/i18n'
 
 import useStore from '@/store'
+import { themeChange } from '@/utils'
 import { isHex, isRgbOrRgba } from '@/utils/color'
 import daisyuiThemes from 'daisyui/src/theming/themes'
 import { storeToRefs } from 'pinia'
-import { themeChange } from 'theme-change'
 import { onMounted, ref, watch } from 'vue'
 import { ColorPicker } from 'vue3-colorpicker'
 import { useI18n } from 'vue-i18n'
