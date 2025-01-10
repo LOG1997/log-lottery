@@ -182,7 +182,7 @@ export const useGlobalConfig = defineStore('global', {
     },
     // 重置音乐列表
     resetMusicList() {
-      this.globalConfig.musicList = defaultMusicList as IMusic[]
+      this.globalConfig.musicList =JSON.parse(JSON.stringify(defaultMusicList)) as IMusic[]
     },
     // 清空音乐列表
     clearMusicList() {
