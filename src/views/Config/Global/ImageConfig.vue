@@ -106,7 +106,7 @@ watch(() => imgUploadToast.value, (val) => {
           </div>
           <div>
             <button class="btn btn-error btn-xs" @click="removeImage(item)">
-              {{ t('button.upload') }}
+              {{ t('button.delete') }}
             </button>
           </div>
         </div>
