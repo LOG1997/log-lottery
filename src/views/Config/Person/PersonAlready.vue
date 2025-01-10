@@ -32,7 +32,7 @@ const tableColumnsList = [
     sort: true,
   },
   {
-    label: i18n.global.t('data.number'),
+    label: i18n.global.t('data.name'),
     props: 'name',
   },
   {
