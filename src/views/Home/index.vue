@@ -429,8 +429,8 @@ async function stopLottery() {
   if (!canOperate.value) {
     return
   }
-  clearInterval(intervalTimer.value)
-  intervalTimer.value = null
+  //   clearInterval(intervalTimer.value)
+  //   intervalTimer.value = null
   canOperate.value = false
   rollBall(0, 1)
 
@@ -570,8 +570,13 @@ function randomBallData(mod: 'default' | 'lucky' | 'sphere' = 'default') {
     const cardRandomIndexArr: number[] = []
     const personRandomIndexArr: number[] = []
     for (let i = 0; i < indexLength; i++) {
-      cardRandomIndexArr.push(Math.round(Math.random() * (tableData.value.length - 1)))
-      personRandomIndexArr.push(Math.round(Math.random() * (allPersonList.value.length - 1)))
+      const randomCardIndex = Math.round(Math.random() * (tableData.value.length - 1))
+      const randomPersonIndex = Math.round(Math.random() * (allPersonList.value.length - 1))
+      if (luckyCardList.value.includes(randomCardIndex)) {
+        continue
+      }
+      cardRandomIndexArr.push(randomCardIndex)
+      personRandomIndexArr.push(randomPersonIndex)
     }
     for (let i = 0; i < cardRandomIndexArr.length; i++) {
       if (!objects.value[cardRandomIndexArr[i]]) {
