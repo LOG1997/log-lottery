@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { IPersonConfig } from '@/types/storeType'
+import type { Material } from 'three'
 import StarsBackground from '@/components/StarsBackground/index.vue'
 import { useElementPosition, useElementStyle } from '@/hooks/useElement'
 import i18n from '@/locales/i18n'
@@ -12,7 +13,7 @@ import { storeToRefs } from 'pinia'
 import { Object3D, PerspectiveCamera, Scene, Vector3 } from 'three'
 import { CSS3DObject, CSS3DRenderer } from 'three-css3d'
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js'
-import { onMounted, onUnmounted, ref } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toast-notification'
@@ -268,7 +269,9 @@ function onWindowResize() {
  */
 function animation() {
   TWEEN.update()
-  controls.value.update()
+  if (controls.value) {
+    controls.value.update()
+  }
   // 设置自动旋转
   // 设置相机位置
   requestAnimationFrame(animation)
@@ -343,7 +346,9 @@ function resetCamera() {
 }
 
 function render() {
-  renderer.value.render(scene.value, camera.value)
+  if (renderer.value) {
+    renderer.value.render(scene.value, camera.value)
+  }
 }
 async function enterLottery() {
   if (!canOperate.value) {
@@ -582,39 +587,84 @@ function randomBallData(mod: 'default' | 'lucky' | 'sphere' = 'default') {
       if (!objects.value[cardRandomIndexArr[i]]) {
         continue
       }
-      objects.value[cardRandomIndexArr[i]].element = useElementStyle(objects.value[cardRandomIndexArr[i]].element, allPersonList.value[personRandomIndexArr[i]], cardRandomIndexArr[i], patternList.value, patternColor.value, cardColor.value, { width: cardSize.value.width, height: cardSize.value.height }, textSize.value, mod)
+      objects.value[cardRandomIndexArr[i]].element = useElementStyle(objects.value[cardRandomIndexArr[i]].element, allPersonList.value[personRandomIndexArr[i]], cardRandomIndexArr[i], patternList.value, patternColor.value, cardColor.value, { width: cardSize.value.width, height: cardSize.value.height }, textSize.value, mod, 'change')
     }
   }, 200)
 }
 // 监听键盘
-function listenKeyboard() {
-  window.addEventListener('keydown', (e: any) => {
-    if ((e.keyCode !== 32 || e.keyCode !== 27) && !canOperate.value) {
-      return
-    }
-    if (e.keyCode === 27 && currentStatus.value === 3) {
-      quitLottery()
-    }
-    if (e.keyCode !== 32) {
-      return
-    }
-    switch (currentStatus.value) {
-      case 0:
-        enterLottery()
-        break
-      case 1:
-        startLottery()
-        break
-      case 2:
-        stopLottery()
-        break
-      case 3:
-        continueLottery()
-        break
-      default:
-        break
-    }
-  })
+function listenKeyboard(e: any) {
+  if ((e.keyCode !== 32 || e.keyCode !== 27) && !canOperate.value) {
+    return
+  }
+  if (e.keyCode === 27 && currentStatus.value === 3) {
+    quitLottery()
+  }
+  if (e.keyCode !== 32) {
+    return
+  }
+  switch (currentStatus.value) {
+    case 0:
+      enterLottery()
+      break
+    case 1:
+      startLottery()
+      break
+    case 2:
+      stopLottery()
+      break
+    case 3:
+      continueLottery()
+      break
+    default:
+      break
+  }
+}
+
+function cleanup() {
+//   animationRunning.value = false
+  clearInterval(intervalTimer.value)
+  intervalTimer.value = null
+  if (scene.value) {
+    scene.value.traverse((object: Object3D) => {
+      if ((object as any).material) {
+        if (Array.isArray((object as any).material)) {
+          (object as any).material.forEach((material: Material) => {
+            material.dispose()
+          })
+        }
+        else {
+          (object as any).material.dispose()
+        }
+      }
+      if ((object as any).geometry) {
+        (object as any).geometry.dispose()
+      }
+      if ((object as any).texture) {
+        (object as any).texture.dispose()
+      }
+    })
+    scene.value.clear()
+  }
+
+  if (objects.value) {
+    objects.value.forEach((object) => {
+      if (object.element) {
+        object.element.remove()
+      }
+    })
+    objects.value = []
+  }
+
+  if (controls.value) {
+    controls.value.removeEventListener('change')
+    controls.value.dispose()
+  }
+  //   移除所有事件监听
+  window.removeEventListener('resize', onWindowResize)
+  scene.value = null
+  camera.value = null
+  renderer.value = null
+  controls.value = null
 }
 onMounted(() => {
   initTableData()
@@ -622,9 +672,12 @@ onMounted(() => {
   animation()
   containerRef.value!.style.color = `${textColor}`
   randomBallData()
-  listenKeyboard()
+  window.addEventListener('keydown', listenKeyboard)
 })
 onUnmounted(() => {
+  nextTick(() => {
+    cleanup()
+  })
   clearInterval(intervalTimer.value)
   intervalTimer.value = null
   window.removeEventListener('keydown', listenKeyboard)
