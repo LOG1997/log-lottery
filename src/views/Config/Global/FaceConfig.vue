@@ -13,7 +13,7 @@ import PatternSetting from './components/PatternSetting.vue'
 const globalConfig = useStore().globalConfig
 const personConfig = useStore().personConfig
 const prizeConfig= useStore().prizeConfig
-const { getTopTitle: topTitle, getTheme: localTheme, getPatterColor: patternColor, getPatternList: patternList, getCardColor: cardColor, getLuckyColor: luckyCardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowPrizeList: isShowPrizeList } = storeToRefs(globalConfig)
+const { getTopTitle: topTitle, getTheme: localTheme, getPatterColor: patternColor, getPatternList: patternList, getCardColor: cardColor, getLuckyColor: luckyCardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowPrizeList: isShowPrizeList, getIsShowAvatar: isShowAvatar } = storeToRefs(globalConfig)
 const { getAlreadyPersonList: alreadyPersonList, getNotPersonList: notPersonList } = storeToRefs(personConfig)
 const colorPickerRef = ref()
 const resetDataDialogRef=ref()
@@ -30,6 +30,7 @@ const cardSizeValue = ref(structuredClone(cardSize.value))
 const textSizeValue = ref(structuredClone(textSize.value))
 const rowCountValue = ref(structuredClone(rowCount.value))
 const isShowPrizeListValue = ref(structuredClone(isShowPrizeList.value))
+const isShowAvatarValue = ref(structuredClone(isShowAvatar.value))
 const patternColorValue = ref(structuredClone(patternColor.value))
 const themeList = ref(Object.keys(daisyuiThemes))
 const daisyuiThemeList = ref<ThemeDaType>(daisyuiThemes)
@@ -142,9 +143,12 @@ watch(textColorValue, (val: string) => {
 watch(cardSizeValue, (val: { width: number; height: number; }) => {
     globalConfig.setCardSize(val)
 }, { deep: true }),
-    watch(isShowPrizeListValue, () => {
-        globalConfig.setIsShowPrizeList(isShowPrizeListValue.value)
-    })
+watch(isShowPrizeListValue, () => {
+    globalConfig.setIsShowPrizeList(isShowPrizeListValue.value)
+})
+watch(isShowAvatarValue, () => {
+    globalConfig.setIsShowAvatar(isShowAvatarValue.value)
+})
 onMounted(() => {
 })
 </script>
@@ -285,6 +289,14 @@ onMounted(() => {
                 <span class="label-text">是否常显奖品列表</span>
             </div>
             <input type="checkbox" :checked="isShowPrizeListValue" @change="isShowPrizeListValue = !isShowPrizeListValue"
+                class="mt-2 border-solid checkbox checkbox-secondary border-1" />
+        </label>
+
+        <label class="w-full max-w-xs mb-10 form-control">
+            <div class="label">
+                <span class="label-text">是否显示头像</span>
+            </div>
+            <input type="checkbox" :checked="isShowAvatarValue" @change="isShowAvatarValue = !isShowAvatarValue"
                 class="mt-2 border-solid checkbox checkbox-secondary border-1" />
         </label>
 

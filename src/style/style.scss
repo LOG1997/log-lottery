@@ -21,6 +21,14 @@
         z-index: 2;
     }
 
+    .card-avatar-name{
+        top: auto;
+        bottom: 0;
+        left: 0px;
+        right: 0;
+        line-height: 2 !important;
+    }
+
     .card-detail {
         position: absolute;
         left: 0;

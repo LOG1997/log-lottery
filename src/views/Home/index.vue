@@ -31,7 +31,7 @@ const prizeConfig = useStore().prizeConfig
 
 const { getAllPersonList: allPersonList, getNotPersonList: notPersonList, getNotThisPrizePersonList: notThisPrizePersonList } = storeToRefs(personConfig)
 const { getCurrentPrize: currentPrize } = storeToRefs(prizeConfig)
-const { getTopTitle: topTitle, getCardColor: cardColor, getPatterColor: patternColor, getPatternList: patternList, getTextColor: textColor, getLuckyColor: luckyColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount } = storeToRefs(globalConfig)
+const { getTopTitle: topTitle, getCardColor: cardColor, getPatterColor: patternColor, getPatternList: patternList, getTextColor: textColor, getLuckyColor: luckyColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowAvatar: isShowAvatar } = storeToRefs(globalConfig)
 const tableData = ref<any[]>([])
 // const tableData = ref<any[]>(JSON.parse(JSON.stringify(alreadyPersonList.value)).concat(JSON.parse(JSON.stringify(notPersonList.value))))
 const currentStatus = ref(0) // 0为初始状态， 1为抽奖准备状态，2为抽奖中状态，3为抽奖结束状态
@@ -119,24 +119,28 @@ const init = () => {
         const number = document.createElement('div');
         number.className = 'card-id';
         number.textContent = tableData.value[i].uid;
+        if(isShowAvatar.value) number.style.display = 'none'
         element.appendChild(number);
 
         const symbol = document.createElement('div');
         symbol.className = 'card-name';
         symbol.textContent = tableData.value[i].name;
+        if(isShowAvatar.value) symbol.className = 'card-name card-avatar-name'
         element.appendChild(symbol);
 
         const detail = document.createElement('div');
         detail.className = 'card-detail';
         detail.innerHTML = `${tableData.value[i].department}<br/>${tableData.value[i].identity}`;
+        if(isShowAvatar.value) detail.style.display = 'none'
         element.appendChild(detail);
-
+           
         const avatar = document.createElement('img');
         avatar.className = 'card-avatar';
         avatar.src = tableData.value[i].avatar;
         avatar.alt = 'avatar';
         avatar.style.width = '140px';
         avatar.style.height = '140px';
+        if(!isShowAvatar.value) avatar.style.display = 'none'
         element.appendChild(avatar);
 
         element = useElementStyle(element, tableData.value[i], i, patternList.value, patternColor.value, cardColor.value, cardSize.value, textSize.value)

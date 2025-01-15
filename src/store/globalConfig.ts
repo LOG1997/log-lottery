@@ -8,6 +8,7 @@ export const useGlobalConfig = defineStore('global', {
             globalConfig: {
                 rowCount: 17,
                 isSHowPrizeList: true,
+                isShowAvatar: true,
                 topTitle: '大明内阁六部御前奏对',
                 theme: {
                     name: 'dracula',
@@ -93,8 +94,11 @@ export const useGlobalConfig = defineStore('global', {
         // 获取是否显示奖品列表
         getIsShowPrizeList(state) {
             return state.globalConfig.isSHowPrizeList;
+        },
+        // 获取是否显示头像
+        getIsShowAvatar(state) {
+            return state.globalConfig.isShowAvatar;
         }
-
     },
     actions: {
         // 设置rowCount
@@ -208,11 +212,16 @@ export const useGlobalConfig = defineStore('global', {
         setIsShowPrizeList(isShowPrizeList: boolean) {
             this.globalConfig.isSHowPrizeList = isShowPrizeList;
         },
+         // 设置是否显示头像
+        setIsShowAvatar(isShowAvatar: boolean) {
+            this.globalConfig.isShowAvatar = isShowAvatar;
+        },
         // 重置所有配置
         reset() {
             this.globalConfig = {
                 rowCount: 17,
                 isSHowPrizeList: true,
+                isShowAvatar: false,
                 topTitle: '大明内阁六部御前奏对',
                 theme: {
                     name: 'dracula',
