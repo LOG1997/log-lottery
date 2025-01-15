@@ -4,12 +4,12 @@ import { defineStore } from 'pinia'
 import { defaultImageList, defaultMusicList, defaultPatternList } from './data'
 // import { IPrizeConfig } from '@/types/storeType';
 export const useGlobalConfig = defineStore('global', {
-                isShowAvatar: true,
   state() {
     return {
       globalConfig: {
         rowCount: 17,
         isSHowPrizeList: true,
+        isShowAvatar: true,
         topTitle: i18n.global.t('data.defaultTitle'),
         language: browserLanguage,
         theme: {
@@ -106,6 +106,10 @@ export const useGlobalConfig = defineStore('global', {
     getBackground(state) {
       return state.globalConfig.theme.background
     },
+     // 获取是否显示头像
+    getIsShowAvatar(state) {
+      return state.globalConfig.isShowAvatar;
+    }
   },
   actions: {
     // 设置rowCount
@@ -228,11 +232,16 @@ export const useGlobalConfig = defineStore('global', {
     setBackground(background: any) {
       this.globalConfig.theme.background = background
     },
+      // 设置是否显示头像
+    setIsShowAvatar(isShowAvatar: boolean) {
+        this.globalConfig.isShowAvatar = isShowAvatar;
+    },
     // 重置所有配置
     reset() {
       this.globalConfig = {
         rowCount: 17,
         isSHowPrizeList: true,
+        isShowAvatar: false,
         topTitle: i18n.global.t('data.defaultTitle'),
         language: browserLanguage,
         theme: {

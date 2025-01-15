@@ -36,6 +36,13 @@ const tableColumnsList = [
     props: 'name',
   },
   {
+    label: i18n.global.t('data.avatar'),
+    props: 'avatar',
+    formatValue(row: any) {
+       return row.avatar ? `<img src="${row.avatar}" alt="avatar" style="width: 50px; height: 50px;"/>` : '-';
+    }
+  },
+  {
     label: i18n.global.t('data.department'),
     props: 'department',
   },
@@ -70,6 +77,13 @@ const tableColumnsDetail = [
   {
     label: i18n.global.t('data.number'),
     props: 'name',
+  },
+  {
+    label: i18n.global.t('data.avatar'),
+    props: 'avatar',
+    formatValue(row: any) {
+       return row.avatar ? `<img src="${row.avatar}" alt="avatar" style="width: 50px; height: 50px;"/>` : '-';
+    }
   },
   {
     label: i18n.global.t('data.department'),
