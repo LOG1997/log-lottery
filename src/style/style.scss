@@ -4,8 +4,9 @@
     user-select: none;
     .card-id {
         position: absolute;
-        top: 20px;
+        top: 10px;
         right: 20px;
+        z-index: 2;
     }
 
     .card-name {
@@ -17,6 +18,15 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        z-index: 2;
+    }
+
+    .card-avatar-name{
+        top: auto;
+        bottom: 0;
+        left: 0px;
+        right: 0;
+        line-height: 2 !important;
     }
 
     .card-detail {
@@ -24,12 +34,24 @@
         left: 0;
         right: 0;
         bottom: 15px;
+        z-index: 2;
+    }
+
+    .card-avatar{
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+        width: 140px !important;
+        height: auto !important;
+        object-fit: cover;
     }
 }
 
 .lucky-element-card {
     cursor: default;
-    text-align: center;
     &::before {
         background-color: linear-gradient(-45deg, #e81cff 0%, #40c9ff 100%);
         border: 1px solid linear-gradient(-45deg, #e81cff 0%, #40c9ff 100%);
@@ -39,9 +61,12 @@
         position: absolute;
         top: 20px;
         right: 20px;
+        z-index: 2;
     }
 
     .card-name {
+        text-align: center;
+        z-index: 2;
         position: absolute;
         top: 40px;
         left: 0px;
@@ -59,6 +84,20 @@
         position: absolute;
         left: 0;
         right: 0;
+        text-align: center;
+        z-index: 2;
         bottom: 15px;
+    }
+
+    .card-avatar{
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+        width: 280px !important;
+        height: auto !important;
+        object-fit: cover;
     }
 }
