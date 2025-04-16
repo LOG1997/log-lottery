@@ -1,0 +1,1 @@
+function e(e){return new Promise((r=>{const a=new FileReader;a.readAsBinaryString(e),a.onload=e=>{r(e.target.result)}}))}function r(e){return new Promise((r=>{const a=new FileReader;a.readAsDataURL(e),a.onload=a=>{r({dataUrl:a.target.result,fileName:e.name})}}))}export{r as a,e as r};
