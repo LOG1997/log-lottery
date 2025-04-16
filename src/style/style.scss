@@ -45,7 +45,7 @@
         bottom: 0;
         z-index: 1;
         width: 140px !important;
-        height: auto !important;
+        height: 120px !important;
         object-fit: cover;
     }
 }
@@ -79,6 +79,13 @@
         // animation: tracking-in-expand-fwd 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both;
         // animation-delay: 0.6s;
     }
+    .card-avatar-name{
+        top: auto;
+        bottom: 0;
+        left: 0px;
+        right: 0;
+        line-height: 2 !important;
+    }
 
     .card-detail {
         position: absolute;
@@ -97,7 +104,7 @@
         bottom: 0;
         z-index: 1;
         width: 280px !important;
-        height: auto !important;
+        height: 240px !important;
         object-fit: cover;
     }
 }
