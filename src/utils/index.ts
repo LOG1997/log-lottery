@@ -32,7 +32,7 @@ export function addOtherInfo(personList: any[]) {
 }
 
 export function selectCard(cardIndexArr: number[], tableLength: number, personId: number): number {
-  const cardIndex = Math.round(Math.random() * (tableLength - 1))
+  const cardIndex = Math.floor(Math.random() * (tableLength - 1))
   if (cardIndexArr.includes(cardIndex)) {
     return selectCard(cardIndexArr, tableLength, personId)
   }
