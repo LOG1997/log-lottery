@@ -1,16 +1,16 @@
 <script setup lang='ts'>
-import type { IPrizeConfig } from '../../types/storeType'
+import type { IPrizeConfig } from '@/types/storeType'
+import { storeToRefs } from 'pinia'
+import { onMounted, ref } from 'vue'
+
+import { useI18n } from 'vue-i18n'
 import defaultPrizeImage from '@/assets/images/龙.png'
 import ImageSync from '@/components/ImageSync/index.vue'
 
 import EditSeparateDialog from '@/components/NumberSeparate/EditSeparateDialog.vue'
+
 import i18n from '@/locales/i18n'
 import useStore from '@/store'
-
-import { storeToRefs } from 'pinia'
-
-import { onMounted, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 const prizeConfig = useStore().prizeConfig
@@ -318,142 +318,5 @@ onMounted(() => {
 </template>
 
 <style lang='scss' scoped>
-.label {
-    width: 120px;
-}
-
-.prize-list-enter-active {
-    -webkit-animation: slide-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-    animation: slide-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-}
-
-.prize-list-leave-active {
-    -webkit-animation: slide-left 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-    animation: slide-left 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-}
-
-.prize-operate-enter-active {
-    // 延时显示
-    animation: show-operate 0.6s;
-    -webkit-animation: show-operate 0.6s;
-}
-
-.current-prize {
-    position: relative;
-    display: block;
-    overflow: hidden;
-    isolation: isolate;
-
-    border-radius: 20px;
-    padding: 3px;
-}
-
-.current-prize::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 400%;
-    height: 100%;
-    background: linear-gradient(115deg, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b);
-    background-size: 25% 100%;
-    animation: an-at-keyframe-css-at-rule-that-translates-via-the-transform-property-the-background-by-negative-25-percent-of-its-width-so-that-it-gives-a-nice-border-animation_-We-use-the-translate-property-to-have-a-nice-transition-so-it_s-not-a-jerk-of-a-start-or-stop .75s linear infinite;
-    // animation-play-state: paused;
-    translate: -5% 0%;
-    transition: translate 0.25s ease-out;
-    animation-play-state: running;
-    transition-duration: 0.75s;
-    translate: 0% 0%;
-}
-
-.current-prize::after {
-    content: "";
-    position: absolute;
-    inset: 4px;
-    border-top-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-    z-index: -1;
-}
-
-@keyframes an-at-keyframe-css-at-rule-that-translates-via-the-transform-property-the-background-by-negative-25-percent-of-its-width-so-that-it-gives-a-nice-border-animation_-We-use-the-translate-property-to-have-a-nice-transition-so-it_s-not-a-jerk-of-a-start-or-stop {
-    to {
-        transform: translateX(-25%);
-    }
-}
-
-@-webkit-keyframes slide-right {
-    0% {
-        -webkit-transform: translateX(0);
-        transform: translateX(0);
-    }
-
-    100% {
-        -webkit-transform: translateX(30px);
-        transform: translateX(30px);
-    }
-}
-
-@keyframes slide-right {
-    0% {
-        -webkit-transform: translateX(-200px);
-        transform: translateX(-200px);
-    }
-
-    100% {
-        -webkit-transform: translateX(0);
-        transform: translateX(0);
-    }
-}
-
-@-webkit-keyframes slide-left {
-    0% {
-        -webkit-transform: translateX(0);
-        transform: translateX(0);
-    }
-
-    100% {
-        -webkit-transform: translateX(-100px);
-        transform: translateX(-100px);
-    }
-}
-
-@keyframes slide-left {
-    0% {
-        -webkit-transform: translateX(0);
-        transform: translateX(0);
-    }
-
-    100% {
-        -webkit-transform: translateX(-400px);
-        transform: translateX(-400px);
-    }
-}
-
-@-webkit-keyframes show-operate {
-    0% {
-        opacity: 0;
-    }
-
-    99% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 1;
-    }
-}
-
-@keyframes show-operate {
-    0% {
-        opacity: 0;
-    }
-
-    99% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 1;
-    }
-}
+@import "./index.scss";
 </style>

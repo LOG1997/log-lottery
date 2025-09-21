@@ -29,6 +29,9 @@ importers:
       localforage:
         specifier: ^1.10.0
         version: 1.10.0
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.17.21
       markdown-it:
         specifier: ^14.1.0
         version: 14.1.0

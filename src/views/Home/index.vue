@@ -1,23 +1,23 @@
 <script setup lang="ts">
+import type { Material, Object3D } from 'three'
 import type { IPersonConfig } from '@/types/storeType'
-import type { Material } from 'three'
-import StarsBackground from '@/components/StarsBackground/index.vue'
-import { useElementPosition, useElementStyle } from '@/hooks/useElement'
-import i18n from '@/locales/i18n'
-import useStore from '@/store'
-import { filterData, selectCard } from '@/utils'
-import { rgba } from '@/utils/color'
 import * as TWEEN from '@tweenjs/tween.js'
-import confetti from 'canvas-confetti'
 import { storeToRefs } from 'pinia'
-import { Object3D, PerspectiveCamera, Scene, Vector3 } from 'three'
+import { PerspectiveCamera, Scene, Vector3 } from 'three'
 import { CSS3DObject, CSS3DRenderer } from 'three-css3d'
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js'
 import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toast-notification'
-import PrizeList from './PrizeList.vue'
+import StarsBackground from '@/components/StarsBackground/index.vue'
+import { useElementPosition, useElementStyle } from '@/hooks/useElement'
+import i18n from '@/locales/i18n'
+import useStore from '@/store'
+import { selectCard } from '@/utils'
+import { rgba } from '@/utils/color'
+import PrizeList from './components/PrizeList/index.vue'
+import { confettiFire, createSphereVertices, createTableVertices, initTableData } from './index'
 import 'vue-toast-notification/dist/theme-sugar.css'
 
 const { t } = useI18n()
@@ -32,7 +32,14 @@ const { getAllPersonList: allPersonList, getNotPersonList: notPersonList, getNot
 const { getCurrentPrize: currentPrize } = storeToRefs(prizeConfig)
 const { getTopTitle: topTitle, getCardColor: cardColor, getPatterColor: patternColor, getPatternList: patternList, getTextColor: textColor, getLuckyColor: luckyColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getBackground: homeBackground, getIsShowAvatar: isShowAvatar } = storeToRefs(globalConfig)
 const tableData = ref<any[]>([])
-const currentStatus = ref(0) // 0为初始状态， 1为抽奖准备状态，2为抽奖中状态，3为抽奖结束状态
+
+enum LotteryStatus {
+  init = 0,
+  ready = 1,
+  running = 2,
+  end = 3,
+}
+const currentStatus = ref<LotteryStatus>(LotteryStatus.init) // 0为初始状态， 1为抽奖准备状态，2为抽奖中状态，3为抽奖结束状态
 const ballRotationY = ref(0)
 const containerRef = ref<HTMLElement>()
 const canOperate = ref(true)
@@ -62,26 +69,6 @@ const luckyCount = ref(10)
 const personPool = ref<IPersonConfig[]>([])
 
 const intervalTimer = ref<any>(null)
-// 填充数据，填满七行
-function initTableData() {
-  if (allPersonList.value.length <= 0) {
-    return
-  }
-  const totalCount = rowCount.value * 7
-  const originPersonData = JSON.parse(JSON.stringify(allPersonList.value))
-  const originPersonLength = originPersonData.length
-  if (originPersonLength < totalCount) {
-    const repeatCount = Math.ceil(totalCount / originPersonLength)
-    // 复制数据
-    for (let i = 0; i < repeatCount; i++) {
-      tableData.value = tableData.value.concat(JSON.parse(JSON.stringify(originPersonData)))
-    }
-  }
-  else {
-    tableData.value = originPersonData.slice(0, totalCount)
-  }
-  tableData.value = filterData(tableData.value.slice(0, totalCount), rowCount.value)
-}
 function init() {
   const felidView = 40
   const width = window.innerWidth
@@ -156,70 +143,12 @@ function init() {
 
     objects.value.push(object)
   }
-
-  createTableVertices()
-  createSphereVertices()
-  createHelixVertices()
-
-  function createTableVertices() {
-    const tableLen = tableData.value.length
-
-    for (let i = 0; i < tableLen; i++) {
-      const object = new Object3D()
-
-      object.position.x = tableData.value[i].x * (cardSize.value.width + 40) - rowCount.value * 90
-      object.position.y = -tableData.value[i].y * (cardSize.value.height + 20) + 1000
-      object.position.z = 0
-
-      targets.table.push(object)
-    }
-  }
-
-  function createSphereVertices() {
-    let i = 0
-    const objLength = objects.value.length
-    const vector = new Vector3()
-
-    for (; i < objLength; ++i) {
-      const phi = Math.acos(-1 + (2 * i) / objLength)
-      const theta = Math.sqrt(objLength * Math.PI) * phi
-      const object = new Object3D()
-
-      object.position.x = 800 * Math.cos(theta) * Math.sin(phi)
-      object.position.y = 800 * Math.sin(theta) * Math.sin(phi)
-      object.position.z = -800 * Math.cos(phi)
-
-      // rotation object
-
-      vector.copy(object.position).multiplyScalar(2)
-      object.lookAt(vector)
-      targets.sphere.push(object)
-    }
-  }
-  function createHelixVertices() {
-    let i = 0
-    const vector = new Vector3()
-    const objLength = objects.value.length
-    for (; i < objLength; ++i) {
-      const phi = i * 0.213 + Math.PI
-
-      const object = new Object3D()
-
-      object.position.x = 800 * Math.sin(phi)
-      object.position.y = -(i * 8) + 450
-      object.position.z = 800 * Math.cos(phi + Math.PI)
-
-      object.scale.set(1.1, 1.1, 1.1)
-
-      vector.x = object.position.x * 2
-      vector.y = object.position.y
-      vector.z = object.position.z * 2
-
-      object.lookAt(vector)
-
-      targets.helix.push(object)
-    }
-  }
+  // 创建横铺的界面
+  const tableVertices = createTableVertices({ tableData: tableData.value, rowCount: rowCount.value, cardSize: cardSize.value })
+  targets.table = tableVertices
+  // 创建球体
+  const sphereVertices = createSphereVertices({ objectsLength: objects.value.length })
+  targets.sphere = sphereVertices
   window.addEventListener('resize', onWindowResize, false)
   transform(targets.table, 1000)
   render()
@@ -238,6 +167,7 @@ function transform(targets: any[], duration: number) {
     for (let i = 0; i < objLength; ++i) {
       const object = objects.value[i]
       const target = targets[i]
+      //   console.log('target', i, target, targets)
       new TWEEN.Tween(object.position)
         .to({ x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration)
         .easing(TWEEN.Easing.Exponential.InOut)
@@ -366,6 +296,7 @@ function render() {
     renderer.value.render(scene.value, camera.value)
   }
 }
+// 进入抽奖，从平铺转为球体
 async function enterLottery() {
   if (!canOperate.value) {
     return
@@ -382,7 +313,7 @@ async function enterLottery() {
   }
   canOperate.value = false
   await transform(targets.sphere, 1000)
-  currentStatus.value = 1
+  currentStatus.value = LotteryStatus.ready
   rollBall(0.1, 2000)
 }
 // 开始抽奖
@@ -443,10 +374,10 @@ function startLottery() {
     position: 'top-right',
     duration: 8000,
   })
-  currentStatus.value = 2
+  currentStatus.value = LotteryStatus.running
   rollBall(10, 3000)
 }
-
+// 停止抽奖，开始选取中将卡片并展示
 async function stopLottery() {
   if (!canOperate.value) {
     return
@@ -476,7 +407,7 @@ async function stopLottery() {
       .start()
       .onComplete(() => {
         canOperate.value = true
-        currentStatus.value = 3
+        currentStatus.value = LotteryStatus.end
       })
     new TWEEN.Tween(item.rotation)
       .to({
@@ -519,63 +450,7 @@ async function continueLottery() {
 }
 function quitLottery() {
   enterLottery()
-  currentStatus.value = 0
-}
-// 庆祝动画
-function confettiFire() {
-  const duration = 3 * 1000
-  const end = Date.now() + duration;
-  (function frame() {
-    // launch a few confetti from the left edge
-    confetti({
-      particleCount: 2,
-      angle: 60,
-      spread: 55,
-      origin: { x: 0 },
-    })
-    // and launch a few from the right edge
-    confetti({
-      particleCount: 2,
-      angle: 120,
-      spread: 55,
-      origin: { x: 1 },
-    })
-
-    // keep going until we are out of time
-    if (Date.now() < end) {
-      requestAnimationFrame(frame)
-    }
-  }())
-  centerFire(0.25, {
-    spread: 26,
-    startVelocity: 55,
-  })
-  centerFire(0.2, {
-    spread: 60,
-  })
-  centerFire(0.35, {
-    spread: 100,
-    decay: 0.91,
-    scalar: 0.8,
-  })
-  centerFire(0.1, {
-    spread: 120,
-    startVelocity: 25,
-    decay: 0.92,
-    scalar: 1.2,
-  })
-  centerFire(0.1, {
-    spread: 120,
-    startVelocity: 45,
-  })
-}
-function centerFire(particleRatio: number, opts: any) {
-  const count = 200
-  confetti({
-    origin: { y: 0.7 },
-    ...opts,
-    particleCount: Math.floor(count * particleRatio),
-  })
+  currentStatus.value = LotteryStatus.init
 }
 
 function setDefaultPersonList() {
@@ -614,23 +489,23 @@ function listenKeyboard(e: any) {
   if ((e.keyCode !== 32 || e.keyCode !== 27) && !canOperate.value) {
     return
   }
-  if (e.keyCode === 27 && currentStatus.value === 3) {
+  if (e.keyCode === 27 && currentStatus.value === LotteryStatus.running) {
     quitLottery()
   }
   if (e.keyCode !== 32) {
     return
   }
   switch (currentStatus.value) {
-    case 0:
+    case LotteryStatus.init:
       enterLottery()
       break
-    case 1:
+    case LotteryStatus.ready:
       startLottery()
       break
-    case 2:
+    case LotteryStatus.running:
       stopLottery()
       break
-    case 3:
+    case LotteryStatus.end:
       continueLottery()
       break
     default:
@@ -639,7 +514,6 @@ function listenKeyboard(e: any) {
 }
 
 function cleanup() {
-//   animationRunning.value = false
   clearInterval(intervalTimer.value)
   intervalTimer.value = null
   if (scene.value) {
@@ -685,7 +559,7 @@ function cleanup() {
   controls.value = null
 }
 onMounted(() => {
-  initTableData()
+  tableData.value = initTableData({ allPersonList: allPersonList.value, rowCount: rowCount.value })
   init()
   animation()
   containerRef.value!.style.color = `${textColor}`
@@ -728,11 +602,11 @@ onUnmounted(() => {
   <div id="container" ref="containerRef" class="3dContainer">
     <!-- 选中菜单结构 start -->
     <div id="menu">
-      <button v-if="currentStatus === 0 && tableData.length > 0" class="btn-end " @click="enterLottery">
+      <button v-if="currentStatus === LotteryStatus.init && tableData.length > 0" class="btn-end " @click="enterLottery">
         {{ t('button.enterLottery') }}
       </button>
 
-      <div v-if="currentStatus === 1" class="start">
+      <div v-if="currentStatus === LotteryStatus.ready" class="start">
         <button class="btn-start" @click="startLottery">
           <strong>{{ t('button.start') }}</strong>
           <div id="container-stars">
@@ -746,11 +620,11 @@ onUnmounted(() => {
         </button>
       </div>
 
-      <button v-if="currentStatus === 2" class="btn-end btn glass btn-lg" @click="stopLottery">
+      <button v-if="currentStatus === LotteryStatus.running" class="btn-end btn glass btn-lg" @click="stopLottery">
         {{ t('button.selectLucky') }}
       </button>
 
-      <div v-if="currentStatus === 3" class="flex justify-center gap-6 enStop">
+      <div v-if="currentStatus === LotteryStatus.end" class="flex justify-center gap-6 enStop">
         <div class="start">
           <button class="btn-start" @click="continueLottery">
             <strong>{{ t('button.continue') }}</strong>
