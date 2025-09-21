@@ -248,7 +248,7 @@ onMounted(() => {
             >
               <div
                 v-if="item.isShow"
-                class="relative flex flex-row items-center justify-between w-64 h-20 shadow-xl card bg-base-100"
+                class="relative flex flex-row items-center justify-between w-64 h-20 px-3 gap-6 shadow-xl card bg-base-100"
               >
                 <div
                   v-if="item.isUsed"
@@ -261,10 +261,10 @@ onMounted(() => {
                     class="object-cover h-full rounded-xl"
                   >
                 </figure>
-                <div class="items-center p-0 text-center card-body">
-                  <div class="tooltip tooltip-left" :data-tip="item.name">
+                <div class="items-center p-0 card-body">
+                  <div class="tooltip tooltip-left w-full pl-1" :data-tip="item.name">
                     <h2
-                      class="w-24 p-0 m-0 overflow-hidden text-center card-title whitespace-nowrap text-ellipsis"
+                      class="w-24 p-0 m-0 overflow-hidden card-title whitespace-nowrap text-ellipsis"
                     >
                       {{ item.name }}
                     </h2>
@@ -274,7 +274,7 @@ onMounted(() => {
                       item.count }}
                   </p>
                   <progress
-                    class="w-3/4 h-6 progress progress-primary" :value="item.isUsedCount"
+                    class="w-full h-6 progress bg-[#52545b] progress-primary" :value="item.isUsedCount"
                     :max="item.count"
                   />
                   <!-- <p class="p-0 m-0">{{ item.isUsedCount }}/{{ item.count }}</p> -->
