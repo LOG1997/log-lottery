@@ -1,10 +1,10 @@
 <script setup lang='ts'>
-import i18n, { languageList } from '@/locales/i18n'
+import { daisyuiThemes } from '@/constant/theme'
 
+import i18n, { languageList } from '@/locales/i18n'
 import useStore from '@/store'
 import { themeChange } from '@/utils'
 import { isHex, isRgbOrRgba } from '@/utils/color'
-import daisyuiThemes from 'daisyui/src/theming/themes'
 import { storeToRefs } from 'pinia'
 import { onMounted, ref, watch } from 'vue'
 import { ColorPicker } from 'vue3-colorpicker'
@@ -17,7 +17,7 @@ const { t } = useI18n()
 const globalConfig = useStore().globalConfig
 const personConfig = useStore().personConfig
 const prizeConfig = useStore().prizeConfig
-const { getTopTitle: topTitle, getTheme: localTheme, getPatterColor: patternColor, getPatternList: patternList, getCardColor: cardColor, getLuckyColor: luckyCardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowPrizeList: isShowPrizeList, getLanguage: userLanguage, getBackground: backgroundImage, getImageList: imageList, getIsShowAvatar: isShowAvatar
+const { getTopTitle: topTitle, getTheme: localTheme, getPatterColor: patternColor, getPatternList: patternList, getCardColor: cardColor, getLuckyColor: luckyCardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowPrizeList: isShowPrizeList, getLanguage: userLanguage, getBackground: backgroundImage, getImageList: imageList, getIsShowAvatar: isShowAvatar,
 } = storeToRefs(globalConfig)
 const { getAlreadyPersonList: alreadyPersonList, getNotPersonList: notPersonList } = storeToRefs(personConfig)
 const colorPickerRef = ref()
@@ -38,7 +38,7 @@ const languageValue = ref(structuredClone(userLanguage.value))
 const isShowPrizeListValue = ref(structuredClone(isShowPrizeList.value))
 const isShowAvatarValue = ref(structuredClone(isShowAvatar.value))
 const patternColorValue = ref(structuredClone(patternColor.value))
-const themeList = ref(Object.keys(daisyuiThemes))
+const themeList = ref(daisyuiThemes)
 const daisyuiThemeList = ref<ThemeDaType>(daisyuiThemes)
 const backgroundImageValue = ref(backgroundImage.value)
 const formData = ref({
@@ -49,8 +49,9 @@ const formErr = ref({
 })
 const schema = zod.object({
   rowCount: zod.number({
-    required_error: i18n.global.t('error.require'),
-    invalid_type_error: i18n.global.t('error.requireNumber'),
+    error: i18n.global.t('error.require'),
+    // required_error: i18n.global.t('error.require'),
+    // invalid_type_error: i18n.global.t('error.requireNumber'),
   })
     .min(1, i18n.global.t('error.minNumber1'))
     .max(100, i18n.global.t('error.maxNumber100')),
@@ -158,7 +159,7 @@ watch(languageValue, (val: string) => {
   globalConfig.setLanguage(val)
 })
 watch(isShowAvatarValue, () => {
-    globalConfig.setIsShowAvatar(isShowAvatarValue.value)
+  globalConfig.setIsShowAvatar(isShowAvatarValue.value)
 })
 onMounted(() => {
 })
@@ -350,11 +351,13 @@ onMounted(() => {
     </label>
 
     <label class="w-full max-w-xs mb-10 form-control">
-        <div class="label">
-            <span class="label-text">{{ t('table.avatarDisplay') }}</span>
-        </div>
-        <input type="checkbox" :checked="isShowAvatarValue" @change="isShowAvatarValue = !isShowAvatarValue"
-          class="mt-2 border-solid checkbox checkbox-secondary border-1" />
+      <div class="label">
+        <span class="label-text">{{ t('table.avatarDisplay') }}</span>
+      </div>
+      <input
+        type="checkbox" :checked="isShowAvatarValue" class="mt-2 border-solid checkbox checkbox-secondary border-1"
+        @change="isShowAvatarValue = !isShowAvatarValue"
+      >
     </label>
   </div>
 </template>
