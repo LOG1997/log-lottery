@@ -187,14 +187,14 @@ onMounted(() => {
       </div>
     </div>
   </dialog>
-  <div>
+  <div class="flex flex-col gap-4">
     <h2>{{ t('viewTitle.globalSetting') }}</h2>
     <div class="mb-8">
       <button class="btn btn-sm btn-primary" @click="resetDataDialogRef.showModal()">
         {{ t('button.resetAllData') }}
       </button>
     </div>
-    <label class="flex flex-row items-center w-full gap-24 mb-10 form-control">
+    <label class="flex flex-row items-center w-full gap-24 form-control">
       <div class="">
         <div class="label">
           <span class="label-text">{{ t('table.title') }}</span>
@@ -205,7 +205,7 @@ onMounted(() => {
         >
       </div>
     </label>
-    <label class="flex flex-row items-center w-full gap-24 mb-10 form-control">
+    <label class="flex flex-row items-center w-full gap-24 form-control">
       <div class="">
         <div class="label">
           <span class="label-text">{{ t('table.columnNumber') }}</span>
@@ -262,26 +262,26 @@ onMounted(() => {
         >{{ item.name }}</option>
       </select>
     </label>
-    <label class="w-full max-w-xs form-control">
+    <label class="w-full max-w-xs flex flex-col gap-1 form-control">
       <div class="label">
         <span class="label-text">{{ t('table.cardColor') }}</span>
       </div>
       <ColorPicker ref="colorPickerRef" v-model="cardColorValue" v-model:pure-color="cardColorValue" />
     </label>
-    <label class="w-full max-w-xs form-control">
+    <label class="w-full max-w-xs flex flex-col gap-1 form-control">
       <div class="label">
         <span class="label-text">{{ t('table.winnerColor') }}</span>
       </div>
       <ColorPicker ref="colorPickerRef" v-model="luckyCardColorValue" v-model:pure-color="luckyCardColorValue" />
     </label>
 
-    <label class="w-full max-w-xs form-control">
+    <label class="w-full max-w-xs flex flex-col gap-1 form-control">
       <div class="label">
         <span class="label-text">{{ t('table.textColor') }}</span>
       </div>
       <ColorPicker ref="colorPickerRef" v-model="textColorValue" v-model:pure-color="textColorValue" />
     </label>
-    <label class="flex flex-row w-full max-w-xs gap-10 mb-10 form-control">
+    <label class="flex flex-row w-full max-w-xs gap-10 form-control">
       <div>
         <div class="label">
           <span class="label-text">{{ t('table.cardWidth') }}</span>
@@ -301,7 +301,7 @@ onMounted(() => {
         >
       </div>
     </label>
-    <label class="w-full max-w-xs mb-10 form-control">
+    <label class="w-full max-w-xs form-control">
       <div class="label">
         <span class="label-text">{{ t('table.textSize') }}</span>
       </div>
@@ -310,7 +310,7 @@ onMounted(() => {
         class="w-full max-w-xs input input-bordered"
       >
     </label>
-    <label class="w-full max-w-xs form-control">
+    <label class="w-full max-w-xs flex flex-col gap-1 form-control">
       <div class="label">
         <span class="label-text">{{ t('table.highlightColor') }}</span>
       </div>
@@ -329,7 +329,7 @@ onMounted(() => {
         </div>
       </div>
     </label>
-    <div class="flex w-full h-24 gap-3 m-0">
+    <div class="flex w-full gap-3 m-0">
       <button class="mt-5 btn btn-info btn-sm" @click.stop="clearPattern">
         <span>{{ t('button.clearPattern') }}</span>
       </button>
@@ -340,22 +340,22 @@ onMounted(() => {
       </div>
     </div>
 
-    <label class="w-full max-w-xs mb-10 form-control">
+    <label class="w-full max-w-xs flex items-center gap-2 form-control">
       <div class="label">
         <span class="label-text">{{ t('table.alwaysDisplay') }}</span>
       </div>
       <input
-        type="checkbox" :checked="isShowPrizeListValue" class="mt-2 border-solid checkbox checkbox-secondary border-1"
+        type="checkbox" :checked="isShowPrizeListValue" class="border-solid checkbox checkbox-secondary border-1"
         @change="isShowPrizeListValue = !isShowPrizeListValue"
       >
     </label>
 
-    <label class="w-full max-w-xs mb-10 form-control">
+    <label class="w-full max-w-xs flex items-center gap-2 mb-10 form-control">
       <div class="label">
         <span class="label-text">{{ t('table.avatarDisplay') }}</span>
       </div>
       <input
-        type="checkbox" :checked="isShowAvatarValue" class="mt-2 border-solid checkbox checkbox-secondary border-1"
+        type="checkbox" :checked="isShowAvatarValue" class="border-solid checkbox checkbox-secondary border-1"
         @change="isShowAvatarValue = !isShowAvatarValue"
       >
     </label>
