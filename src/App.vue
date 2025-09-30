@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import PlayMusic from '@/components/PlayMusic/index.vue'
-import useStore from '@/store'
-import { themeChange } from '@/utils'
 import { storeToRefs } from 'pinia'
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import PlayMusic from '@/components/PlayMusic/index.vue'
+import useStore from '@/store'
+import { themeChange } from '@/utils'
 
 const { t } = useI18n()
 const globalConfig = useStore().globalConfig

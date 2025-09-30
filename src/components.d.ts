@@ -15,7 +15,6 @@ declare module 'vue' {
     PlayMusic: typeof import('./components/PlayMusic/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    StarsBackground: typeof import('./components/StarsBackground/index.vue')['default']
     SvgIcon: typeof import('./components/SvgIcon/index.vue')['default']
     ToTop: typeof import('./components/ToTop/index.vue')['default']
   }
