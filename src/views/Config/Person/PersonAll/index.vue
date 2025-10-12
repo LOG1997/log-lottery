@@ -6,12 +6,12 @@ import DaiysuiTable from '@/components/DaiysuiTable/index.vue'
 import CustomDialog from '@/components/Dialog/index.vue'
 import { useViewModel } from './useViewModel'
 
-const { resetData, deleteAll, handleFileChange, exportData, alreadyPersonList, allPersonList, tableColumns } = useViewModel()
-const { t } = useI18n()
-const limitType = '.xlsx,.xls'
-
 const resetDataDialogRef = ref()
 const delAllDataDialogRef = ref()
+const exportInputFileRef = ref()
+const { resetData, deleteAll, handleFileChange, exportData, alreadyPersonList, allPersonList, tableColumns } = useViewModel({ exportInputFileRef })
+const { t } = useI18n()
+const limitType = '.xlsx,.xls'
 </script>
 
 <template>
@@ -45,8 +45,8 @@ const delAllDataDialogRef = ref()
 
           <div class="tooltip tooltip-bottom" :data-tip="t('tooltip.uploadExcelTip')">
             <input
-              id="explore" type="file" class="" style="display: none" :accept="limitType"
-              @change="handleFileChange"
+              id="explore" ref="exportInputFileRef" type="file" class="" style="display: none"
+              :accept="limitType" @change="handleFileChange"
             >
 
             <span class="btn btn-primary btn-sm">{{ t('button.importData') }}</span>

@@ -27,6 +27,11 @@ globalThis.onmessage = async (e: MessageEvent<WorkerMessage>) => {
                 break
             }
         default:
+            globalThis.postMessage({
+                type: 'fail',
+                data: null,
+                message: '读取失败',
+            })
             break
     }
 }
