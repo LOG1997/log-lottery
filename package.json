@@ -21,6 +21,7 @@
         "axios": "^1.7.8",
         "canvas-confetti": "^1.9.3",
         "dayjs": "^1.11.13",
+        "dexie": "^4.2.1",
         "github-markdown-css": "^5.8.0",
         "localforage": "^1.10.0",
         "markdown-it": "^14.1.0",
