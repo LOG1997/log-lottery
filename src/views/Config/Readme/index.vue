@@ -25,5 +25,16 @@ onMounted(() => {
 </template>
 
 <style scoped>
+:deep(.markdown-body) {
+  color: white;
+}
 
+:deep(.markdown-body *) {
+  color: white;
+}
+
+:deep(.markdown-body table:last-of-type),
+:deep(.markdown-body table:last-of-type *) {
+  color: black;
+}
 </style>
