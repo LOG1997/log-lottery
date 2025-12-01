@@ -15,12 +15,9 @@
 
 log-lottery是一个可配置可定制化的抽奖应用，炫酷3D球体，可用于年会抽奖等活动，支持奖品、人员、界面、图片音乐配置。
 
-> 因原域名到期，现将原域名 (<https://24years.top/log-lottery>)
-迁移到 (<https://1kw20.fun/log-lottery>) 。
-
 > 如果进入网站遇到图片无法显示或有报错的情况，请先到【全局配置】-【界面配置】菜单中点击【重置所有数据】按钮清除数据后进行更新。
 
-> 请尽量拉取代码进行构建部署，本线上网站代码会保持更新，可能影响原有功能和数据。
+> 该项目将在近期进行**内部代码重构**及**开发新功能**，预计元旦节前三天上线新版本。
 
 ## 要求
 
@@ -28,7 +25,7 @@ log-lottery是一个可配置可定制化的抽奖应用，炫酷3D球体，可�
 
 访问地址：
 
-<https://1kw20.fun/log-lottery>
+<https://to2026.xyz/log-lottery>
 
 or
 
@@ -132,14 +129,6 @@ npm run dev
 pnpm build
 or
 npm run build
-```
-
-预览
-
-```bash
-pnpm preview
-or
-npm run preview
 ```
 
 若想直接以打开html文件的方式运行，请执行以下命令进行打包。打包完成后在dist目录中直接打开index.html即可。
