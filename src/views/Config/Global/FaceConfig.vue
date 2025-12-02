@@ -1,6 +1,5 @@
 <script setup lang='ts'>
 import { storeToRefs } from 'pinia'
-
 import { onMounted, ref, watch } from 'vue'
 import { ColorPicker } from 'vue3-colorpicker'
 import { useI18n } from 'vue-i18n'
@@ -9,7 +8,6 @@ import { daisyuiThemes } from '@/constant/theme'
 import i18n, { languageList } from '@/locales/i18n'
 import useStore from '@/store'
 import { themeChange } from '@/utils'
-import { isHex, isRgbOrRgba } from '@/utils/color'
 import PatternSetting from './components/PatternSetting.vue'
 import 'vue3-colorpicker/style.css'
 
