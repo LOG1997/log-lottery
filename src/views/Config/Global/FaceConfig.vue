@@ -195,6 +195,7 @@ onMounted(() => {
       </button>
     </div>
     <div class="flex flex-wrap w-full gap-6">
+      <!-- 文本设置（主标题、语言、文字大小） -->
       <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs">
         <legend class="fieldset-legend">
           文本设置
@@ -230,6 +231,7 @@ onMounted(() => {
           >
         </label>
       </fieldset>
+      <!-- 布局设置（列数、卡片宽度、卡片高度 -->
       <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs">
         <legend class="fieldset-legend">
           布局设置
@@ -280,6 +282,7 @@ onMounted(() => {
           </div>
         </label>
       </fieldset>
+      <!-- 主题设置（主题、背景图片） -->
       <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs">
         <legend class="fieldset-legend">
           主题设置
@@ -344,6 +347,7 @@ onMounted(() => {
           </div>
         </div>
       </fieldset>
+      <!-- 图案设置 -->
       <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs">
         <legend class="fieldset-legend">
           图案设置
@@ -372,7 +376,7 @@ onMounted(() => {
           </div>
         </div>
       </fieldset>
-
+      <!-- 其他设置（是否常显奖项列表、是否显示头像） -->
       <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs">
         <legend class="fieldset-legend">
           其他设置
