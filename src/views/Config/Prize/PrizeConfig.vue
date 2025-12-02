@@ -1,12 +1,13 @@
 <script setup lang='ts'>
 import type { IPrizeConfig } from '@/types/storeType'
-import EditSeparateDialog from '@/components/NumberSeparate/EditSeparateDialog.vue'
-import i18n from '@/locales/i18n'
-import useStore from '@/store'
 import localforage from 'localforage'
 import { storeToRefs } from 'pinia'
 import { onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import EditSeparateDialog from '@/components/NumberSeparate/EditSeparateDialog.vue'
+import PageHeader from '@/components/PageHeader/index.vue'
+import i18n from '@/locales/i18n'
+import useStore from '@/store'
 
 const { t } = useI18n()
 const imageDbStore = localforage.createInstance({
@@ -149,27 +150,33 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
 
 <template>
   <div>
-    <h2>{{ t('viewTitle.prizeManagement') }}</h2>
-    <div class="flex w-full gap-3">
-      <button class="btn btn-info btn-sm" @click="addPrize">
-        {{ t('button.add') }}
-      </button>
-      <button class="btn btn-info btn-sm" @click="resetDefault">
-        {{ t('button.resetDefault') }}
-      </button>
-      <button class="btn btn-error btn-sm" @click="delAll">
-        {{ t('button.allDelete') }}
-      </button>
-    </div>
-    <div role="alert" class="w-full my-4 alert alert-info">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-6 h-6 stroke-current shrink-0">
-        <path
-          stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-        />
-      </svg>
-      <span>{{ t('dialog.tipResetPrize') }}</span>
-    </div>
+    <PageHeader :title="t('viewTitle.prizeManagement')">
+      <template #buttons>
+        <div class="flex w-full gap-3">
+          <button class="btn btn-info btn-sm" @click="addPrize">
+            {{ t('button.add') }}
+          </button>
+          <button class="btn btn-info btn-sm" @click="resetDefault">
+            {{ t('button.resetDefault') }}
+          </button>
+          <button class="btn btn-error btn-sm" @click="delAll">
+            {{ t('button.allDelete') }}
+          </button>
+        </div>
+      </template>
+      <template #alerts>
+        <div role="alert" class="w-full my-4 alert alert-info">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-6 h-6 stroke-current shrink-0">
+            <path
+              stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span>{{ t('dialog.tipResetPrize') }}</span>
+        </div>
+      </template>
+    </PageHeader>
+
     <ul class="p-0 m-0">
       <li
         v-for="item in prizeList" :key="item.id" class="flex gap-10"

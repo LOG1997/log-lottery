@@ -1,12 +1,13 @@
 <script setup lang='ts'>
 import type { IImage } from '@/types/storeType'
-import ImageSync from '@/components/ImageSync/index.vue'
-import useStore from '@/store'
-import { readFileData } from '@/utils/file'
 import localforage from 'localforage'
 import { storeToRefs } from 'pinia'
 import { onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import ImageSync from '@/components/ImageSync/index.vue'
+import PageHeader from '@/components/PageHeader/index.vue'
+import useStore from '@/store'
+import { readFileData } from '@/utils/file'
 
 const { t } = useI18n()
 const globalConfig = useStore().globalConfig
@@ -81,15 +82,20 @@ watch(() => imgUploadToast.value, (val) => {
   </div>
 
   <div>
-    <div class="">
-      <label for="explore">
-        <input
-          id="explore" type="file" class="" style="display: none" :accept="limitType"
-          @change="handleFileChange"
-        >
-        <span class="btn btn-primary btn-sm">{{ t('button.upload') }}</span>
-      </label>
-    </div>
+    <PageHeader title="图片管理">
+      <template #buttons>
+        <div class="">
+          <label for="explore">
+            <input
+              id="explore" type="file" class="" style="display: none" :accept="limitType"
+              @change="handleFileChange"
+            >
+            <span class="btn btn-primary btn-sm">{{ t('button.upload') }}</span>
+          </label>
+        </div>
+      </template>
+    </PageHeader>
+
     <ul class="p-0">
       <li v-for="item in localImageList" :key="item.id" class="mb-3">
         <div class="flex items-center gap-8">
