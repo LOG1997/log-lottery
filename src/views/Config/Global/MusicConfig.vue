@@ -96,10 +96,9 @@ onMounted(() => {
 
     <div>
       <ul class="p-0">
-        <li v-for="item in localMusicListValue" :key="item.id" class="flex items-center gap-6 pb-2 mb-3 divide-y">
-          <div class="mr-12 overflow-hidden w-72 whitespace-nowrap text-ellipsis">
-            <span>
-              {{ item.name }}</span>
+        <li v-for="item in localMusicListValue" :key="item.id" class="flex items-center gap-6 pb-2 mb-3">
+          <div class="mr-12 overflow-hidden w-72 whitespace-nowrap text-ellipsis" :title="item.name">
+            <a class="link hover:text-primary">{{ item.name }}</a>
           </div>
           <div class="flex gap-3">
             <button class="btn btn-primary btn-xs" @click="play(item)">
