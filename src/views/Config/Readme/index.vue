@@ -1,7 +1,7 @@
 <script setup lang='ts'>
-import i18n from '@/locales/i18n'
 import markdownit from 'markdown-it'
 import { onMounted, ref } from 'vue'
+import i18n from '@/locales/i18n'
 
 const md = markdownit()
 const readmeHtml = ref('')
