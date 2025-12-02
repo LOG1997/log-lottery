@@ -1,15 +1,15 @@
 <script setup lang='ts'>
-import { daisyuiThemes } from '@/constant/theme'
+import { storeToRefs } from 'pinia'
 
+import { onMounted, ref, watch } from 'vue'
+import { ColorPicker } from 'vue3-colorpicker'
+import { useI18n } from 'vue-i18n'
+import { z as zod } from 'zod'
+import { daisyuiThemes } from '@/constant/theme'
 import i18n, { languageList } from '@/locales/i18n'
 import useStore from '@/store'
 import { themeChange } from '@/utils'
 import { isHex, isRgbOrRgba } from '@/utils/color'
-import { storeToRefs } from 'pinia'
-import { onMounted, ref, watch } from 'vue'
-import { ColorPicker } from 'vue3-colorpicker'
-import { useI18n } from 'vue-i18n'
-import zod from 'zod'
 import PatternSetting from './components/PatternSetting.vue'
 import 'vue3-colorpicker/style.css'
 
@@ -194,171 +194,210 @@ onMounted(() => {
         {{ t('button.resetAllData') }}
       </button>
     </div>
-    <label class="flex flex-row items-center w-full gap-24 form-control">
-      <div class="">
-        <div class="label">
-          <span class="label-text">{{ t('table.title') }}</span>
-        </div>
+    <div class="flex flex-wrap w-full gap-6">
+      <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs">
+        <legend class="fieldset-legend">
+          文本设置
+        </legend>
+
+        <label class="label">
+          <div class="label">
+            <span class="label-text">{{ t('table.title') }}</span>
+          </div>
+        </label>
         <input
           v-model="topTitleValue" type="text" :placeholder="t('placeHolder.enterTitle')"
           class="w-full max-w-xs input input-bordered"
         >
-      </div>
-    </label>
-    <label class="flex flex-row items-center w-full gap-24 form-control">
-      <div class="">
-        <div class="label">
-          <span class="label-text">{{ t('table.columnNumber') }}</span>
-        </div>
-        <input
-          v-model="formData.rowCount" type="number" placeholder="Type here"
-          class="w-full max-w-xs input input-bordered"
-        >
-        <div class="help">
-          <span v-if="formErr.rowCount" class="text-sm text-red-400 help-text">
-            {{ formErr.rowCount }}
-          </span>
-        </div>
-      </div>
-      <div>
-        <div class="tooltip" :data-tip="t('tooltip.resetLayout')">
-          <button class="mt-5 btn btn-info btn-sm" :disabled="isRowCountChange !== 1" @click="resetPersonLayout">
-            <span>{{ t('button.setLayout') }}</span>
-            <span v-show="isRowCountChange === 2" class="loading loading-ring loading-md" />
-          </button>
-        </div>
-      </div>
-    </label>
-    <label class="w-full max-w-xs form-control">
-      <div class="label">
-        <span class="label-text">{{ t('table.language') }}</span>
-      </div>
-      <select v-model="languageValue" data-choose-theme class="w-full max-w-xs border-solid select border-1">
-        <option disabled selected>{{ t('table.language') }}</option>
-        <option v-for="item in languageList" :key="item.key" :value="item.key">{{ item.name }}</option>
-      </select>
-    </label>
-    <label class="w-full max-w-xs form-control">
-      <div class="label">
-        <span class="label-text">{{ t('table.theme') }}</span>
-      </div>
-      <select v-model="themeValue" data-choose-theme class="w-full max-w-xs border-solid select border-1">
-        <option disabled selected>{{ t('table.theme') }}</option>
-        <option v-for="(item, index) in themeList" :key="index" :value="item">{{ item }}</option>
-      </select>
-    </label>
-    <label class="w-full max-w-xs form-control">
-      <div class="label">
-        <span class="label-text">{{ t('table.backgroundImage') }}</span>
-      </div>
-      <select
-        v-model="backgroundImageValue" data-choose-theme
-        class="w-full max-w-xs border-solid select border-1"
-      >
-        <option disabled selected>{{ t('table.backgroundImage') }}</option>
-        <option
-          v-for="(item, index) in [{ name: '❌', url: '', id: '' }, ...imageList]" :key="index"
-          :value="item"
-        >{{ item.name }}</option>
-      </select>
-    </label>
-    <label class="w-full max-w-xs flex flex-col gap-1 form-control">
-      <div class="label">
-        <span class="label-text">{{ t('table.cardColor') }}</span>
-      </div>
-      <ColorPicker ref="colorPickerRef" v-model="cardColorValue" v-model:pure-color="cardColorValue" />
-    </label>
-    <label class="w-full max-w-xs flex flex-col gap-1 form-control">
-      <div class="label">
-        <span class="label-text">{{ t('table.winnerColor') }}</span>
-      </div>
-      <ColorPicker ref="colorPickerRef" v-model="luckyCardColorValue" v-model:pure-color="luckyCardColorValue" />
-    </label>
 
-    <label class="w-full max-w-xs flex flex-col gap-1 form-control">
-      <div class="label">
-        <span class="label-text">{{ t('table.textColor') }}</span>
-      </div>
-      <ColorPicker ref="colorPickerRef" v-model="textColorValue" v-model:pure-color="textColorValue" />
-    </label>
-    <label class="flex flex-row w-full max-w-xs gap-10 form-control">
-      <div>
-        <div class="label">
-          <span class="label-text">{{ t('table.cardWidth') }}</span>
+        <label class="w-full max-w-xs form-control">
+          <div class="label">
+            <span class="label-text">{{ t('table.language') }}</span>
+          </div>
+          <select v-model="languageValue" data-choose-theme class="w-full max-w-xs border-solid select border-1">
+            <option disabled selected>{{ t('table.language') }}</option>
+            <option v-for="item in languageList" :key="item.key" :value="item.key">{{ item.name }}</option>
+          </select>
+        </label>
+
+        <label class="w-full max-w-xs form-control">
+          <div class="label">
+            <span class="label-text">{{ t('table.textSize') }}</span>
+          </div>
+          <input
+            v-model="textSizeValue" type="number" placeholder="Type here"
+            class="w-full max-w-xs input input-bordered"
+          >
+        </label>
+      </fieldset>
+      <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs">
+        <legend class="fieldset-legend">
+          布局设置
+        </legend>
+        <label class="flex flex-row items-center form-control">
+          <div class="">
+            <div class="label">
+              <span class="label-text">{{ t('table.columnNumber') }}</span>
+              <div class="help">
+                <span v-if="formErr.rowCount" class="text-xs text-red-400 help-text">
+                  {{ formErr.rowCount }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </label>
+        <div class="join">
+          <input
+            v-model="formData.rowCount" type="number" placeholder="Type here"
+            class="w-full input input-bordered join-item"
+          >
+          <div class="tooltip join-item" :data-tip="t('tooltip.resetLayout')">
+            <button class="btn btn-neutral w-[120px] join-item" :disabled="isRowCountChange !== 1" @click="resetPersonLayout">
+              <span>{{ t('button.setLayout') }}</span>
+              <span v-show="isRowCountChange === 2" class="loading loading-ring loading-md" />
+            </button>
+          </div>
         </div>
-        <input
-          v-model="cardSizeValue.width" type="number" placeholder="Type here"
-          class="w-full max-w-xs input input-bordered"
-        >
-      </div>
-      <div>
-        <div class="label">
-          <span class="label-text">{{ t('table.cardHeight') }}</span>
+
+        <label class="flex flex-row w-full max-w-xs gap-10 form-control">
+          <div>
+            <div class="label">
+              <span class="label-text">{{ t('table.cardWidth') }}</span>
+            </div>
+            <input
+              v-model="cardSizeValue.width" type="number" placeholder="Type here"
+              class="w-full max-w-xs input input-bordered"
+            >
+          </div>
+          <div>
+            <div class="label">
+              <span class="label-text">{{ t('table.cardHeight') }}</span>
+            </div>
+            <input
+              v-model="cardSizeValue.height" type="number" placeholder="Type here"
+              class="w-full max-w-xs input input-bordered"
+            >
+          </div>
+        </label>
+      </fieldset>
+      <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs">
+        <legend class="fieldset-legend">
+          主题设置
+        </legend>
+
+        <div class="w-full max-w-xs form-control">
+          <label class="label">
+            <span class="label-text">{{ t('table.theme') }}</span>
+          </label>
+          <select v-model="themeValue" data-choose-theme class="w-full max-w-xs border-solid select border-1">
+            <option disabled selected>
+              {{ t('table.theme') }}
+            </option>
+            <option v-for="(item, index) in themeList" :key="index" :value="item">
+              {{ item }}
+            </option>
+          </select>
         </div>
-        <input
-          v-model="cardSizeValue.height" type="number" placeholder="Type here"
-          class="w-full max-w-xs input input-bordered"
-        >
-      </div>
-    </label>
-    <label class="w-full max-w-xs form-control">
-      <div class="label">
-        <span class="label-text">{{ t('table.textSize') }}</span>
-      </div>
-      <input
-        v-model="textSizeValue" type="number" placeholder="Type here"
-        class="w-full max-w-xs input input-bordered"
-      >
-    </label>
-    <label class="w-full max-w-xs flex flex-col gap-1 form-control">
-      <div class="label">
-        <span class="label-text">{{ t('table.highlightColor') }}</span>
-      </div>
-      <ColorPicker ref="colorPickerRef" v-model="patternColorValue" v-model:pure-color="patternColorValue" />
-    </label>
-    <label class="flex flex-row items-center w-full gap-24 mb-0 form-control">
-      <div>
-        <div class="label">
-          <span class="label-text">{{ t('table.patternSetting') }}</span>
+        <div class="w-full max-w-xs form-control">
+          <label class="label">
+            <span class="label-text">{{ t('table.backgroundImage') }}</span>
+          </label>
+          <select
+            v-model="backgroundImageValue" data-choose-theme
+            class="w-full max-w-xs border-solid select border-1"
+          >
+            <option disabled selected>
+              {{ t('table.backgroundImage') }}
+            </option>
+            <option
+              v-for="(item, index) in [{ name: '❌', url: '', id: '' }, ...imageList]" :key="index"
+              :value="item"
+            >
+              {{ item.name }}
+            </option>
+          </select>
         </div>
-        <div class="h-auto">
-          <PatternSetting
-            :row-count="rowCount" :card-color="cardColor" :pattern-color="patternColor"
-            :pattern-list="patternList"
-          />
+        <div class="grid grid-cols-2 gap-4 w-full">
+          <div class="flex flex-col max-w-xs items-center gap-1 form-control">
+            <label class="label">
+              <span class="label-text">{{ t('table.cardColor') }}</span>
+            </label>
+            <ColorPicker ref="colorPickerRef" v-model="cardColorValue" v-model:pure-color="cardColorValue" />
+          </div>
+          <div class="flex flex-col max-w-xs items-center gap-1 form-control">
+            <label class="label">
+              <span class="label-text">{{ t('table.winnerColor') }}</span>
+            </label>
+            <ColorPicker ref="colorPickerRef" v-model="luckyCardColorValue" v-model:pure-color="luckyCardColorValue" />
+          </div>
+          <div class="flex flex-col max-w-xs gap-1 items-center form-control">
+            <label class="label">
+              <span class="label-text">{{ t('table.textColor') }}</span>
+            </label>
+            <ColorPicker ref="colorPickerRef" v-model="textColorValue" v-model:pure-color="textColorValue" />
+          </div>
+          <div class="flex flex-col max-w-xs gap-1 form-control items-center">
+            <label class="label">
+              <span class="label-text">{{ t('table.highlightColor') }}</span>
+            </label>
+            <ColorPicker ref="colorPickerRef" v-model="patternColorValue" v-model:pure-color="patternColorValue" />
+          </div>
         </div>
-      </div>
-    </label>
-    <div class="flex w-full gap-3 m-0">
-      <button class="mt-5 btn btn-info btn-sm" @click.stop="clearPattern">
-        <span>{{ t('button.clearPattern') }}</span>
-      </button>
-      <div class="tooltip" :data-tip="t('tooltip.defaultLayout')">
-        <button class="mt-5 btn btn-info btn-sm" @click="resetPattern">
-          <span>{{ t('button.DefaultPattern') }}</span>
-        </button>
-      </div>
+      </fieldset>
+      <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs">
+        <legend class="fieldset-legend">
+          图案设置
+        </legend>
+        <div class="items-center gap-24 mb-0 form-control">
+          <div>
+            <label class="label">
+              <span class="label-text">{{ t('table.patternSetting') }}</span>
+            </label>
+            <div class="h-auto">
+              <PatternSetting
+                :row-count="rowCount" :card-color="cardColor" :pattern-color="patternColor"
+                :pattern-list="patternList"
+              />
+            </div>
+          </div>
+          <div class="flex w-full gap-3 m-0">
+            <button class="mt-5 btn btn-info btn-sm" @click.stop="clearPattern">
+              <span>{{ t('button.clearPattern') }}</span>
+            </button>
+            <div class="tooltip" :data-tip="t('tooltip.defaultLayout')">
+              <button class="mt-5 btn btn-info btn-sm" @click="resetPattern">
+                <span>{{ t('button.DefaultPattern') }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs">
+        <legend class="fieldset-legend">
+          其他设置
+        </legend>
+
+        <div class="flex items-center justify-between w-full max-w-xs mb-3 gap-2 form-control">
+          <div class="label">
+            <span class="label-text">{{ t('table.alwaysDisplay') }}</span>
+          </div>
+          <input
+            type="checkbox" :checked="isShowPrizeListValue" class="border-solid checkbox checkbox-secondary border-1"
+            @change="isShowPrizeListValue = !isShowPrizeListValue"
+          >
+        </div>
+        <div class="flex items-center justify-between w-full max-w-xs gap-2 mb-3 form-control">
+          <div class="label">
+            <span class="label-text">{{ t('table.avatarDisplay') }}</span>
+          </div>
+          <input
+            type="checkbox" :checked="isShowAvatarValue" class="border-solid checkbox checkbox-secondary border-1"
+            @change="isShowAvatarValue = !isShowAvatarValue"
+          >
+        </div>
+      </fieldset>
     </div>
-
-    <label class="w-full max-w-xs flex items-center gap-2 form-control">
-      <div class="label">
-        <span class="label-text">{{ t('table.alwaysDisplay') }}</span>
-      </div>
-      <input
-        type="checkbox" :checked="isShowPrizeListValue" class="border-solid checkbox checkbox-secondary border-1"
-        @change="isShowPrizeListValue = !isShowPrizeListValue"
-      >
-    </label>
-
-    <label class="w-full max-w-xs flex items-center gap-2 mb-10 form-control">
-      <div class="label">
-        <span class="label-text">{{ t('table.avatarDisplay') }}</span>
-      </div>
-      <input
-        type="checkbox" :checked="isShowAvatarValue" class="border-solid checkbox checkbox-secondary border-1"
-        @change="isShowAvatarValue = !isShowAvatarValue"
-      >
-    </label>
   </div>
 </template>
 

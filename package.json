@@ -59,6 +59,7 @@
         "@vitest/ui": "^3.2.4",
         "@vue/test-utils": "^2.4.6",
         "autoprefixer": "^10.4.20",
+        "baseline-browser-mapping": "^2.8.32",
         "daisyui": "^5.1.13",
         "eslint": "^9.15.0",
         "eslint-plugin-vue": "^10.4.0",
