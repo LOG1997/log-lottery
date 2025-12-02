@@ -127,9 +127,9 @@ watch(themeValue, (val: any) => {
   const selectedThemeDetail = daisyuiThemeList.value[val]
   globalConfig.setTheme({ name: val, detail: selectedThemeDetail })
   themeChange(val)
-  if (selectedThemeDetail.primary && (isHex(selectedThemeDetail.primary) || isRgbOrRgba(selectedThemeDetail.primary))) {
-    globalConfig.setCardColor(selectedThemeDetail.primary)
-  }
+//   if (selectedThemeDetail.primary && (isHex(selectedThemeDetail.primary) || isRgbOrRgba(selectedThemeDetail.primary))) {
+//     globalConfig.setCardColor(selectedThemeDetail.primary)
+//   }
 }, { deep: true })
 
 watch(cardColorValue, (val: string) => {
