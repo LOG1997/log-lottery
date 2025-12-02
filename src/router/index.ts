@@ -75,7 +75,7 @@ export const configRoutes = {
                 {
                     path: '/log-lottery/config/global/face',
                     name: 'FaceConfig',
-                    component: () => import('@/views/Config/Global/FaceConfig.vue'),
+                    component: () => import('@/views/Config/Global/FaceConfig/index.vue'),
                     meta: {
                         title: i18n.global.t('sidebar.viewSetting'),
                         icon: 'face',
@@ -84,7 +84,7 @@ export const configRoutes = {
                 {
                     path: '/log-lottery/config/global/image',
                     name: 'ImageConfig',
-                    component: () => import('@/views/Config/Global/ImageConfig.vue'),
+                    component: () => import('@/views/Config/Global/ImageConfig/index.vue'),
                     meta: {
                         title: i18n.global.t('sidebar.imagesManagement'),
                         icon: 'image',
@@ -93,7 +93,7 @@ export const configRoutes = {
                 {
                     path: '/log-lottery/config/global/music',
                     name: 'MusicConfig',
-                    component: () => import('@/views/Config/Global/MusicConfig.vue'),
+                    component: () => import('@/views/Config/Global/MusicConfig/index.vue'),
                     meta: {
                         title: i18n.global.t('sidebar.musicManagement'),
                         icon: 'music',
