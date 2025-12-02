@@ -1,12 +1,13 @@
 <!-- eslint-disable vue/no-parsing-error -->
 <script setup lang='ts'>
 import type { IPersonConfig } from '@/types/storeType'
-import DaiysuiTable from '@/components/DaiysuiTable/index.vue'
-import i18n from '@/locales/i18n'
-import useStore from '@/store'
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import DaiysuiTable from '@/components/DaiysuiTable/index.vue'
+import PageHeader from '@/components/PageHeader/index.vue'
+import i18n from '@/locales/i18n'
+import useStore from '@/store'
 
 const { t } = useI18n()
 const personConfig = useStore().personConfig
@@ -39,8 +40,8 @@ const tableColumnsList = [
     label: i18n.global.t('data.avatar'),
     props: 'avatar',
     formatValue(row: any) {
-       return row.avatar ? `<img src="${row.avatar}" alt="avatar" style="width: 50px; height: 50px;"/>` : '-';
-    }
+      return row.avatar ? `<img src="${row.avatar}" alt="avatar" style="width: 50px; height: 50px;"/>` : '-'
+    },
   },
   {
     label: i18n.global.t('data.department'),
@@ -82,8 +83,8 @@ const tableColumnsDetail = [
     label: i18n.global.t('data.avatar'),
     props: 'avatar',
     formatValue(row: any) {
-       return row.avatar ? `<img src="${row.avatar}" alt="avatar" style="width: 50px; height: 50px;"/>` : '-';
-    }
+      return row.avatar ? `<img src="${row.avatar}" alt="avatar" style="width: 50px; height: 50px;"/>` : '-'
+    },
   },
   {
     label: i18n.global.t('data.department'),
@@ -121,21 +122,25 @@ const tableColumnsDetail = [
 
 <template>
   <div class="overflow-y-auto">
-    <h2>{{ t('viewTitle.winnerManagement') }}</h2>
-    <div class="flex items-center justify-start gap-10">
-      <div>
-        <span>{{ t('table.luckyPeopleNumber') }}：</span>
-        <span>{{ alreadyPersonList.length }}</span>
-      </div>
-      <div class="flex flex-col">
-        <div class="form-control">
-          <label class="cursor-pointer label">
-            <span class="label-text">{{ t('table.detail') }}:</span>
-            <input v-model="isDetail" type="checkbox" class="border-solid toggle toggle-primary border-1">
-          </label>
+    <PageHeader :title="t('viewTitle.winnerManagement')">
+      <template #buttons>
+        <div class="flex items-center justify-start gap-10">
+          <div>
+            <span>{{ t('table.luckyPeopleNumber') }}：</span>
+            <span>{{ alreadyPersonList.length }}</span>
+          </div>
+          <div class="flex flex-col">
+            <div class="form-control">
+              <label class="cursor-pointer label">
+                <span class="label-text">{{ t('table.detail') }}:</span>
+                <input v-model="isDetail" type="checkbox" class="border-solid toggle toggle-primary border-1">
+              </label>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </template>
+    </PageHeader>
+
     <DaiysuiTable v-if="!isDetail" :table-columns="tableColumnsList" :data="alreadyPersonList" />
 
     <DaiysuiTable v-if="isDetail" :table-columns="tableColumnsDetail" :data="alreadyPersonDetail" />

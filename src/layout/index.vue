@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import ToTop from '@/components/ToTop/index.vue'
 import { useScroll } from '@vueuse/core'
 // import Header from './Header/index.vue';
 // import Footer from './Footer/index.vue';
 import { ref } from 'vue'
+import { Loading } from '@/components/Loading'
+import ToTop from '@/components/ToTop/index.vue'
 
 const mainContainer = ref<HTMLElement | null>(null)
-
 const { y } = useScroll(mainContainer)
 
 function scrollToTop() {
@@ -19,6 +19,7 @@ function scrollToTop() {
     <!-- <header class="shadow-2xl head-container h-14">
       <Header></Header>
     </header> -->
+    <Loading />
     <ToTop v-if="y > 400" @click="scrollToTop" />
     <main ref="mainContainer" class="box-content w-screen h-screen overflow-x-hidden overflow-y-auto main-container">
       <router-view class="h-full main-container-content" />

@@ -1,11 +1,13 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
+import { onMounted, provide, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { loadingKey, loadingState } from '@/components/Loading'
 import PlayMusic from '@/components/PlayMusic/index.vue'
 import useStore from '@/store'
 import { themeChange } from '@/utils'
-import { storeToRefs } from 'pinia'
-import { onMounted, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
 
+provide(loadingKey, loadingState)
 const { t } = useI18n()
 const globalConfig = useStore().globalConfig
 const prizeConfig = useStore().prizeConfig
@@ -14,7 +16,6 @@ const { getTheme: localTheme } = storeToRefs(globalConfig)
 const { getPrizeConfig: prizeList } = storeToRefs(prizeConfig)
 
 const tipDialog = ref()
-
 // 设置当前奖列表
 function setCurrentPrize() {
   if (prizeList.value.length <= 0) {

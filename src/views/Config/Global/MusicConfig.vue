@@ -1,12 +1,12 @@
 <script setup lang='ts'>
 import type { IMusic } from '@/types/storeType'
-import useStore from '@/store'
-import { readFileData } from '@/utils/file'
 import localforage from 'localforage'
 import { storeToRefs } from 'pinia'
-
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import PageHeader from '@/components/PageHeader/index.vue'
+import useStore from '@/store'
+import { readFileData } from '@/utils/file'
 
 const { t } = useI18n()
 const audioUploadToast = ref(0) // 0是不显示，1是成功，2是失败,3是不是图片
@@ -74,27 +74,31 @@ onMounted(() => {
 
 <template>
   <div>
-    <div class="flex gap-3">
-      <button class="btn btn-primary btn-sm" @click="resetMusic">
-        {{ t('button.reset') }}
-      </button>
-      <label for="explore">
-        <input
-          id="explore" type="file" class="" style="display: none" :accept="limitType"
-          @change="handleFileChange"
-        >
-        <span class="btn btn-primary btn-sm">{{ t('button.upload') }}</span>
-      </label>
-      <button class="btn btn-error btn-sm" @click="deleteAll">
-        {{ t('button.allDelete') }}
-      </button>
-    </div>
+    <PageHeader title="音乐管理">
+      <template #buttons>
+        <div class="flex gap-3">
+          <button class="btn btn-primary btn-sm" @click="resetMusic">
+            {{ t('button.reset') }}
+          </button>
+          <label for="explore">
+            <input
+              id="explore" type="file" class="" style="display: none" :accept="limitType"
+              @change="handleFileChange"
+            >
+            <span class="btn btn-primary btn-sm">{{ t('button.upload') }}</span>
+          </label>
+          <button class="btn btn-error btn-sm" @click="deleteAll">
+            {{ t('button.allDelete') }}
+          </button>
+        </div>
+      </template>
+    </PageHeader>
+
     <div>
       <ul class="p-0">
-        <li v-for="item in localMusicListValue" :key="item.id" class="flex items-center gap-6 pb-2 mb-3 divide-y">
-          <div class="mr-12 overflow-hidden w-72 whitespace-nowrap text-ellipsis">
-            <span>
-              {{ item.name }}</span>
+        <li v-for="item in localMusicListValue" :key="item.id" class="flex items-center gap-6 pb-2 mb-3">
+          <div class="mr-12 overflow-hidden w-72 whitespace-nowrap text-ellipsis" :title="item.name">
+            <a class="link hover:text-primary">{{ item.name }}</a>
           </div>
           <div class="flex gap-3">
             <button class="btn btn-primary btn-xs" @click="play(item)">

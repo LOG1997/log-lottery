@@ -9,13 +9,15 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     DaiysuiTable: typeof import('./components/DaiysuiTable/index.vue')['default']
+    Dialog: typeof import('./components/Dialog/index.vue')['default']
     EditSeparateDialog: typeof import('./components/NumberSeparate/EditSeparateDialog.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     ImageSync: typeof import('./components/ImageSync/index.vue')['default']
+    Loading: typeof import('./components/Loading/index.vue')['default']
+    PageHeader: typeof import('./components/PageHeader/index.vue')['default']
     PlayMusic: typeof import('./components/PlayMusic/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    StarsBackground: typeof import('./components/StarsBackground/index.vue')['default']
     SvgIcon: typeof import('./components/SvgIcon/index.vue')['default']
     ToTop: typeof import('./components/ToTop/index.vue')['default']
   }

@@ -1,159 +1,185 @@
 import type { IPersonConfig, IPrizeConfig } from '@/types/storeType'
-
 import dayjs from 'dayjs'
 import { defineStore } from 'pinia'
+import { computed, ref, toRaw, watch } from 'vue'
+import { IndexDb } from '@/utils/dexie'
 import { defaultPersonList } from './data'
 import { usePrizeConfig } from './prizeConfig'
 
-export const usePersonConfig = defineStore('person', {
-  state() {
-    return {
-      personConfig: {
+// 获取IPersonConfig的key组成数组
+export const personListKey = Object.keys(defaultPersonList[0])
+export const usePersonConfig = defineStore('person', () => {
+    const personDb = new IndexDb('person', ['allPersonList', 'alreadyPersonList'], 1, personListKey)
+    // NOTE: state
+    const personConfig = ref({
         allPersonList: [] as IPersonConfig[],
         alreadyPersonList: [] as IPersonConfig[],
-      },
-    }
-  },
-  getters: {
+    })
+    personDb.getAllData('allPersonList').then((data) => {
+        personConfig.value.allPersonList = data
+    })
+    personDb.getAllData('alreadyPersonList').then((data) => {
+        console.log(data)
+        personConfig.value.alreadyPersonList = data
+    })
+
+    // NOTE: getter
     // 获取全部配置
-    getPersonConfig(state) {
-      return state.personConfig
-    },
+    const getPersonConfig = computed(() => personConfig.value)
     // 获取全部人员名单
-    getAllPersonList(state) {
-      return state.personConfig.allPersonList.filter((item: IPersonConfig) => {
-        return item
-      })
-    },
+    const getAllPersonList = computed(() => personConfig.value.allPersonList)
     // 获取未获此奖的人员名单
-    getNotThisPrizePersonList(state: any) {
-      const currentPrize = usePrizeConfig().prizeConfig.currentPrize
-      const data = state.personConfig.allPersonList.filter((item: IPersonConfig) => {
-        return !item.prizeId.includes(currentPrize.id as string)
-      })
-
-      return data
-    },
-    // 获取已中奖人员名单
-    getAlreadyPersonList(state) {
-      return state.personConfig.allPersonList.filter((item: IPersonConfig) => {
-        return item.isWin === true
-      })
-    },
-    // 获取中奖人员详情
-    getAlreadyPersonDetail(state) {
-      return state.personConfig.alreadyPersonList
-    },
-    // 获取未中奖人员名单
-    getNotPersonList(state) {
-      return state.personConfig.allPersonList.filter((item: IPersonConfig) => {
-        return item.isWin === false
-      })
-    },
-  },
-  actions: {
-    // 添加未中奖人员
-    addNotPersonList(personList: IPersonConfig[]) {
-      if (personList.length <= 0) {
-        return
-      }
-      personList.forEach((item: IPersonConfig) => {
-        this.personConfig.allPersonList.push(item)
-      })
-    },
-    // 添加已中奖人员
-    addAlreadyPersonList(personList: IPersonConfig[], prize: IPrizeConfig | null) {
-      if (personList.length <= 0) {
-        return
-      }
-      personList.forEach((person: IPersonConfig) => {
-        this.personConfig.allPersonList.map((item: IPersonConfig) => {
-          if (item.id === person.id && prize != null) {
-            item.isWin = true
-            // person.isWin = true
-            item.prizeName.push(prize.name)
-            // person.prizeName += prize.name
-            item.prizeTime.push(dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'))
-            // person.prizeTime = new Date().toString()
-            item.prizeId.push(prize.id as string)
-          }
-
-          return item
+    const getNotThisPrizePersonList = computed(() => {
+        const currentPrize = usePrizeConfig().prizeConfig.currentPrize
+        const data = personConfig.value.allPersonList.filter((item: IPersonConfig) => {
+            return !item.prizeId.includes(currentPrize.id as string)
         })
-        this.personConfig.alreadyPersonList.push(person)
-      })
-    },
-    // 从已中奖移动到未中奖
-    moveAlreadyToNot(person: IPersonConfig) {
-      if (person.id === undefined || person.id == null) {
-        return
-      }
-      const alreadyPersonListLength = this.personConfig.alreadyPersonList.length
-      for (let i = 0; i < this.personConfig.allPersonList.length; i++) {
-        if (person.id === this.personConfig.allPersonList[i].id) {
-          this.personConfig.allPersonList[i].isWin = false
-          this.personConfig.allPersonList[i].prizeName = []
-          this.personConfig.allPersonList[i].prizeTime = []
-          this.personConfig.allPersonList[i].prizeId = []
 
-          break
+        return data
+    })
+
+    // 获取已中奖人员名单
+    const getAlreadyPersonList = computed(() => {
+        return personConfig.value.allPersonList.filter((item: IPersonConfig) => {
+            return item.isWin === true
+        })
+    })
+    // 获取中奖人员详情
+    const getAlreadyPersonDetail = computed(() => personConfig.value.alreadyPersonList)
+    // 获取未中奖人员名单
+    const getNotPersonList = computed(() => personConfig.value.allPersonList.filter((item: IPersonConfig) => {
+        return item.isWin === false
+    }))
+    // NOTE: action
+    // 添加未中奖人员
+    function addNotPersonList(personList: IPersonConfig[]) {
+        if (personList.length <= 0) {
+            return
         }
-      }
-      for (let i = 0; i < alreadyPersonListLength; i++) {
-        this.personConfig.alreadyPersonList = this.personConfig.alreadyPersonList.filter((item: IPersonConfig) =>
-          item.id !== person.id,
-        )
-      }
-    },
+        personList.forEach((item: IPersonConfig) => {
+            personConfig.value.allPersonList.push(item)
+        })
+        personDb.setAllData('allPersonList', personList)
+    }
+    // 添加已中奖人员
+    function addAlreadyPersonList(personList: IPersonConfig[], prize: IPrizeConfig | null) {
+        if (personList.length <= 0) {
+            return
+        }
+        personList.forEach((person: IPersonConfig) => {
+            personConfig.value.allPersonList.map((item: IPersonConfig) => {
+                if (item.id === person.id && prize != null) {
+                    item.isWin = true
+                    // person.isWin = true
+                    item.prizeName.push(prize.name)
+                    // person.prizeName += prize.name
+                    item.prizeTime.push(dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'))
+                    // person.prizeTime = new Date().toString()
+                    item.prizeId.push(prize.id as string)
+                }
+                return item
+            })
+            personConfig.value.alreadyPersonList.push(person)
+            personDb.updateData('allPersonList', toRaw(person))
+            personDb.setData('alreadyPersonList', toRaw(person))
+        })
+    }
+    // 从已中奖移动到未中奖
+    function moveAlreadyToNot(person: IPersonConfig) {
+        if (person.id === undefined || person.id == null) {
+            return
+        }
+        const alreadyPersonListLength = personConfig.value.alreadyPersonList.length
+        for (let i = 0; i < personConfig.value.allPersonList.length; i++) {
+            if (person.id === personConfig.value.allPersonList[i].id) {
+                personConfig.value.allPersonList[i].isWin = false
+                personConfig.value.allPersonList[i].prizeName = []
+                personConfig.value.allPersonList[i].prizeTime = []
+                personConfig.value.allPersonList[i].prizeId = []
+                personDb.updateData('allPersonList', toRaw(personConfig.value.allPersonList[i]))
+                break
+            }
+        }
+        const alreadyPersonListRaw = toRaw(personConfig.value.alreadyPersonList)
+        for (let i = 0; i < alreadyPersonListLength; i++) {
+            personConfig.value.alreadyPersonList = alreadyPersonListRaw.filter((item: IPersonConfig) =>
+                item.id !== person.id,
+            )
+        }
+        personDb.deleteData('alreadyPersonList', person)
+    }
     // 删除指定人员
-    deletePerson(person: IPersonConfig) {
-      if (person.id !== undefined || person.id != null) {
-        this.personConfig.allPersonList = this.personConfig.allPersonList.filter((item: IPersonConfig) => item.id !== person.id)
-        this.personConfig.alreadyPersonList = this.personConfig.alreadyPersonList.filter((item: IPersonConfig) => item.id !== person.id)
-      }
-    },
+    function deletePerson(person: IPersonConfig) {
+        if (person.id !== undefined || person.id != null) {
+            const allPersonListRaw = toRaw(personConfig.value.allPersonList)
+            const alreadyPersonListRaw = toRaw(personConfig.value.alreadyPersonList)
+            personConfig.value.allPersonList = allPersonListRaw.filter((item: IPersonConfig) => item.id !== person.id)
+            personConfig.value.alreadyPersonList = alreadyPersonListRaw.filter((item: IPersonConfig) => item.id !== person.id)
+            personDb.deleteData('allPersonList', person)
+            personDb.deleteData('alreadyPersonList', person)
+        }
+    }
     // 删除所有人员
-    deleteAllPerson() {
-      this.personConfig.allPersonList = []
-      this.personConfig.alreadyPersonList = []
-    },
+    function deleteAllPerson() {
+        personConfig.value.allPersonList = []
+        personConfig.value.alreadyPersonList = []
+        personDb.deleteAll('allPersonList')
+        personDb.deleteAll('alreadyPersonList')
+    }
 
     // 删除所有人员
-    resetPerson() {
-      this.personConfig.allPersonList = []
-      this.personConfig.alreadyPersonList = []
-    },
+    function resetPerson() {
+        personConfig.value.allPersonList = []
+        personConfig.value.alreadyPersonList = []
+        personDb.deleteAll('allPersonList')
+        personDb.deleteAll('alreadyPersonList')
+    }
     // 重置已中奖人员
-    resetAlreadyPerson() {
-      // 把已中奖人员合并到未中奖人员，要验证是否已存在
-      this.personConfig.allPersonList.forEach((item: IPersonConfig) => {
-        item.isWin = false
-        item.prizeName = []
-        item.prizeTime = []
-        item.prizeId = []
-      })
-      this.personConfig.alreadyPersonList = []
-    },
-    setDefaultPersonList() {
-      this.personConfig.allPersonList = defaultPersonList
-      this.personConfig.alreadyPersonList = []
-    },
+    function resetAlreadyPerson() {
+        // 把已中奖人员合并到未中奖人员，要验证是否已存在
+        personConfig.value.allPersonList.forEach((item: IPersonConfig) => {
+            item.isWin = false
+            item.prizeName = []
+            item.prizeTime = []
+            item.prizeId = []
+        })
+        personConfig.value.alreadyPersonList = []
+        const allPersonListRaw = toRaw(personConfig.value.allPersonList)
+        personDb.deleteAll('allPersonList')
+        personDb.setAllData('allPersonList', allPersonListRaw)
+        personDb.deleteAll('alreadyPersonList')
+    }
+    function setDefaultPersonList() {
+        personConfig.value.allPersonList = defaultPersonList
+        personConfig.value.alreadyPersonList = []
+        personDb.setAllData('allPersonList', defaultPersonList)
+        personDb.deleteAll('alreadyPersonList')
+    }
     // 重置所有配置
-    reset() {
-      this.personConfig = {
-        allPersonList: [] as IPersonConfig[],
-        alreadyPersonList: [] as IPersonConfig[],
-      }
-    },
-  },
-  persist: {
-    enabled: true,
-    strategies: [
-      {
-        // 如果要存储在localStorage中
-        storage: localStorage,
-        key: 'personConfig',
-      },
-    ],
-  },
+    function reset() {
+        personConfig.value = {
+            allPersonList: [] as IPersonConfig[],
+            alreadyPersonList: [] as IPersonConfig[],
+        }
+        personDb.deleteAll('allPersonList')
+        personDb.deleteAll('alreadyPersonList')
+    }
+    return {
+        personConfig,
+        getPersonConfig,
+        getAllPersonList,
+        getNotThisPrizePersonList,
+        getAlreadyPersonList,
+        getAlreadyPersonDetail,
+        getNotPersonList,
+        addNotPersonList,
+        addAlreadyPersonList,
+        moveAlreadyToNot,
+        deletePerson,
+        deleteAllPerson,
+        resetPerson,
+        resetAlreadyPerson,
+        setDefaultPersonList,
+        reset,
+    }
 })
