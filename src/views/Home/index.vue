@@ -426,7 +426,7 @@ function startLottery() {
   for (let i = 0; i < luckyCount.value; i++) {
     if (personPool.value.length > 0) {
       // 解决随机元素概率过于不均等问题
-      const randomIndex = Math.floor(Math.random() * (personPool.value.length - 1))
+      const randomIndex = Math.floor(Math.random() * personPool.value.length)
       luckyTargets.value.push(personPool.value[randomIndex])
       personPool.value.splice(randomIndex, 1)
     }
