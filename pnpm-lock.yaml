@@ -32,6 +32,9 @@ importers:
       localforage:
         specifier: ^1.10.0
         version: 1.10.0
+      lucide-vue-next:
+        specifier: ^0.555.0
+        version: 0.555.0(vue@3.5.13(typescript@5.5.3))
       markdown-it:
         specifier: ^14.1.0
         version: 14.1.0
@@ -3833,6 +3836,11 @@ packages:
   lru-cache@6.0.0:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
     engines: {node: '>=10'}
+
+  lucide-vue-next@0.555.0:
+    resolution: {integrity: sha512-7hczPsiMD/y+VNLpal5Q5Wv09kQxlHS0l/cM1xagrd+MA3i5umMm+PUXqllvsbgwAl3PHv27fo59h4PN02GM5A==}
+    peerDependencies:
+      vue: '>=3.0.1'
 
   lz-string@1.5.0:
     resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
@@ -9418,6 +9426,10 @@ snapshots:
   lru-cache@6.0.0:
     dependencies:
       yallist: 4.0.0
+
+  lucide-vue-next@0.555.0(vue@3.5.13(typescript@5.5.3)):
+    dependencies:
+      vue: 3.5.13(typescript@5.5.3)
 
   lz-string@1.5.0: {}
 

@@ -24,6 +24,7 @@
         "dexie": "^4.2.1",
         "github-markdown-css": "^5.8.0",
         "localforage": "^1.10.0",
+        "lucide-vue-next": "^0.555.0",
         "markdown-it": "^14.1.0",
         "pinia": "^3.0.3",
         "pinia-plugin-persist": "^1.0.0",

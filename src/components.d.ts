@@ -13,6 +13,7 @@ declare module 'vue' {
     EditSeparateDialog: typeof import('./components/NumberSeparate/EditSeparateDialog.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     ImageSync: typeof import('./components/ImageSync/index.vue')['default']
+    ImageUpload: typeof import('./components/ImageUpload/index.vue')['default']
     Loading: typeof import('./components/Loading/index.vue')['default']
     PageHeader: typeof import('./components/PageHeader/index.vue')['default']
     PlayMusic: typeof import('./components/PlayMusic/index.vue')['default']
