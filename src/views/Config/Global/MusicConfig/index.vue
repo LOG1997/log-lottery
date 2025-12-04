@@ -2,22 +2,21 @@
 import type { IMusic } from '@/types/storeType'
 import localforage from 'localforage'
 import { storeToRefs } from 'pinia'
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import PageHeader from '@/components/PageHeader/index.vue'
 import useStore from '@/store'
-import { readFileData } from '@/utils/file'
+import UploadDialog from './components/UploadDialog.vue'
 
 const { t } = useI18n()
-const audioUploadToast = ref(0) // 0是不显示，1是成功，2是失败,3是不是图片
 const audioDbStore = localforage.createInstance({
   name: 'audioStore',
 })
 const globalConfig = useStore().globalConfig
 
 const { getMusicList: localMusicList } = storeToRefs(globalConfig)
-const limitType = ref('audio/*')
 const localMusicListValue = ref(localMusicList)
+const uploadVisible = ref(false)
 async function play(item: IMusic) {
   globalConfig.setCurrentMusic(item, false)
 }
@@ -37,42 +36,10 @@ function deleteAll() {
   globalConfig.clearMusicList()
   audioDbStore.clear()
 }
-async function getMusicDbStore() {
-  const keys = await audioDbStore.keys()
-  if (keys.length > 0) {
-    audioDbStore.iterate((value: string, key: string) => {
-      globalConfig.addMusic({
-        id: key + new Date().getTime().toString(),
-        name: key,
-        url: 'Storage',
-      })
-    })
-  }
-}
-async function handleFileChange(e: Event) {
-  const isAudio = /audio*/.test(((e.target as HTMLInputElement).files as FileList)[0].type)
-  if (!isAudio) {
-    audioUploadToast.value = 3
-
-    return
-  }
-  const { dataUrl, fileName } = await readFileData(((e.target as HTMLInputElement).files as FileList)[0])
-  audioDbStore.setItem(`${new Date().getTime().toString()}+${fileName}`, dataUrl)
-    .then(() => {
-      audioUploadToast.value = 1
-      getMusicDbStore()
-    })
-    .catch(() => {
-      audioUploadToast.value = 2
-    })
-}
-
-onMounted(() => {
-  getMusicDbStore()
-})
 </script>
 
 <template>
+  <UploadDialog v-model:visible="uploadVisible" />
   <div>
     <PageHeader title="音乐管理">
       <template #buttons>
@@ -81,11 +48,7 @@ onMounted(() => {
             {{ t('button.reset') }}
           </button>
           <label for="explore">
-            <input
-              id="explore" type="file" class="" style="display: none" :accept="limitType"
-              @change="handleFileChange"
-            >
-            <span class="btn btn-primary btn-sm">{{ t('button.upload') }}</span>
+            <span class="btn btn-primary btn-sm" @click="uploadVisible = true">{{ t('button.upload') }}</span>
           </label>
           <button class="btn btn-error btn-sm" @click="deleteAll">
             {{ t('button.allDelete') }}

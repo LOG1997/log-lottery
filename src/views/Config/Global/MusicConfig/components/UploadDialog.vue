@@ -4,30 +4,32 @@ import localforage from 'localforage'
 import { v4 as uuidv4 } from 'uuid'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useToast } from 'vue-toast-notification'
 import CustomDialog from '@/components/Dialog/index.vue'
 import FileUpload from '@/components/FileUpload/index.vue'
 import useStore from '@/store'
 
+const toast = useToast()
 const { t } = useI18n()
-const limitType = ref('image/*')
+const limitType = ref('audio/*')
 const imgUploadToast = ref(0) // 0是不显示，1是成功，2是失败,3是不是图片
 const visible = defineModel('visible', {
   type: Boolean,
   required: true,
 })
 const globalConfig = useStore().globalConfig
-const imageDbStore = localforage.createInstance({
-  name: 'imgStore',
+const audioDbStore = localforage.createInstance({
+  name: 'audioStore',
 })
-const imageData = ref<IFileData | null>(null)
+const audioData = ref<IFileData | null>(null)
 
 const fileName = computed({
   get() {
-    return imageData.value?.fileName || null
+    return audioData.value?.fileName || null
   },
   set(value) {
-    if (imageData.value && value) {
-      imageData.value.fileName = value
+    if (audioData.value && value) {
+      audioData.value.fileName = value
     }
   },
 })
@@ -35,22 +37,25 @@ const uploadDialogRef = ref()
 
 async function uploadFile(fileData: IFileData | null) {
   if (!fileData) {
-    imageData.value = null
+    audioData.value = null
     return
   }
-  const isImage = /image*/.test(fileData?.type || '')
-  if (!isImage) {
-    imgUploadToast.value = 3
+  const isAudio = /audio*/.test(fileData?.type || '')
+  if (!isAudio) {
+    toast.open({
+      message: '不是音频文件',
+      type: 'error',
+      position: 'top-right',
+    })
     return
   }
-  imageData.value = fileData
+  audioData.value = fileData
 }
-async function getImageDbStore() {
-  const keys = await imageDbStore.keys()
+async function getAudioDbStore() {
+  const keys = await audioDbStore.keys()
   if (keys.length > 0) {
-    imageDbStore.iterate((value: { fileName: string, dataUrl: string }, key: string) => {
-      console.log(value, key)
-      globalConfig.addImage({
+    audioDbStore.iterate((value: { fileName: string, dataUrl: string }, key: string) => {
+      globalConfig.addMusic({
         id: key,
         name: value.fileName,
         url: 'Storage',
@@ -59,19 +64,27 @@ async function getImageDbStore() {
   }
 }
 function submitUpload() {
-  if (imageData.value) {
-    const { dataUrl, fileName } = imageData.value
+  if (audioData.value) {
+    const { dataUrl, fileName } = audioData.value
     const uniqueId = uuidv4()
-    imageDbStore.setItem(uniqueId, {
+    audioDbStore.setItem(uniqueId, {
       dataUrl,
       fileName,
     })
       .then(() => {
-        imgUploadToast.value = 1
-        getImageDbStore()
+        toast.open({
+          message: '上传成功',
+          type: 'success',
+          position: 'top-right',
+        })
+        getAudioDbStore()
       })
       .catch(() => {
-        imgUploadToast.value = 2
+        toast.open({
+          message: '上传失败',
+          type: 'error',
+          position: 'top-right',
+        })
       })
   }
 }
@@ -97,14 +110,14 @@ watch(visible, (newVal) => {
   <CustomDialog
     ref="uploadDialogRef"
     v-model:visible="visible"
-    title="图片上传"
+    title="音乐上传"
     :submit-func="submitUpload"
     class=""
   >
     <template #content>
       <div class="flex flex-col items-center gap-6 w-full px-12">
         <FileUpload v-if="visible" :limit-type="limitType" @upload-file="uploadFile" />
-        <input v-model="fileName" :disabled="imageData === null" type="text" placeholder="图片名称" class="input w-full">
+        <input v-model="fileName" :disabled="audioData === null" type="text" placeholder="图片名称" class="input w-full">
       </div>
     </template>
   </CustomDialog>

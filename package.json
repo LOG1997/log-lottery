@@ -17,7 +17,7 @@
     },
     "dependencies": {
         "@tweenjs/tween.js": "^23.1.2",
-        "@vueuse/core": "^13.9.0",
+        "@vueuse/core": "^14.1.0",
         "axios": "^1.7.8",
         "canvas-confetti": "^1.9.3",
         "dayjs": "^1.11.13",
@@ -42,7 +42,7 @@
         "zod": "^4.1.11"
     },
     "devDependencies": {
-        "@antfu/eslint-config": "^5.4.1",
+        "@antfu/eslint-config": "^6.4.1",
         "@eslint/eslintrc": "^3.2.0",
         "@eslint/js": "^9.15.0",
         "@iconify-json/ep": "^1.2.1",
@@ -58,7 +58,7 @@
         "@typescript-eslint/parser": "^8.16.0",
         "@vitejs/plugin-legacy": "^7.2.1",
         "@vitejs/plugin-vue": "^6.0.1",
-        "@vitest/ui": "^3.2.4",
+        "@vitest/ui": "^4.0.15",
         "@vue/test-utils": "^2.4.6",
         "autoprefixer": "^10.4.20",
         "baseline-browser-mapping": "^2.8.32",
