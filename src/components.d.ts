@@ -16,7 +16,6 @@ declare module 'vue' {
     ImageSync: typeof import('./components/ImageSync/index.vue')['default']
     Loading: typeof import('./components/Loading/index.vue')['default']
     PageHeader: typeof import('./components/PageHeader/index.vue')['default']
-    PlayMusic: typeof import('./components/PlayMusic/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SvgIcon: typeof import('./components/SvgIcon/index.vue')['default']
