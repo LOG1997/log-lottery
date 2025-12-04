@@ -313,6 +313,7 @@ onMounted(() => {
               {{ item.name }}
             </option>
           </select>
+          <span class="label">请先前往图片管理上传图片</span>
         </div>
         <div class="grid grid-cols-2 gap-4 w-full">
           <div class="flex flex-col max-w-xs items-center gap-1 form-control">
