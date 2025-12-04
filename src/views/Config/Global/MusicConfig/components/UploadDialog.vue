@@ -12,7 +12,6 @@ import useStore from '@/store'
 const toast = useToast()
 const { t } = useI18n()
 const limitType = ref('audio/*')
-const imgUploadToast = ref(0) // 0是不显示，1是成功，2是失败,3是不是图片
 const visible = defineModel('visible', {
   type: Boolean,
   required: true,
@@ -96,17 +95,6 @@ watch(visible, (newVal) => {
 </script>
 
 <template>
-  <div class="toast toast-top toast-end">
-    <div v-if="imgUploadToast === 2" class="alert alert-error">
-      <span>{{ t('error.uploadFail') }}</span>
-    </div>
-    <div v-if="imgUploadToast === 1" class="alert alert-success">
-      <span>{{ t('error.uploadSuccess') }}</span>
-    </div>
-    <div v-if="imgUploadToast === 3" class="alert alert-error">
-      <span>{{ t('error.notImage') }}</span>
-    </div>
-  </div>
   <CustomDialog
     ref="uploadDialogRef"
     v-model:visible="visible"
