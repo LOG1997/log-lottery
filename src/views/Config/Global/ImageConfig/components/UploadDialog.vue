@@ -1,6 +1,7 @@
 <script setup lang='ts'>
 import type { IFileData } from '@/components/ImageUpload/type'
 import localforage from 'localforage'
+import { v4 as uuidv4 } from 'uuid'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import CustomDialog from '@/components/Dialog/index.vue'
@@ -47,10 +48,11 @@ async function uploadFile(fileData: IFileData | null) {
 async function getImageDbStore() {
   const keys = await imageDbStore.keys()
   if (keys.length > 0) {
-    imageDbStore.iterate((value, key) => {
+    imageDbStore.iterate((value: { fileName: string, dataUrl: string }, key: string) => {
+      console.log(value, key)
       globalConfig.addImage({
         id: key,
-        name: key,
+        name: value.fileName,
         url: 'Storage',
       })
     })
@@ -59,8 +61,11 @@ async function getImageDbStore() {
 function submitUpload() {
   if (imageData.value) {
     const { dataUrl, fileName } = imageData.value
-    console.log(dataUrl, fileName)
-    imageDbStore.setItem(`${new Date().getTime().toString()}+${fileName}`, dataUrl)
+    const uniqueId = uuidv4()
+    imageDbStore.setItem(uniqueId, {
+      dataUrl,
+      fileName,
+    })
       .then(() => {
         imgUploadToast.value = 1
         getImageDbStore()

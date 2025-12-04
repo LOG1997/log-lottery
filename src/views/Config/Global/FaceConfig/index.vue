@@ -1,4 +1,5 @@
 <script setup lang='ts'>
+import localforage from 'localforage'
 import { storeToRefs } from 'pinia'
 import { onMounted, ref, watch } from 'vue'
 import { ColorPicker } from 'vue3-colorpicker'
@@ -8,6 +9,7 @@ import { daisyuiThemes } from '@/constant/theme'
 import i18n, { languageList } from '@/locales/i18n'
 import useStore from '@/store'
 import { themeChange } from '@/utils'
+import { clearAllDbStore } from '@/utils/localforage'
 import PatternSetting from './components/PatternSetting.vue'
 import 'vue3-colorpicker/style.css'
 
@@ -94,17 +96,11 @@ function resetData() {
   globalConfig.reset()
   personConfig.reset()
   prizeConfig.resetDefault()
+  //   删除所有indexDb
+  clearAllDbStore()
   // 刷新页面
   window.location.reload()
 }
-
-// const handleChangeShowFields = (fieldItem: any) => {
-//     formData.value.showField.map((item) => {
-//         if (item.label === fieldItem.label) {
-//             item.value = !item.value
-//         }
-//     })
-// }
 
 watch(() => formData.value.rowCount, () => {
   payload.rowCount = formData.value.rowCount
