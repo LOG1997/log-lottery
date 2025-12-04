@@ -1,8 +1,11 @@
 <script setup lang='ts'>
 import type { IPrizeConfig } from '@/types/storeType'
 import localforage from 'localforage'
+import { cloneDeep } from 'lodash-es'
+import { Grip } from 'lucide-vue-next'
 import { storeToRefs } from 'pinia'
 import { onMounted, ref, watch } from 'vue'
+import { VueDraggable } from 'vue-draggable-plus'
 import { useI18n } from 'vue-i18n'
 import EditSeparateDialog from '@/components/NumberSeparate/EditSeparateDialog.vue'
 import PageHeader from '@/components/PageHeader/index.vue'
@@ -18,7 +21,7 @@ const globalConfig = useStore().globalConfig
 const { getPrizeConfig: localPrizeList, getCurrentPrize: currentPrize } = storeToRefs(prizeConfig)
 
 const { getImageList: localImageList } = storeToRefs(globalConfig)
-const prizeList = ref(localPrizeList)
+const prizeList = ref(cloneDeep(localPrizeList.value))
 const imgList = ref<any[]>([])
 
 const selectedPrize = ref<IPrizeConfig | null>()
@@ -123,17 +126,6 @@ async function getImageDbStore() {
   }
 }
 
-function sort(item: IPrizeConfig, isUp: number) {
-  const itemIndex = prizeList.value.indexOf(item)
-  if (isUp === 1) {
-    prizeList.value.splice(itemIndex, 1)
-    prizeList.value.splice(itemIndex - 1, 0, item)
-  }
-  else {
-    prizeList.value.splice(itemIndex, 1)
-    prizeList.value.splice(itemIndex + 1, 0, item)
-  }
-}
 function delItem(item: IPrizeConfig) {
   prizeConfig.deletePrizeConfig(item.id)
 }
@@ -144,6 +136,7 @@ onMounted(() => {
   getImageDbStore()
 })
 watch(() => prizeList.value, (val: IPrizeConfig[]) => {
+  console.log('prizeList', val)
   prizeConfig.setPrizeConfig(val)
 }, { deep: true })
 </script>
@@ -176,27 +169,20 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
         </div>
       </template>
     </PageHeader>
-
-    <ul class="p-0 m-0">
-      <li
-        v-for="item in prizeList" :key="item.id" class="flex gap-10"
+    <VueDraggable
+      v-model="prizeList"
+      :animation="150"
+      handle=".handle"
+      class="p-0 m-0"
+    >
+      <div
+        v-for="item in prizeList" :key="item.id" class="flex gap-10 items-center justify-center py-5"
         :class="currentPrize.id === item.id ? 'border-1 border-dotted rounded-xl' : null"
       >
-        <label class="max-w-xs mb-10 form-control">
-          <!-- 向上向下 -->
-          <div class="flex flex-col items-center gap-2 pt-5">
-            <svg-icon
-              class="cursor-pointer hover:text-blue-400"
-              :class="prizeList.indexOf(item) === 0 ? 'opacity-0 cursor-default' : ''" name="up"
-              @click="sort(item, 1)"
-            />
-            <svg-icon
-              class="cursor-pointer hover:text-blue-400" name="down" :class="prizeList.indexOf(item) === prizeList.length - 1 ? 'opacity-0 cursor-default' : ''"
-              @click="sort(item, 0)"
-            />
-          </div>
+        <label class="handle max-w-xs form-control flex items-center justify-center px-2">
+          <Grip class="handle cursor-move w-10 h-10" />
         </label>
-        <label class="w-1/2 max-w-xs mb-10 form-control">
+        <label class="w-1/2 max-w-xs form-control">
           <div class="label">
             <span class="label-text">{{ t('table.prizeName') }}</span>
           </div>
@@ -205,16 +191,16 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
             class="w-full max-w-xs input-sm input input-bordered"
           >
         </label>
-        <label class="w-1/2 max-w-xs mb-10 form-control">
+        <label class="w-1/2 max-w-xs flex items-center gap-2 form-control">
           <div class="label">
             <span class="label-text">{{ t('table.fullParticipation') }}</span>
           </div>
           <input
-            type="checkbox" :checked="item.isAll" class="mt-2 border-solid checkbox checkbox-secondary border-1"
+            type="checkbox" :checked="item.isAll" class="border-solid checkbox checkbox-secondary border-1"
             @change="item.isAll = !item.isAll"
           >
         </label>
-        <label class="w-1/2 max-w-xs mb-10 form-control">
+        <label class="w-1/2 max-w-xs  form-control">
           <div class="label">
             <span class="label-text">{{ t('table.numberParticipants') }}</span>
           </div>
@@ -226,27 +212,28 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
             <progress class="w-full progress" :value="item.isUsedCount" :max="item.count" />
           </div>
         </label>
-        <label class="w-1/2 max-w-xs mb-10 form-control">
+        <label class="w-1/2 max-w-xs flex items-center gap-2 form-control">
           <div class="label">
             <span class="label-text">{{ t('table.isDone') }}</span>
           </div>
           <input
-            type="checkbox" :checked="item.isUsed" class="mt-2 border-solid checkbox checkbox-secondary border-1"
+            type="checkbox" :checked="item.isUsed" class="border-solid checkbox checkbox-secondary border-1"
             @change="changePrizeStatus(item)"
           >
         </label>
-        <label class="w-full max-w-xs mb-10 form-control">
+        <label class="w-full max-w-xs form-control">
           <div class="label">
             <span class="label-text">{{ t('table.image') }}</span>
           </div>
-          <select v-model="item.picture" class="w-full max-w-xs select select-warning select-sm">
+          <select v-model="item.picture" class="select select-warning select-sm truncate">
             <option v-if="item.picture.id" :value="{ id: '', name: '', url: '' }">❌</option>
             <option disabled selected>{{ t('table.selectPicture') }}</option>
-            <option v-for="picItem in localImageList" :key="picItem.id" :value="picItem">{{ picItem.name }}
+            <option v-for="picItem in localImageList" :key="picItem.id" class="w-full max-w-full" :value="picItem">
+              <span class="w-full max-w-[200px] truncate" :title="picItem.name">{{ picItem.name }}</span>
             </option>
           </select>
         </label>
-        <label v-if="item.separateCount" class="w-full max-w-xs mb-10 form-control">
+        <label v-if="item.separateCount" class="w-full max-w-xs  form-control">
           <div class="label">
             <span class="label-text">{{ t('table.onceNumber') }}</span>
           </div>
@@ -274,16 +261,16 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
             <button v-else class="btn btn-secondary btn-xs">{{ t('button.setting') }}</button>
           </div>
         </label>
-        <label class="w-full max-w-xs mb-10 form-control">
+        <label class="w-full max-w-xs  form-control">
           <div class="label">
             <span class="label-text">{{ t('table.operation') }}</span>
           </div>
           <div class="flex gap-2">
-            <button class="btn btn-error btn-sm" @click="delItem(item)">{{ t('button.delete') }}</button>
+            <button class="btn btn-error btn-xs" @click="delItem(item)">{{ t('button.delete') }}</button>
           </div>
         </label>
-      </li>
-    </ul>
+      </div>
+    </VueDraggable>
     <EditSeparateDialog
       :total-number="selectedPrize?.count" :separated-number="selectedPrize?.separateCount.countList"
       @submit-data="submitData"
