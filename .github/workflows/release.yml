@@ -46,13 +46,20 @@ jobs:
 
       - name: Create source code archive
         run: |
-          tar -czf source-code.tar.gz \
-            --exclude='.git' \
-            --exclude='node_modules' \
-            --exclude='dist-prod' \
-            --exclude='dist-file-prod' \
-            --exclude='*.tar.gz' \
-            .
+          mkdir -p temp_source
+          cp -r .git temp_source/.git
+          cp -r src temp_source/src
+          cp -r public temp_source/public
+          cp -r .github temp_source/.github
+          cp package.json temp_source/
+          cp vite.config.ts temp_source/
+          cp tsconfig.json temp_source/
+          cp tsconfig.node.json temp_source/
+          cp index.html temp_source/
+          cp README.md temp_source/
+          cp Dockerfile temp_source/
+          tar -czf source-code.tar.gz -C temp_source .
+          rm -rf temp_source
 
       - name: Create production build archive
         run: |
