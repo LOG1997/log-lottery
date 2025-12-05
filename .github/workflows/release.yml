@@ -38,7 +38,7 @@ jobs:
       - name: Build for file protocol
         run: pnpm build:file
 
-      - name: Rename dist folders
+      - name: Prepare directories
         run: |
           mv dist dist-prod
           mv dist-prod/index.html dist-prod/404.html
