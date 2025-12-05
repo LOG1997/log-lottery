@@ -1,0 +1,62 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.x'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build for production
+        run: pnpm build
+
+      - name: Build for file protocol
+        run: pnpm build:file
+
+      - name: Prepare directories
+        run: |
+          mv dist dist-prod
+          mv dist-prod/index.html dist-prod/404.html
+
+      - name: Create production build archive
+        run: |
+          tar -czf dist.tar.gz dist-prod
+
+      - name: Create file protocol build archive
+        run: |
+          tar -czf dist-file.tar.gz dist-file
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist.tar.gz
+            dist-file.tar.gz
+          draft: true
+          prerelease: false
+          generate_release_notes: true
