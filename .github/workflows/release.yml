@@ -42,40 +42,21 @@ jobs:
         run: |
           mv dist dist-prod
           mv dist-prod/index.html dist-prod/404.html
-          mv dist-file dist-file-prod
-
-      - name: Create source code archive
-        run: |
-          mkdir -p temp_source
-          cp -r .git temp_source/.git
-          cp -r src temp_source/src
-          cp -r public temp_source/public
-          cp -r .github temp_source/.github
-          cp package.json temp_source/
-          cp vite.config.ts temp_source/
-          cp tsconfig.json temp_source/
-          cp tsconfig.node.json temp_source/
-          cp index.html temp_source/
-          cp README.md temp_source/
-          cp Dockerfile temp_source/
-          tar -czf source-code.tar.gz -C temp_source .
-          rm -rf temp_source
 
       - name: Create production build archive
         run: |
-          tar -czf production-build.tar.gz dist-prod
+          tar -czf dist.tar.gz dist-prod
 
       - name: Create file protocol build archive
         run: |
-          tar -czf file-protocol-build.tar.gz dist-file-prod
+          tar -czf dist-file.tar.gz dist-file
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            source-code.tar.gz
-            production-build.tar.gz
-            file-protocol-build.tar.gz
+            dist.tar.gz
+            dist-file.tar.gz
           draft: true
           prerelease: false
           generate_release_notes: true
