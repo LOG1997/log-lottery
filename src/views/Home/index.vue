@@ -9,7 +9,7 @@ import { useViewModel } from './useViewModel'
 import 'vue-toast-notification/dist/theme-sugar.css'
 
 const viewModel = useViewModel()
-const { setDefaultPersonList, tableData, currentStatus, enterLottery, stopLottery, containerRef, startLottery, continueLottery, quitLottery } = viewModel
+const { setDefaultPersonList, tableData, currentStatus, enterLottery, stopLottery, containerRef, startLottery, continueLottery, quitLottery, isInitialDone } = viewModel
 const globalConfig = useStore().globalConfig
 
 const { getTopTitle: topTitle, getTextColor: textColor, getTextSize: textSize, getBackground: homeBackground } = storeToRefs(globalConfig)
@@ -22,6 +22,7 @@ const { getTopTitle: topTitle, getTextColor: textColor, getTextSize: textSize, g
     :text-color="textColor"
     :top-title="topTitle"
     :set-default-person-list="setDefaultPersonList"
+    :is-initial-done="isInitialDone"
   />
   <div id="container" ref="containerRef" class="3dContainer">
     <OptionButton

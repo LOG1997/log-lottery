@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-
+import { v4 as uuidv4 } from 'uuid'
 /**
  * @description: 处理表格数据，添加x,y,id等信息
  * @param tableData 表格数据
@@ -32,6 +32,7 @@ export function addOtherInfo(personList: any[]) {
         personList[i].prizeTime = [] as string[]
         personList[i].prizeId = []
         personList[i].isWin = false
+        personList[i].uuid = uuidv4()
     }
 
     return personList
