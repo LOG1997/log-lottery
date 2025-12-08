@@ -41,6 +41,11 @@ const { t } = useI18n()
         {{ t('button.useDefault') }}
       </button>
     </div>
+    <!-- 加载中 -->
+    <div v-else class="flex gap-3 items-center">
+      <span class="loading loading-spinner loading-xl" />
+      <span>加载中</span>
+    </div>
   </div>
 </template>
 
