@@ -4,6 +4,11 @@
     themes: all;
 }
 
+@utility w-option-xs {
+    max-width: calc(var(--container-xs) - 90px);
+}
+
+
 /* @plugin "@tailwindcss/typography" */
 
 body,

@@ -1,4 +1,5 @@
 <script setup lang='ts'>
+import localforage from 'localforage'
 import { storeToRefs } from 'pinia'
 import { onMounted, ref, watch } from 'vue'
 import { ColorPicker } from 'vue3-colorpicker'
@@ -8,6 +9,7 @@ import { daisyuiThemes } from '@/constant/theme'
 import i18n, { languageList } from '@/locales/i18n'
 import useStore from '@/store'
 import { themeChange } from '@/utils'
+import { clearAllDbStore } from '@/utils/localforage'
 import PatternSetting from './components/PatternSetting.vue'
 import 'vue3-colorpicker/style.css'
 
@@ -94,17 +96,11 @@ function resetData() {
   globalConfig.reset()
   personConfig.reset()
   prizeConfig.resetDefault()
+  //   删除所有indexDb
+  clearAllDbStore()
   // 刷新页面
   window.location.reload()
 }
-
-// const handleChangeShowFields = (fieldItem: any) => {
-//     formData.value.showField.map((item) => {
-//         if (item.label === fieldItem.label) {
-//             item.value = !item.value
-//         }
-//     })
-// }
 
 watch(() => formData.value.rowCount, () => {
   payload.rowCount = formData.value.rowCount
@@ -305,39 +301,42 @@ onMounted(() => {
           </label>
           <select
             v-model="backgroundImageValue" data-choose-theme
-            class="w-full max-w-xs border-solid select border-1"
+            class="box-border w-full max-w-xs truncate border-solid select border-1"
           >
-            <option disabled selected>
+            <option disabled selected class="w-full truncate">
               {{ t('table.backgroundImage') }}
             </option>
             <option
               v-for="(item, index) in [{ name: '❌', url: '', id: '' }, ...imageList]" :key="index"
               :value="item"
+              :title="item.name"
+              class="box-border w-full truncate"
             >
-              {{ item.name }}
+              <span class="truncate w-option-xs">{{ item.name }}</span>
             </option>
           </select>
+          <span class="label">请先前往图片管理上传图片</span>
         </div>
-        <div class="grid grid-cols-2 gap-4 w-full">
-          <div class="flex flex-col max-w-xs items-center gap-1 form-control">
+        <div class="grid w-full grid-cols-2 gap-4">
+          <div class="flex flex-col items-center max-w-xs gap-1 form-control">
             <label class="label">
               <span class="label-text">{{ t('table.cardColor') }}</span>
             </label>
             <ColorPicker ref="colorPickerRef" v-model="cardColorValue" v-model:pure-color="cardColorValue" />
           </div>
-          <div class="flex flex-col max-w-xs items-center gap-1 form-control">
+          <div class="flex flex-col items-center max-w-xs gap-1 form-control">
             <label class="label">
               <span class="label-text">{{ t('table.winnerColor') }}</span>
             </label>
             <ColorPicker ref="colorPickerRef" v-model="luckyCardColorValue" v-model:pure-color="luckyCardColorValue" />
           </div>
-          <div class="flex flex-col max-w-xs gap-1 items-center form-control">
+          <div class="flex flex-col items-center max-w-xs gap-1 form-control">
             <label class="label">
               <span class="label-text">{{ t('table.textColor') }}</span>
             </label>
             <ColorPicker ref="colorPickerRef" v-model="textColorValue" v-model:pure-color="textColorValue" />
           </div>
-          <div class="flex flex-col max-w-xs gap-1 form-control items-center">
+          <div class="flex flex-col items-center max-w-xs gap-1 form-control">
             <label class="label">
               <span class="label-text">{{ t('table.highlightColor') }}</span>
             </label>
@@ -380,7 +379,7 @@ onMounted(() => {
           其他设置
         </legend>
 
-        <div class="flex items-center justify-between w-full max-w-xs mb-3 gap-2 form-control">
+        <div class="flex items-center justify-between w-full max-w-xs gap-2 mb-3 form-control">
           <div class="label">
             <span class="label-text">{{ t('table.alwaysDisplay') }}</span>
           </div>
