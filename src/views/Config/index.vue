@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import dayjs from 'dayjs'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
@@ -8,6 +9,7 @@ const { t } = useI18n()
 const router = useRouter()
 const route = useRoute()
 const menuList = ref<any[]>(configRoutes.children)
+const currentYear = dayjs().year()
 
 function cleanMenuList(menu: any) {
   const newList = menu
@@ -89,7 +91,7 @@ function skip(path: string) {
       <p class="p-0 m-0">
         蜀ICP备2021028666号
       </p>
-      <p>Copyright © 2024 - All right reserved by Log1997</p>
+      <p>Copyright © {{ currentYear }} - All right reserved by <a class="link link-primary" href="https://github.com/LOG1997" target="_blank">log1997</a></p>
     </aside>
   </footer>
 </template>
