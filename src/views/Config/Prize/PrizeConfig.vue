@@ -176,11 +176,11 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
       class="p-0 m-0"
     >
       <div
-        v-for="item in prizeList" :key="item.id" class="flex gap-10 items-center justify-center py-5"
+        v-for="item in prizeList" :key="item.id" class="flex items-center justify-center gap-10 py-5"
         :class="currentPrize.id === item.id ? 'border-1 border-dotted rounded-xl' : null"
       >
-        <label class="handle max-w-xs form-control flex items-center justify-center px-2">
-          <Grip class="handle cursor-move w-10 h-10" />
+        <label class="flex items-center justify-center max-w-xs px-2 handle form-control">
+          <Grip class="w-10 h-10 cursor-move handle" />
         </label>
         <label class="w-1/2 max-w-xs form-control">
           <div class="label">
@@ -191,7 +191,7 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
             class="w-full max-w-xs input-sm input input-bordered"
           >
         </label>
-        <label class="w-1/2 max-w-xs flex items-center gap-2 form-control">
+        <label class="flex items-center w-1/2 max-w-xs gap-2 form-control">
           <div class="label">
             <span class="label-text">{{ t('table.fullParticipation') }}</span>
           </div>
@@ -200,7 +200,7 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
             @change="item.isAll = !item.isAll"
           >
         </label>
-        <label class="w-1/2 max-w-xs  form-control">
+        <label class="w-1/2 max-w-xs form-control">
           <div class="label">
             <span class="label-text">{{ t('table.numberParticipants') }}</span>
           </div>
@@ -212,7 +212,7 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
             <progress class="w-full progress" :value="item.isUsedCount" :max="item.count" />
           </div>
         </label>
-        <label class="w-1/2 max-w-xs flex items-center gap-2 form-control">
+        <label class="flex items-center w-1/2 max-w-xs gap-2 form-control">
           <div class="label">
             <span class="label-text">{{ t('table.isDone') }}</span>
           </div>
@@ -225,15 +225,15 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
           <div class="label">
             <span class="label-text">{{ t('table.image') }}</span>
           </div>
-          <select v-model="item.picture" class="select select-warning select-sm truncate">
+          <select v-model="item.picture" class="truncate select select-warning select-sm">
             <option v-if="item.picture.id" :value="{ id: '', name: '', url: '' }">❌</option>
             <option disabled selected>{{ t('table.selectPicture') }}</option>
-            <option v-for="picItem in localImageList" :key="picItem.id" class="w-full max-w-full" :value="picItem">
-              <span class="w-full max-w-[200px] truncate" :title="picItem.name">{{ picItem.name }}</span>
+            <option v-for="picItem in localImageList" :key="picItem.id" :title="picItem.name" class="w-full max-w-full" :value="picItem">
+              <span class="truncate w-option-xs">{{ picItem.name }}</span>
             </option>
           </select>
         </label>
-        <label v-if="item.separateCount" class="w-full max-w-xs  form-control">
+        <label v-if="item.separateCount" class="w-full max-w-xs form-control">
           <div class="label">
             <span class="label-text">{{ t('table.onceNumber') }}</span>
           </div>
@@ -261,7 +261,7 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
             <button v-else class="btn btn-secondary btn-xs">{{ t('button.setting') }}</button>
           </div>
         </label>
-        <label class="w-full max-w-xs  form-control">
+        <label class="w-full max-w-xs form-control">
           <div class="label">
             <span class="label-text">{{ t('table.operation') }}</span>
           </div>
