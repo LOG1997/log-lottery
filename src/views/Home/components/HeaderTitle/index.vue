@@ -10,6 +10,7 @@ interface Props {
   topTitle: string
   tableData: any[]
   setDefaultPersonList: () => void
+  isInitialDone: boolean
 }
 
 const props = defineProps<Props>()
@@ -26,7 +27,7 @@ const { t } = useI18n()
     >
       {{ topTitle }}
     </h2>
-    <div class="flex gap-3">
+    <div v-if="isInitialDone" class="flex gap-3">
       <button
         v-if="tableData.length <= 0" class="cursor-pointer btn btn-outline btn-secondary btn-lg"
         @click="router.push('config')"

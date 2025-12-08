@@ -51,6 +51,7 @@ export function useViewModel() {
     const luckyCount = ref(10)
     const personPool = ref<IPersonConfig[]>([])
     const intervalTimer = ref<any>(null)
+    const isInitialDone = ref<boolean>(false)
 
     function initThreeJs() {
         const felidView = 40
@@ -597,6 +598,7 @@ export function useViewModel() {
                 containerRef.value!.style.color = `${textColor}`
                 randomBallData()
                 window.addEventListener('keydown', listenKeyboard)
+                isInitialDone.value = true
             }
             else {
                 console.log('等待人员列表数据...')
@@ -634,5 +636,6 @@ export function useViewModel() {
         enterLottery,
         tableData,
         currentStatus,
+        isInitialDone,
     }
 }
