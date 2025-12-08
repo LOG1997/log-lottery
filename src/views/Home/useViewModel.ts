@@ -14,7 +14,7 @@ import useStore from '@/store'
 import { selectCard } from '@/utils'
 import { rgba } from '@/utils/color'
 import { LotteryStatus } from './type'
-import { confettiFire, createSphereVertices, createTableVertices, initTableData } from './util'
+import { confettiFire, createSphereVertices, createTableVertices, getRandomElements, initTableData } from './utils'
 
 export function useViewModel() {
     const toast = useToast()
@@ -52,7 +52,7 @@ export function useViewModel() {
     const personPool = ref<IPersonConfig[]>([])
     const intervalTimer = ref<any>(null)
 
-    function init() {
+    function initThreeJs() {
         const felidView = 40
         const width = window.innerWidth
         const height = window.innerHeight
@@ -358,14 +358,22 @@ export function useViewModel() {
             }
         }
         luckyCount.value = leftover < luckyCount.value ? leftover : luckyCount.value
-        for (let i = 0; i < luckyCount.value; i++) {
-            if (personPool.value.length > 0) {
-                // 解决随机元素概率过于不均等问题
-                const randomIndex = Math.floor(Math.random() * (personPool.value.length - 1))
-                luckyTargets.value.push(personPool.value[randomIndex])
-                personPool.value.splice(randomIndex, 1)
+        // 重构抽奖函数
+        luckyTargets.value = getRandomElements(personPool.value, luckyCount.value)
+        luckyTargets.value.forEach((item) => {
+            const index = personPool.value.findIndex(person => person.id === item.id)
+            if (index > -1) {
+                personPool.value.splice(index, 1)
             }
-        }
+        })
+        // for (let i = 0; i < luckyCount.value; i++) {
+        //     if (personPool.value.length > 0) {
+        //         // 解决随机元素概率过于不均等问题
+        //         const randomIndex = Math.floor(Math.random() * (personPool.value.length - 1))
+        //         luckyTargets.value.push(personPool.value[randomIndex])
+        //         personPool.value.splice(randomIndex, 1)
+        //     }
+        // }
 
         toast.open({
             // message: `现在抽取${currentPrize.value.name} ${leftover}人`,
@@ -575,13 +583,32 @@ export function useViewModel() {
         // 刷新页面
         window.location.reload()
     }
+    const init = () => {
+        const startTime = Date.now()
+        const maxWaitTime = 2000 // 2秒
+
+        const checkAndInit = () => {
+            // 如果人员列表有数据或者等待时间超过2秒，则执行初始化
+            if (allPersonList.value.length > 0 || (Date.now() - startTime) >= maxWaitTime) {
+                console.log('初始化完成')
+                tableData.value = initTableData({ allPersonList: allPersonList.value, rowCount: rowCount.value })
+                initThreeJs()
+                animation()
+                containerRef.value!.style.color = `${textColor}`
+                randomBallData()
+                window.addEventListener('keydown', listenKeyboard)
+            }
+            else {
+                console.log('等待人员列表数据...')
+                // 继续等待
+                setTimeout(checkAndInit, 100) // 每100毫秒检查一次
+            }
+        }
+
+        checkAndInit()
+    }
     onMounted(() => {
-        tableData.value = initTableData({ allPersonList: allPersonList.value, rowCount: rowCount.value })
         init()
-        animation()
-        containerRef.value!.style.color = `${textColor}`
-        randomBallData()
-        window.addEventListener('keydown', listenKeyboard)
     })
     onUnmounted(() => {
         nextTick(() => {
@@ -591,6 +618,11 @@ export function useViewModel() {
         intervalTimer.value = null
         window.removeEventListener('keydown', listenKeyboard)
     })
+    // watch(() => allPersonList.value, (newVal) => {
+    //     if (newVal.length) {
+    //         init()
+    //     }
+    // })
 
     return {
         setDefaultPersonList,
