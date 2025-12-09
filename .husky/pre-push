@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# 获取最新的 tag
+TAG=$(git describe --tags --abbrev=0 2>/dev/null)
+
+if [ $? -eq 0 ]; then
+  echo "🏷️  检查最新的 tag: $TAG"
+  node .husky/scripts/verifyTagVersion.js $TAG
+else
+  echo "⚠️  没有找到任何 tag，跳过版本校验"
+fi
