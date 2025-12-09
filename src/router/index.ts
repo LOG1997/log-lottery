@@ -114,6 +114,10 @@ export const configRoutes = {
 }
 const routes = [
     {
+        path: '/',
+        redirect: '/log-lottery',
+    },
+    {
         path: '/log-lottery',
         component: Layout,
         redirect: '/log-lottery/home',
@@ -135,7 +139,7 @@ const routes = [
 const envMode = import.meta.env.MODE
 const router = createRouter({
     // 读取环境变量
-    history: envMode === 'file' ? createWebHashHistory() : createWebHistory(),
+    history: (envMode === 'file' || import.meta.env.TAURI_PLATFORM) ? createWebHashHistory() : createWebHistory(),
     routes,
 })
 
