@@ -1,9 +1,9 @@
 <script setup lang='ts'>
+import markdownit from 'markdown-it'
+import { onMounted, ref, watch } from 'vue'
 import readmeEn from '@/../public/readme-en.md?raw'
 import readmeZh from '@/../public/readme-zhCn.md?raw'
 import i18n from '@/locales/i18n'
-import markdownit from 'markdown-it'
-import { onMounted, ref, watch } from 'vue'
 
 const md = markdownit()
 const readmeHtml = ref('')
