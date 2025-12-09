@@ -31,6 +31,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Install dependency fast-glob
+        run: pnpm add fast-glob -D
+
       - name: Build for production
         run: pnpm build
 
@@ -73,6 +76,9 @@ jobs:
 
       - name: Install frontend dependencies
         run: pnpm install
+
+      - name: Install dependency fast-glob
+        run: pnpm add fast-glob -D
 
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
