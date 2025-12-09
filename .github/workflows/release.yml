@@ -46,6 +46,12 @@ jobs:
         run: |
           zip -r dist.zip dist-prod
 
+      - name: Upload web build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: dist.zip
+
   publish-tauri:
     permissions:
       contents: write
