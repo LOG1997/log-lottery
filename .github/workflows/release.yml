@@ -8,7 +8,6 @@ on:
 jobs:
   build-web:
     runs-on: ubuntu-latest
-
     permissions:
       contents: write
 
@@ -44,12 +43,6 @@ jobs:
         run: |
           zip -r dist.zip dist-prod
 
-      - name: Upload web build artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: web-build
-          path: dist.zip
-
   publish-tauri:
     permissions:
       contents: write
@@ -75,7 +68,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 'lts/*'
+          node-version: 22.x
           cache: pnpm
 
       - name: Install frontend dependencies
@@ -90,6 +83,7 @@ jobs:
           releaseBody: See the assets to download this version and install.
           releaseDraft: true
           prerelease: false
+        run: pnpm tauri build
 
   release:
     needs: [build-web, publish-tauri]
