@@ -109,6 +109,7 @@ export default defineConfig(({ mode }) => {
             },
         },
         build: {
+            outDir: mode === 'file' ? 'dist-file' : 'dist',
             minify: 'terser',
             terserOptions: {
                 compress: {
