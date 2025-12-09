@@ -1,9 +1,9 @@
 <script setup lang='ts'>
-import localforage from 'localforage'
 import { storeToRefs } from 'pinia'
 import { onMounted, ref, watch } from 'vue'
 import { ColorPicker } from 'vue3-colorpicker'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { z as zod } from 'zod'
 import { daisyuiThemes } from '@/constant/theme'
 import i18n, { languageList } from '@/locales/i18n'
@@ -13,6 +13,7 @@ import { clearAllDbStore } from '@/utils/localforage'
 import PatternSetting from './components/PatternSetting.vue'
 import 'vue3-colorpicker/style.css'
 
+const router = useRouter()
 const { t } = useI18n()
 const globalConfig = useStore().globalConfig
 const personConfig = useStore().personConfig
@@ -315,7 +316,11 @@ onMounted(() => {
               <span class="truncate w-option-xs">{{ item.name }}</span>
             </option>
           </select>
-          <span class="label">请先前往图片管理上传图片</span>
+          <span class="label">请先前往
+            <a class="link link-info" @click="() => { router.push('image') }">
+              图片管理
+            </a>
+            上传图片</span>
         </div>
         <div class="grid w-full grid-cols-2 gap-4">
           <div class="flex flex-col items-center max-w-xs gap-1 form-control">
