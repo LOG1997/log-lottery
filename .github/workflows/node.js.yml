@@ -5,7 +5,7 @@ name: Node.js CI
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: [main]
 
 jobs:
   build:
@@ -19,26 +19,24 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-            - uses: actions/checkout@v3
-            - uses: pnpm/action-setup@v2
-              with:
-                version: 8
-            - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v3
-              with:
-                  node-version: ${{ matrix.node-version }}
-                  cache: 'pnpm'
-            - run: pnpm install
-            - run: pnpm build
-            - name: Copy and Rename index.html to dist
-              run: cp dist/index.html dist/404.html
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: pnpm
+      - run: pnpm install
+      - run: pnpm build
+      - name: Copy and Rename index.html to dist
+        run: cp dist/index.html dist/404.html
 
-            - name: Deploy to gh-pages
-              uses: crazy-max/ghaction-github-pages@v2
-              with:
-                  target_branch: gh-pages
-                  build_dir: dist
-              env:
-                  GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-              
-
+      - name: Deploy to gh-pages
+        uses: crazy-max/ghaction-github-pages@v2
+        with:
+          target_branch: gh-pages
+          build_dir: dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
