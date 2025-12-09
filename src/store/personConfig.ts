@@ -1,6 +1,7 @@
 import type { IPersonConfig, IPrizeConfig } from '@/types/storeType'
 import dayjs from 'dayjs'
 import { defineStore } from 'pinia'
+import { v4 as uuidv4 } from 'uuid'
 import { computed, ref, toRaw, watch } from 'vue'
 import { IndexDb } from '@/utils/dexie'
 import { defaultPersonList } from './data'
@@ -150,7 +151,10 @@ export const usePersonConfig = defineStore('person', () => {
         personDb.deleteAll('alreadyPersonList')
     }
     function setDefaultPersonList() {
-        personConfig.value.allPersonList = defaultPersonList
+        personConfig.value.allPersonList = defaultPersonList.map((item: any) => {
+            item.uuid = uuidv4()
+            return item
+        })
         personConfig.value.alreadyPersonList = []
         personDb.setAllData('allPersonList', defaultPersonList)
         personDb.deleteAll('alreadyPersonList')

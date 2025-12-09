@@ -79,6 +79,8 @@ web_modules/
 .env.production.local
 .env.local
 
+components.d.ts
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache
@@ -90,6 +92,7 @@ out
 # Nuxt.js build / generate output
 .nuxt
 dist
+dist-file
 
 # Gatsby files
 .cache/
