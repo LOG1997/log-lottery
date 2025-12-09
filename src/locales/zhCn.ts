@@ -59,7 +59,7 @@ export default {
         detail: '详细信息',
         noneData: '暂无数据',
         // prize configuration
-        fullParticipation: '全员参加',
+        fullParticipation: '可重复',
         numberParticipants: '抽奖人数',
         isDone: '已抽取',
         image: '图片',
