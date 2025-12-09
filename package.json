@@ -9,6 +9,7 @@
         "build": "vue-tsc --noEmit && vite build",
         "build:pre": "vue-tsc --noEmit && vite build --mode prebuild",
         "build:file": "vue-tsc --noEmit && vite build --mode file",
+        "tauri":"node ./build/syncVersion.js && tauri",
         "test": "vitest",
         "test:ui": "vitest --ui",
         "preview": "vite preview",
