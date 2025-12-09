@@ -2,7 +2,7 @@ import antfu from '@antfu/eslint-config'
 
 export default antfu(
     {
-        ignores: ['**/node_modules', '**/build', '**/public', '**/dist', '**/package.json', '**/*.yaml', '**/.gitignore', '**/.env*', '**/tsconfig*', '**/*.config.js'],
+        ignores: ['**/node_modules', '**/build', '**/.husky', '**/public', '**/dist', '**/package.json', '**/*.yaml', '**/.gitignore', '**/.env*', '**/tsconfig*', '**/*.config.js'],
     },
     {
         rules: {

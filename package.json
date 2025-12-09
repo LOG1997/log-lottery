@@ -9,12 +9,13 @@
         "build": "vue-tsc --noEmit && vite build",
         "build:pre": "vue-tsc --noEmit && vite build --mode prebuild",
         "build:file": "vue-tsc --noEmit && vite build --mode file",
-        "tauri":"node ./build/syncVersion.js && tauri",
+        "tauri": "node ./build/syncVersion.js && tauri",
         "test": "vitest",
         "test:ui": "vitest --ui",
         "preview": "vite preview",
         "lint": "eslint ./src",
-        "lint:fix": "eslint ./src --fix"
+        "lint:fix": "eslint ./src --fix",
+        "prepare": "husky"
     },
     "dependencies": {
         "@tweenjs/tween.js": "^23.1.2",
@@ -68,6 +69,7 @@
         "@vue/tsconfig": "^0.8.1",
         "autoprefixer": "^10.4.20",
         "baseline-browser-mapping": "^2.8.32",
+        "child_process": "^1.0.2",
         "daisyui": "^5.1.13",
         "eslint": "^9.15.0",
         "eslint-plugin-vue": "^10.4.0",
