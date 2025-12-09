@@ -2,6 +2,7 @@
 
 import { createRequire } from 'node:module'
 import path from 'node:path'
+import tailwindcss from '@tailwindcss/vite'
 import legacy from '@vitejs/plugin-legacy'
 import vue from '@vitejs/plugin-vue'
 import { visualizer } from 'rollup-plugin-visualizer'
@@ -26,6 +27,7 @@ export default defineConfig(({ mode }) => {
         base: mode === 'file' ? './' : '/log-lottery/',
         plugins: [
             vue(),
+            tailwindcss(),
             mode === 'file'
                 ? legacy({
                     additionalLegacyPolyfills: ['regenerator-runtime/runtime'],

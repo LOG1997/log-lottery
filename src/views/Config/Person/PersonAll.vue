@@ -1,16 +1,17 @@
 <!-- eslint-disable vue/no-parsing-error -->
 <script setup lang='ts'>
 import type { IPersonConfig } from '@/types/storeType'
-import DaiysuiTable from '@/components/DaiysuiTable/index.vue'
-import i18n from '@/locales/i18n'
-import useStore from '@/store'
-import { addOtherInfo } from '@/utils'
-import { readFileBinary } from '@/utils/file'
 import { storeToRefs } from 'pinia'
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import * as XLSX from 'xlsx'
+import DaiysuiTable from '@/components/DaiysuiTable/index.vue'
+import i18n from '@/locales/i18n'
+import useStore from '@/store'
+import { readFileBinary } from '@/utils/file'
+import ImportExcelWorker from './importExcel.worker?worker'
 
+const worker: Worker | null = new ImportExcelWorker()
 const { t } = useI18n()
 const personConfig = useStore().personConfig
 const { getAllPersonList: allPersonList, getAlreadyPersonList: alreadyPersonList } = storeToRefs(personConfig)
@@ -19,15 +20,27 @@ const limitType = '.xlsx,.xls'
 
 const resetDataDialog = ref()
 const delAllDataDialog = ref()
-
+function sendMessage(message: any) {
+  if (worker) {
+    worker.postMessage(message)
+  }
+}
+// 方法
+function startWorker(data: Event) {
+  sendMessage({ type: 'start', data })
+}
 async function handleFileChange(e: Event) {
+//   worker = new ImportExcelWorker()
+  if (worker) {
+    worker.onmessage = (e) => {
+      if (e.data.type === 'done') {
+        personConfig.resetPerson()
+        personConfig.addNotPersonList(e.data.data)
+      }
+    }
+  }
   const dataBinary = await readFileBinary(((e.target as HTMLInputElement).files as FileList)[0]!)
-  const workBook = XLSX.read(dataBinary, { type: 'binary', cellDates: true })
-  const workSheet = workBook.Sheets[workBook.SheetNames[0]]
-  const excelData = XLSX.utils.sheet_to_json(workSheet)
-  const allData = addOtherInfo(excelData)
-  personConfig.resetPerson()
-  personConfig.addNotPersonList(allData)
+  startWorker(dataBinary)
 }
 function exportData() {
   let data = JSON.parse(JSON.stringify(allPersonList.value))
@@ -99,8 +112,8 @@ const tableColumns = [
     label: i18n.global.t('data.avatar'),
     props: 'avatar',
     formatValue(row: any) {
-       return row.avatar ? `<img src="${row.avatar}" alt="avatar" style="width: 50px; height: 50px;"/>` : '-';
-    }
+      return row.avatar ? `<img src="${row.avatar}" alt="avatar" style="width: 50px; height: 50px;"/>` : '-'
+    },
   },
   {
     label: i18n.global.t('data.identity'),
