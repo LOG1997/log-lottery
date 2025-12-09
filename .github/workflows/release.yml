@@ -83,7 +83,7 @@ jobs:
           releaseBody: See the assets to download this version and install.
           releaseDraft: true
           prerelease: false
-        run: pnpm tauri build
+          run: pnpm tauri build
 
   release:
     needs: [build-web, publish-tauri]
