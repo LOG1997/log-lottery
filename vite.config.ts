@@ -116,6 +116,7 @@ export default defineConfig(({ mode }) => {
             },
         },
         build: {
+            outDir: mode === 'file' ? 'dist-file' : 'dist',
             // Tauri 在 Windows 上使用 Chromium，在 macOS 和 Linux 上使用 WebKit
             // target: (process.env.TAURI_ENV_PLATFORM && mode !== 'file')
             //     ? (process.env.TAURI_ENV_PLATFORM === 'windows' ? 'chrome105' : 'safari13')
