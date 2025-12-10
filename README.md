@@ -130,14 +130,6 @@ or
 npm run build
 ```
 
-若想直接以打开html文件的方式运行，请执行以下命令进行打包。打包完成后在dist目录中直接打开index.html即可。
-
-```bash
-pnpm build:file
-or
-npm run build:file
-```
-
 > 项目思路来源于 <https://github.com/moshang-xc/lottery>
 
 ## Docker支持
