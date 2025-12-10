@@ -24,7 +24,7 @@ export const useGlobalConfig = defineStore('global', {
                     patternColor: '#1b66c9',
                     patternList: defaultPatternList as number[],
                     background: {}, // 背景颜色或图片
-                    font: '',
+                    font: '微软雅黑',
                 },
                 musicList: defaultMusicList as IMusic[],
                 imageList: defaultImageList as IImage[],
@@ -265,7 +265,7 @@ export const useGlobalConfig = defineStore('global', {
                     patternColor: '#1b66c9',
                     patternList: defaultPatternList as number[],
                     background: {}, // 背景颜色或图片
-                    font: '',
+                    font: '微软雅黑',
                 },
                 musicList: defaultMusicList as IMusic[],
                 imageList: defaultImageList as IImage[],
