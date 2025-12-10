@@ -160,7 +160,6 @@ export function useViewModel() {
             for (let i = 0; i < objLength; ++i) {
                 const object = objects.value[i]
                 const target = targets[i]
-                //   console.log('target', i, target, targets)
                 new TWEEN.Tween(object.position)
                     .to({ x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration)
                     .easing(TWEEN.Easing.Exponential.InOut)

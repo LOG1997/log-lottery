@@ -153,7 +153,6 @@ watch(backgroundImageValue, (val) => {
   globalConfig.setBackground(val)
 })
 watch(currentFontValue, (val) => {
-  console.log('currentFontValue', val)
   globalConfig.setFont(val)
   document.documentElement.style.setProperty('--app-font-family', `"${val}", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`)
 }, { immediate: true })

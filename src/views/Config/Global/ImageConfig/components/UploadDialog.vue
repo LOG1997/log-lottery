@@ -49,7 +49,6 @@ async function getImageDbStore() {
   const keys = await imageDbStore.keys()
   if (keys.length > 0) {
     imageDbStore.iterate((value: { fileName: string, dataUrl: string }, key: string) => {
-      console.log(value, key)
       globalConfig.addImage({
         id: key,
         name: value.fileName,
