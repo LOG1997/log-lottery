@@ -24,6 +24,7 @@ export const useGlobalConfig = defineStore('global', {
                     patternColor: '#1b66c9',
                     patternList: defaultPatternList as number[],
                     background: {}, // 背景颜色或图片
+                    font: '',
                 },
                 musicList: defaultMusicList as IMusic[],
                 imageList: defaultImageList as IImage[],
@@ -105,6 +106,10 @@ export const useGlobalConfig = defineStore('global', {
         // 获取背景图片设置
         getBackground(state) {
             return state.globalConfig.theme.background
+        },
+        // 获取字体
+        getFont(state) {
+            return state.globalConfig.theme.font
         },
         // 获取是否显示头像
         getIsShowAvatar(state) {
@@ -232,6 +237,10 @@ export const useGlobalConfig = defineStore('global', {
         setBackground(background: any) {
             this.globalConfig.theme.background = background
         },
+        // 设置字体
+        setFont(font: any) {
+            this.globalConfig.theme.font = font
+        },
         // 设置是否显示头像
         setIsShowAvatar(isShowAvatar: boolean) {
             this.globalConfig.isShowAvatar = isShowAvatar
@@ -256,6 +265,7 @@ export const useGlobalConfig = defineStore('global', {
                     patternColor: '#1b66c9',
                     patternList: defaultPatternList as number[],
                     background: {}, // 背景颜色或图片
+                    font: '',
                 },
                 musicList: defaultMusicList as IMusic[],
                 imageList: defaultImageList as IImage[],

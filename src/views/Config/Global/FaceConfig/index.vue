@@ -11,6 +11,7 @@ import useStore from '@/store'
 import { themeChange } from '@/utils'
 import { clearAllDbStore } from '@/utils/localforage'
 import PatternSetting from './components/PatternSetting.vue'
+import SelectFont from './components/SelectFont.vue'
 import 'vue3-colorpicker/style.css'
 
 const router = useRouter()
@@ -18,7 +19,7 @@ const { t } = useI18n()
 const globalConfig = useStore().globalConfig
 const personConfig = useStore().personConfig
 const prizeConfig = useStore().prizeConfig
-const { getTopTitle: topTitle, getTheme: localTheme, getPatterColor: patternColor, getPatternList: patternList, getCardColor: cardColor, getLuckyColor: luckyCardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowPrizeList: isShowPrizeList, getLanguage: userLanguage, getBackground: backgroundImage, getImageList: imageList, getIsShowAvatar: isShowAvatar,
+const { getTopTitle: topTitle, getTheme: localTheme, getPatterColor: patternColor, getPatternList: patternList, getCardColor: cardColor, getLuckyColor: luckyCardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowPrizeList: isShowPrizeList, getLanguage: userLanguage, getBackground: backgroundImage, getFont: currentFont, getImageList: imageList, getIsShowAvatar: isShowAvatar,
 } = storeToRefs(globalConfig)
 const { getAlreadyPersonList: alreadyPersonList, getNotPersonList: notPersonList } = storeToRefs(personConfig)
 const colorPickerRef = ref()
@@ -42,6 +43,7 @@ const patternColorValue = ref(structuredClone(patternColor.value))
 const themeList = ref(daisyuiThemes)
 const daisyuiThemeList = ref<ThemeDaType>(daisyuiThemes)
 const backgroundImageValue = ref(backgroundImage.value)
+const currentFontValue = ref(currentFont.value)
 const formData = ref({
   rowCount: rowCountValue,
 })
@@ -150,6 +152,10 @@ watch(isShowPrizeListValue, () => {
 watch(backgroundImageValue, (val) => {
   globalConfig.setBackground(val)
 })
+watch(currentFontValue, (val) => {
+  globalConfig.setFont(val)
+  document.documentElement.style.setProperty('--app-font-family', `"${val}", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`)
+}, { immediate: true })
 watch(languageValue, (val: string) => {
   globalConfig.setLanguage(val)
 })
@@ -224,6 +230,13 @@ onMounted(() => {
             v-model="textSizeValue" type="number" placeholder="Type here"
             class="w-full max-w-xs input input-bordered"
           >
+        </label>
+
+        <label class="w-full max-w-xs form-control">
+          <div class="label">
+            <span class="label-text">字体</span>
+          </div>
+          <SelectFont v-model:selected-font="currentFontValue" />
         </label>
       </fieldset>
       <!-- 布局设置（列数、卡片宽度、卡片高度 -->

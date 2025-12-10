@@ -20,7 +20,6 @@ export const usePersonConfig = defineStore('person', () => {
         personConfig.value.allPersonList = data
     })
     personDb.getAllData('alreadyPersonList').then((data) => {
-        console.log(data)
         personConfig.value.alreadyPersonList = data
     })
 

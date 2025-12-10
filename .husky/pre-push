@@ -18,20 +18,6 @@ while read local_ref local_sha remote_ref remote_sha; do
       fi
       ;;
     *)
-      # 对于普通分支推送，检查最新 tag
-      LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null)
-      if [ $? -eq 0 ]; then
-        # 只校验以 "v" 开头的 tag
-        if [[ $LATEST_TAG == v* ]]; then
-          echo "🏷️  检查最新的 tag: $LATEST_TAG"
-          node .husky/scripts/verifyTagVersion.js "$LATEST_TAG"
-        else
-          echo "ℹ️  最新 tag ($LATEST_TAG) 不是版本 tag，跳过校验"
-        fi
-      else
-        echo "⚠️  没有找到任何 tag，跳过版本校验"
-      fi
-      ;;
   esac
 done
 

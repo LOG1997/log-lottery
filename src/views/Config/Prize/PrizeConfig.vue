@@ -136,7 +136,6 @@ onMounted(() => {
   getImageDbStore()
 })
 watch(() => prizeList.value, (val: IPrizeConfig[]) => {
-  console.log('prizeList', val)
   prizeConfig.setPrizeConfig(val)
 }, { deep: true })
 </script>
