@@ -17,15 +17,18 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-
 import { useLocalFonts } from '@/hooks/useLocalFonts'
 import { cn } from '@/lib/utils'
 
+const selectedFont = defineModel('selectedFont', {
+  type: String,
+  required: true,
+})
+
 const { getFonts, disabled, fonts } = useLocalFonts()
 const open = ref(false)
-const activeKey = ref('Arial')
+const activeKey = ref('')
 const debouncedActiveKey = refDebounced(activeKey, 20)
-const selectedFont = ref('')
 
 function selectFont(selectedValue: any) {
   open.value = false
@@ -43,21 +46,23 @@ function handleScroll() {
 </script>
 
 <template>
-  <div class="w-full h-full flex justify-center items-center">
+  <div class="w-full h-full flex justify-center items-center max-w-xs">
     <Popover v-model:open="open">
       <PopoverTrigger as-child :disabled="disabled">
         <Button
           variant="outline"
           role="combobox"
           :aria-expanded="open"
-          class="w-[200px] justify-between"
+          class="w-full justify-between truncate bg-transparent hover:bg-transparent hover:text-inherit"
           @click="getFonts"
         >
-          {{ selectedFont || "选择字体..." }}
+          <span class="w-7/8 text-left truncate" :style="{ fontFamily: `${selectedFont}` }">
+            {{ selectedFont || "选择字体..." }}
+          </span>
           <ChevronsUpDownIcon class="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent class="w-[200px] p-0">
+      <PopoverContent class="w-full p-0">
         <Command>
           <CommandInput class="h-9" placeholder="Search framework..." />
           <CommandList @scroll="handleScroll">

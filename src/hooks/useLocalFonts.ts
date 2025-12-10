@@ -3,7 +3,6 @@ import { onMounted, ref } from 'vue'
 export function useLocalFonts() {
     const fonts = ref<Map<string, { name: string, value: string }[]>>(new Map())
     const disabled = ref(false)
-
     const formatFonts = (list: FontData[]): Map<string, { name: string, value: string }[]> => {
         const res: Map<string, { name: string, value: string }[]> = new Map()
         for (const item of list) {
@@ -30,11 +29,8 @@ export function useLocalFonts() {
             return
         }
         const list = await window.queryLocalFonts()
-        console.log('list', list)
         const res = formatFonts(list)
-        console.log('fontlist', res)
         fonts.value = res
-        // 对比family，相同则移入第一个元素的children里面
     }
 
     onMounted(() => {

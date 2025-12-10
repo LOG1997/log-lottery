@@ -6,12 +6,12 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { z as zod } from 'zod'
 import { daisyuiThemes } from '@/constant/theme'
-import { useLocalFonts } from '@/hooks/useLocalFonts'
 import i18n, { languageList } from '@/locales/i18n'
 import useStore from '@/store'
 import { themeChange } from '@/utils'
 import { clearAllDbStore } from '@/utils/localforage'
 import PatternSetting from './components/PatternSetting.vue'
+import SelectFont from './components/SelectFont.vue'
 import 'vue3-colorpicker/style.css'
 
 const router = useRouter()
@@ -22,7 +22,6 @@ const prizeConfig = useStore().prizeConfig
 const { getTopTitle: topTitle, getTheme: localTheme, getPatterColor: patternColor, getPatternList: patternList, getCardColor: cardColor, getLuckyColor: luckyCardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowPrizeList: isShowPrizeList, getLanguage: userLanguage, getBackground: backgroundImage, getFont: currentFont, getImageList: imageList, getIsShowAvatar: isShowAvatar,
 } = storeToRefs(globalConfig)
 const { getAlreadyPersonList: alreadyPersonList, getNotPersonList: notPersonList } = storeToRefs(personConfig)
-const { getFonts, disabled: disabledFonts, fonts } = useLocalFonts()
 const colorPickerRef = ref()
 const resetDataDialogRef = ref()
 interface ThemeDaType {
@@ -156,7 +155,8 @@ watch(backgroundImageValue, (val) => {
 watch(currentFontValue, (val) => {
   console.log('currentFontValue', val)
   globalConfig.setFont(val)
-})
+  document.documentElement.style.setProperty('--app-font-family', `"${val}", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`)
+}, { immediate: true })
 watch(languageValue, (val: string) => {
   globalConfig.setLanguage(val)
 })
@@ -237,10 +237,7 @@ onMounted(() => {
           <div class="label">
             <span class="label-text">字体</span>
           </div>
-          <select v-model="currentFontValue" class="w-full max-w-xs border-solid select border-1" @click="getFonts">
-            <option disabled selected>选择字体</option>
-            <option v-for="item in fonts" :key="item.fullName" :style="{ fontFamily: `${item.fullName}`, fontSize: 'normal', fontWeight: 'normal' }" :value="item.fullName">{{ item.fullName }}</option>
-          </select>
+          <SelectFont v-model:selected-font="currentFontValue" />
         </label>
       </fieldset>
       <!-- 布局设置（列数、卡片宽度、卡片高度 -->

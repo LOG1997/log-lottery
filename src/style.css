@@ -20,6 +20,7 @@ html {
     overflow-y: overlay;
     overflow-y: hidden;
     overflow-x: hidden;
+    font-family: var(--app-font-family);
 }
 
 ul {
