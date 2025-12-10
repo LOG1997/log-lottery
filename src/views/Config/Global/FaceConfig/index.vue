@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { z as zod } from 'zod'
 import { daisyuiThemes } from '@/constant/theme'
+import { useLocalFonts } from '@/hooks/useLocalFonts'
 import i18n, { languageList } from '@/locales/i18n'
 import useStore from '@/store'
 import { themeChange } from '@/utils'
@@ -18,9 +19,10 @@ const { t } = useI18n()
 const globalConfig = useStore().globalConfig
 const personConfig = useStore().personConfig
 const prizeConfig = useStore().prizeConfig
-const { getTopTitle: topTitle, getTheme: localTheme, getPatterColor: patternColor, getPatternList: patternList, getCardColor: cardColor, getLuckyColor: luckyCardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowPrizeList: isShowPrizeList, getLanguage: userLanguage, getBackground: backgroundImage, getImageList: imageList, getIsShowAvatar: isShowAvatar,
+const { getTopTitle: topTitle, getTheme: localTheme, getPatterColor: patternColor, getPatternList: patternList, getCardColor: cardColor, getLuckyColor: luckyCardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowPrizeList: isShowPrizeList, getLanguage: userLanguage, getBackground: backgroundImage, getFont: currentFont, getImageList: imageList, getIsShowAvatar: isShowAvatar,
 } = storeToRefs(globalConfig)
 const { getAlreadyPersonList: alreadyPersonList, getNotPersonList: notPersonList } = storeToRefs(personConfig)
+const { getFonts, disabled: disabledFonts, fonts } = useLocalFonts()
 const colorPickerRef = ref()
 const resetDataDialogRef = ref()
 interface ThemeDaType {
@@ -42,6 +44,7 @@ const patternColorValue = ref(structuredClone(patternColor.value))
 const themeList = ref(daisyuiThemes)
 const daisyuiThemeList = ref<ThemeDaType>(daisyuiThemes)
 const backgroundImageValue = ref(backgroundImage.value)
+const currentFontValue = ref(currentFont.value)
 const formData = ref({
   rowCount: rowCountValue,
 })
@@ -150,6 +153,10 @@ watch(isShowPrizeListValue, () => {
 watch(backgroundImageValue, (val) => {
   globalConfig.setBackground(val)
 })
+watch(currentFontValue, (val) => {
+  console.log('currentFontValue', val)
+  globalConfig.setFont(val)
+})
 watch(languageValue, (val: string) => {
   globalConfig.setLanguage(val)
 })
@@ -224,6 +231,16 @@ onMounted(() => {
             v-model="textSizeValue" type="number" placeholder="Type here"
             class="w-full max-w-xs input input-bordered"
           >
+        </label>
+
+        <label class="w-full max-w-xs form-control">
+          <div class="label">
+            <span class="label-text">字体</span>
+          </div>
+          <select v-model="currentFontValue" class="w-full max-w-xs border-solid select border-1" @click="getFonts">
+            <option disabled selected>选择字体</option>
+            <option v-for="item in fonts" :key="item.fullName" :style="{ fontFamily: `${item.fullName}`, fontSize: 'normal', fontWeight: 'normal' }" :value="item.fullName">{{ item.fullName }}</option>
+          </select>
         </label>
       </fieldset>
       <!-- 布局设置（列数、卡片宽度、卡片高度 -->
