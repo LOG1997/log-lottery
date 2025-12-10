@@ -19,7 +19,7 @@ const { t } = useI18n()
 const globalConfig = useStore().globalConfig
 const personConfig = useStore().personConfig
 const prizeConfig = useStore().prizeConfig
-const { getTopTitle: topTitle, getTheme: localTheme, getPatterColor: patternColor, getPatternList: patternList, getCardColor: cardColor, getLuckyColor: luckyCardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowPrizeList: isShowPrizeList, getLanguage: userLanguage, getBackground: backgroundImage, getFont: currentFont, getImageList: imageList, getIsShowAvatar: isShowAvatar,
+const { getTopTitle: topTitle, getTheme: localTheme, getPatterColor: patternColor, getPatternList: patternList, getCardColor: cardColor, getLuckyColor: luckyCardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowPrizeList: isShowPrizeList, getLanguage: userLanguage, getBackground: backgroundImage, getFont: currentFont, getTitleFont: currentTitleFont, getTitleFontSyncGlobal: titleFontSyncGlobal, getImageList: imageList, getIsShowAvatar: isShowAvatar,
 } = storeToRefs(globalConfig)
 const { getAlreadyPersonList: alreadyPersonList, getNotPersonList: notPersonList } = storeToRefs(personConfig)
 const colorPickerRef = ref()
@@ -43,7 +43,9 @@ const patternColorValue = ref(structuredClone(patternColor.value))
 const themeList = ref(daisyuiThemes)
 const daisyuiThemeList = ref<ThemeDaType>(daisyuiThemes)
 const backgroundImageValue = ref(backgroundImage.value)
-const currentFontValue = ref(currentFont.value)
+const currentFontValue = ref(structuredClone(currentFont.value))
+const currentTitleFontValue = ref(structuredClone(currentTitleFont.value))
+const titleFontSyncGlobalValue = ref(structuredClone(titleFontSyncGlobal.value))
 const formData = ref({
   rowCount: rowCountValue,
 })
@@ -155,7 +157,13 @@ watch(backgroundImageValue, (val) => {
 watch(currentFontValue, (val) => {
   globalConfig.setFont(val)
   document.documentElement.style.setProperty('--app-font-family', `"${val}", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`)
-}, { immediate: true })
+})
+watch(currentTitleFontValue, (val) => {
+  globalConfig.setTitleFont(val)
+})
+watch(titleFontSyncGlobalValue, (val) => {
+  globalConfig.setTitleFontSyncGlobal(val)
+})
 watch(languageValue, (val: string) => {
   globalConfig.setLanguage(val)
 })
@@ -195,9 +203,9 @@ onMounted(() => {
         {{ t('button.resetAllData') }}
       </button>
     </div>
-    <div class="flex flex-wrap w-full gap-6">
+    <div class="flex flex-wrap h-auto w-full gap-6">
       <!-- 文本设置（主标题、语言、文字大小） -->
-      <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs">
+      <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs pb-10">
         <legend class="fieldset-legend">
           文本设置
         </legend>
@@ -216,7 +224,7 @@ onMounted(() => {
           <div class="label">
             <span class="label-text">{{ t('table.language') }}</span>
           </div>
-          <select v-model="languageValue" data-choose-theme class="w-full max-w-xs border-solid select border-1">
+          <select v-model="languageValue" data-choose-theme class="w-full max-w-xs border-solid select border">
             <option disabled selected>{{ t('table.language') }}</option>
             <option v-for="item in languageList" :key="item.key" :value="item.key">{{ item.name }}</option>
           </select>
@@ -232,15 +240,29 @@ onMounted(() => {
           >
         </label>
 
-        <label class="w-full max-w-xs form-control">
+        <label class="w-full max-w-xs form-control mt-3">
           <div class="label">
-            <span class="label-text">字体</span>
+            <span class="label-text">全局字体</span>
           </div>
           <SelectFont v-model:selected-font="currentFontValue" />
         </label>
+        <label class="flex flex-row w-full max-w-xs mt-5 gap-10 form-control">
+          <div class="w-3/4">
+            <div class="label">
+              <span class="label-text">标题字体</span>
+            </div>
+            <SelectFont v-model:selected-font="currentTitleFontValue" :disabled="titleFontSyncGlobalValue" />
+          </div>
+          <div class="flex flex-col gap-4">
+            <div class="label">
+              <span class="label-text">同全局</span>
+            </div>
+            <input type="checkbox" :checked="titleFontSyncGlobalValue" class="border-solid checkbox checkbox-secondary border" @change="titleFontSyncGlobalValue = !titleFontSyncGlobalValue">
+          </div>
+        </label>
       </fieldset>
       <!-- 布局设置（列数、卡片宽度、卡片高度 -->
-      <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs">
+      <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs  pb-10">
         <legend class="fieldset-legend">
           布局设置
         </legend>
@@ -291,7 +313,7 @@ onMounted(() => {
         </label>
       </fieldset>
       <!-- 主题设置（主题、背景图片） -->
-      <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs">
+      <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs  pb-10">
         <legend class="fieldset-legend">
           主题设置
         </legend>
@@ -363,7 +385,7 @@ onMounted(() => {
         </div>
       </fieldset>
       <!-- 图案设置 -->
-      <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs">
+      <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs  pb-10">
         <legend class="fieldset-legend">
           图案设置
         </legend>
@@ -392,7 +414,7 @@ onMounted(() => {
         </div>
       </fieldset>
       <!-- 其他设置（是否常显奖项列表、是否显示头像） -->
-      <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs">
+      <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs  pb-10">
         <legend class="fieldset-legend">
           其他设置
         </legend>
@@ -402,7 +424,7 @@ onMounted(() => {
             <span class="label-text">{{ t('table.alwaysDisplay') }}</span>
           </div>
           <input
-            type="checkbox" :checked="isShowPrizeListValue" class="border-solid checkbox checkbox-secondary border-1"
+            type="checkbox" :checked="isShowPrizeListValue" class="border-solid checkbox checkbox-secondary border"
             @change="isShowPrizeListValue = !isShowPrizeListValue"
           >
         </div>
@@ -411,7 +433,7 @@ onMounted(() => {
             <span class="label-text">{{ t('table.avatarDisplay') }}</span>
           </div>
           <input
-            type="checkbox" :checked="isShowAvatarValue" class="border-solid checkbox checkbox-secondary border-1"
+            type="checkbox" :checked="isShowAvatarValue" class="border-solid checkbox checkbox-secondary border"
             @change="isShowAvatarValue = !isShowAvatarValue"
           >
         </div>

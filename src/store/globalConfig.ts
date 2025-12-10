@@ -25,6 +25,8 @@ export const useGlobalConfig = defineStore('global', {
                     patternList: defaultPatternList as number[],
                     background: {}, // 背景颜色或图片
                     font: '微软雅黑',
+                    titleFont: '微软雅黑',
+                    titleFontSyncGlobal: true,
                 },
                 musicList: defaultMusicList as IMusic[],
                 imageList: defaultImageList as IImage[],
@@ -110,6 +112,14 @@ export const useGlobalConfig = defineStore('global', {
         // 获取字体
         getFont(state) {
             return state.globalConfig.theme.font
+        },
+        // 获取标题字体
+        getTitleFont(state) {
+            return state.globalConfig.theme.titleFont
+        },
+        // 获取标题字体同步全局
+        getTitleFontSyncGlobal(state) {
+            return state.globalConfig.theme.titleFontSyncGlobal
         },
         // 获取是否显示头像
         getIsShowAvatar(state) {
@@ -241,6 +251,14 @@ export const useGlobalConfig = defineStore('global', {
         setFont(font: any) {
             this.globalConfig.theme.font = font
         },
+        // 设置标题字体
+        setTitleFont(titleFont: any) {
+            this.globalConfig.theme.titleFont = titleFont
+        },
+        // 设置同步全局字体
+        setTitleFontSyncGlobal(titleFontSyncGlobal: boolean) {
+            this.globalConfig.theme.titleFontSyncGlobal = titleFontSyncGlobal
+        },
         // 设置是否显示头像
         setIsShowAvatar(isShowAvatar: boolean) {
             this.globalConfig.isShowAvatar = isShowAvatar
@@ -266,6 +284,8 @@ export const useGlobalConfig = defineStore('global', {
                     patternList: defaultPatternList as number[],
                     background: {}, // 背景颜色或图片
                     font: '微软雅黑',
+                    titleFont: '微软雅黑',
+                    titleFontSyncGlobal: true,
                 },
                 musicList: defaultMusicList as IMusic[],
                 imageList: defaultImageList as IImage[],
