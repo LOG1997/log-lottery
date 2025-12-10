@@ -26,7 +26,7 @@ export function useViewModel() {
         getNotThisPrizePersonList: notThisPrizePersonList,
     } = storeToRefs(personConfig)
     const { getCurrentPrize: currentPrize } = storeToRefs(prizeConfig)
-    const { getCardColor: cardColor, getPatterColor: patternColor, getPatternList: patternList, getTextColor: textColor, getLuckyColor: luckyColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowAvatar: isShowAvatar } = storeToRefs(globalConfig)
+    const { getCardColor: cardColor, getPatterColor: patternColor, getPatternList: patternList, getTextColor: textColor, getLuckyColor: luckyColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowAvatar: isShowAvatar, getTitleFont: titleFont, getTitleFontSyncGlobal: titleFontSyncGlobal } = storeToRefs(globalConfig)
     // three初始值
     const ballRotationY = ref(0)
     const containerRef = ref<HTMLElement>()
@@ -636,5 +636,7 @@ export function useViewModel() {
         tableData,
         currentStatus,
         isInitialDone,
+        titleFont,
+        titleFontSyncGlobal,
     }
 }

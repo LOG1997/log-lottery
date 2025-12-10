@@ -2,7 +2,7 @@
 import { refDebounced } from '@vueuse/core'
 import { ChevronRight, ChevronsUpDownIcon } from 'lucide-vue-next'
 import { PopoverArrow } from 'reka-ui'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { Button } from '@/components/ui/button'
 import {
   Command,
@@ -20,12 +20,14 @@ import {
 import { useLocalFonts } from '@/hooks/useLocalFonts'
 import { cn } from '@/lib/utils'
 
+const props = defineProps<{
+  disabled?: boolean
+}>()
 const selectedFont = defineModel('selectedFont', {
   type: String,
   required: true,
 })
-
-const { getFonts, disabled, fonts } = useLocalFonts()
+const { getFonts, disabled: browserDisabled, fonts } = useLocalFonts()
 const open = ref(false)
 const activeKey = ref('')
 const debouncedActiveKey = refDebounced(activeKey, 20)
@@ -43,12 +45,20 @@ function handelActiveKey(val: string) {
 function handleScroll() {
   activeKey.value = ''
 }
+const disabledStyle = computed(() => {
+  if (props.disabled || browserDisabled) {
+    return {
+      cursor: 'not-allowed',
+    }
+  }
+  return {}
+})
 </script>
 
 <template>
-  <div class="w-full h-full flex justify-center items-center max-w-xs">
+  <div class="w-full h-full flex justify-center items-center max-w-xs" :style="disabledStyle">
     <Popover v-model:open="open">
-      <PopoverTrigger as-child :disabled="disabled">
+      <PopoverTrigger as-child :disabled="browserDisabled || disabled">
         <Button
           variant="outline"
           role="combobox"

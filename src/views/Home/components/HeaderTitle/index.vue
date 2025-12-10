@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { toRefs } from 'vue'
+import { computed, toRefs } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { useRouter } from 'vue-router'
@@ -11,11 +11,32 @@ interface Props {
   tableData: any[]
   setDefaultPersonList: () => void
   isInitialDone: boolean
+  titleFont: string
+  titleFontSyncGlobal: boolean
 }
 
 const props = defineProps<Props>()
 const router = useRouter()
-const { tableData, textSize, textColor, topTitle, setDefaultPersonList } = toRefs(props)
+const { tableData, textSize, textColor, topTitle, setDefaultPersonList, titleFont, titleFontSyncGlobal } = toRefs(props)
+
+const titleStyle = computed(() => {
+  const baseStyle = {
+    fontSize: `${textSize.value * 1.5}px`,
+    color: textColor.value,
+  }
+
+  if (titleFontSyncGlobal.value) {
+    return {
+      ...baseStyle,
+    }
+  }
+  else {
+    return {
+      ...baseStyle,
+      fontFamily: titleFont.value,
+    }
+  }
+})
 const { t } = useI18n()
 </script>
 
@@ -23,7 +44,7 @@ const { t } = useI18n()
   <div class="absolute z-10 flex flex-col items-center justify-center -translate-x-1/2 left-1/2">
     <h2
       class="pt-12 m-0 mb-12 tracking-wide text-center leading-12 header-title"
-      :style="{ fontSize: `${textSize * 1.5}px`, color: textColor }"
+      :style="titleStyle"
     >
       {{ topTitle }}
     </h2>
