@@ -10,7 +10,6 @@ import FileUpload from '@/components/FileUpload/index.vue'
 import useStore from '@/store'
 
 const toast = useToast()
-const { t } = useI18n()
 const limitType = ref('audio/*')
 const visible = defineModel('visible', {
   type: Boolean,

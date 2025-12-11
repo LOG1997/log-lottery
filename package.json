@@ -18,7 +18,7 @@
         "prepare": "husky"
     },
     "dependencies": {
-        "@tweenjs/tween.js": "^23.1.2",
+        "@tweenjs/tween.js": "23.1.2",
         "@vueuse/core": "^14.1.0",
         "axios": "^1.7.8",
         "canvas-confetti": "^1.9.3",
@@ -29,7 +29,7 @@
         "github-markdown-css": "^5.8.0",
         "localforage": "^1.10.0",
         "lodash-es": "^4.17.21",
-        "lucide-vue-next": "^0.556.0",
+        "lucide-vue-next": "^0.559.0",
         "markdown-it": "^14.1.0",
         "pinia": "^3.0.3",
         "pinia-plugin-persist": "^1.0.0",
@@ -44,6 +44,7 @@
         "vue-draggable-plus": "^0.6.0",
         "vue-i18n": "^11.2.2",
         "vue-router": "^4.5.0",
+        "vue-sonner": "^2.0.9",
         "vue-toast-notification": "^3",
         "vue3-colorpicker": "^2.3.0",
         "xlsx": "^0.18.5",
@@ -62,7 +63,7 @@
         "@types/canvas-confetti": "^1.6.4",
         "@types/lodash-es": "^4.17.12",
         "@types/markdown-it": "^14.1.2",
-        "@types/node": "^24.10.2",
+        "@types/node": "^25.0.0",
         "@types/three": "0.166.0",
         "@typescript-eslint/eslint-plugin": "^8.49.0",
         "@typescript-eslint/parser": "^8.49.0",
@@ -100,6 +101,9 @@
         "vite-plugin-vue-devtools": "^8.0.2",
         "vitest": "^4.0.15",
         "vue-tsc": "^3.0.7"
+    },
+    "engines": {
+        "node": ">=22.x"
     },
     "packageManager": "pnpm@10.8.1+sha1.a4eff733d0c4ccc179997f0ef4986f6e92427781"
 }

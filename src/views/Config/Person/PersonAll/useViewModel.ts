@@ -2,11 +2,12 @@ import type { Ref } from 'vue'
 import type { IPersonConfig } from '@/types/storeType'
 import { storeToRefs } from 'pinia'
 import { inject } from 'vue'
+import { toast } from 'vue-sonner'
 import * as XLSX from 'xlsx'
 import { loadingKey } from '@/components/Loading'
 import i18n from '@/locales/i18n'
 import useStore from '@/store'
-import { readFileBinary } from '@/utils/file'
+import { readFileBinary, readLocalFileAsArraybuffer } from '@/utils/file'
 import ImportExcelWorker from './importExcel.worker?worker'
 
 export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<HTMLInputElement> }) {
@@ -48,13 +49,6 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
         {
             label: i18n.global.t('data.operation'),
             actions: [
-                // {
-                //     label: '编辑',
-                //     type: 'btn-info',
-                //     onClick: (row: any) => {
-                //         delPersonItem(row)
-                //     }
-                // },
                 {
                     label: i18n.global.t('data.delete'),
                     type: 'btn-error',
@@ -66,6 +60,18 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
             ],
         },
     ]
+
+    async function getExcelTemplateContent() {
+        const locale = i18n.global.locale.value
+        if (locale === 'zhCn') {
+            const templateData = await readLocalFileAsArraybuffer('/log-lottery/人口登记表-zhCn.xlsx')
+            return templateData
+        }
+        else {
+            const templateData = await readLocalFileAsArraybuffer('/log-lottery/personListTemplate-en.xlsx')
+            return templateData
+        }
+    }
     /// 向worker发送消息
     function sendWorkerMessage(message: any) {
         if (worker) {
@@ -73,15 +79,15 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
         }
     }
     /// 开始导入
-    function startWorker(data: Event) {
+    async function startWorker(data: string) {
         loading?.show()
-        sendWorkerMessage({ type: 'start', data })
+        getExcelTemplateContent()
+        sendWorkerMessage({ type: 'start', data, templateData: await getExcelTemplateContent() })
     }
     /**
      * 获取用户数据
      */
     async function handleFileChange(e: Event) {
-        //   worker = new ImportExcelWorker()
         if (worker) {
             worker.onmessage = (e) => {
                 if (e.data.type === 'done') {
@@ -89,6 +95,9 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
                     personConfig.addNotPersonList(e.data.data)
                     // 导入成功后清空file input
                     clearFileInput()
+                }
+                if (e.data.type === 'error') {
+                    toast.warning(e.data.message || '导入错误')
                 }
                 loading?.hide()
             }
