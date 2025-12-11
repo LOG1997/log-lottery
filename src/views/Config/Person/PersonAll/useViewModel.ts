@@ -64,11 +64,11 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
     async function getExcelTemplateContent() {
         const locale = i18n.global.locale.value
         if (locale === 'zhCn') {
-            const templateData = await readLocalFileAsArraybuffer('log-lottery/人口登记表-zhCn.xlsx')
+            const templateData = await readLocalFileAsArraybuffer('/log-lottery/人口登记表-zhCn.xlsx')
             return templateData
         }
         else {
-            const templateData = await readLocalFileAsArraybuffer('log-lottery/personListTemplate-en.xlsx')
+            const templateData = await readLocalFileAsArraybuffer('/log-lottery/personListTemplate-en.xlsx')
             return templateData
         }
     }
