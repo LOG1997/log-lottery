@@ -127,6 +127,10 @@ export const useGlobalConfig = defineStore('global', {
         },
     },
     actions: {
+        // 设置全局配置
+        setGlobalConfig(data: any) {
+            this.globalConfig = data
+        },
         // 设置rowCount
         setRowCount(rowCount: number) {
             this.globalConfig.rowCount = rowCount
@@ -137,9 +141,8 @@ export const useGlobalConfig = defineStore('global', {
         },
         // 设置主题
         setTheme(theme: any) {
-            const { name, detail } = theme
+            const { name } = theme
             this.globalConfig.theme.name = name
-            this.globalConfig.theme.detail = detail
         },
         // 设置卡片颜色
         setCardColor(cardColor: string) {

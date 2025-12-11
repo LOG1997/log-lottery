@@ -2,10 +2,11 @@
 import type { IFileData } from './type'
 import { ListMusic, Upload, X } from 'lucide-vue-next'
 import { ref } from 'vue'
-import { readFileData } from '@/utils/file'
+import { readFileAsJsonData, readFileData } from '@/utils/file'
 
-defineProps<{
+const props = defineProps<{
   limitType?: string
+  mode?: 'file' | 'json'
 }>()
 
 const emits = defineEmits<{
@@ -17,6 +18,14 @@ const fileData = ref<IFileData | null>(null)
 async function handleFileChange(e: Event) {
   const file = ((e.target as HTMLInputElement).files as FileList)[0]
   const type = file.type
+  if (props.mode === 'json') {
+    const fileRes = await readFileAsJsonData(file)
+    const jsonData = JSON.parse(fileRes)
+    fileData.value = { dataUrl: jsonData, fileName: file.name, type }
+    originFileName.value = file.name
+    emits('uploadFile', fileData.value)
+    return
+  }
   const { dataUrl, fileName } = await readFileData(file)
   fileData.value = { dataUrl, fileName, type }
   originFileName.value = fileName
