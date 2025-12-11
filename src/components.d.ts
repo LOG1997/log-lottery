@@ -58,6 +58,7 @@ declare module 'vue' {
     PopoverTrigger: typeof import('./components/ui/popover/PopoverTrigger.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Sonner: typeof import('./components/ui/sonner/Sonner.vue')['default']
     SvgIcon: typeof import('./components/SvgIcon/index.vue')['default']
     ToTop: typeof import('./components/ToTop/index.vue')['default']
   }
