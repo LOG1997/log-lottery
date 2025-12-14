@@ -642,8 +642,13 @@ function randomBallData(mod: 'default' | 'lucky' | 'sphere' = 'default') {
   }, 200)
 }
 // 监听键盘
-function listenKeyboard(e: any) {
-  if ((e.keyCode !== 32 || e.keyCode !== 27) && !canOperate.value) {
+function listenKeyboard(e: KeyboardEvent) {
+  // 阻止空格键的默认滚动行为
+  if (e.keyCode === 32) {
+    e.preventDefault()
+  }
+  
+  if ((e.keyCode !== 32 && e.keyCode !== 27) && !canOperate.value) {
     return
   }
   if (e.keyCode === 27 && currentStatus.value === 3) {
@@ -819,84 +824,85 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="absolute z-10 flex flex-col items-center justify-center -translate-x-1/2 left-1/2">
-    <h2
-      class="pt-12 m-0 mb-12 font-mono tracking-wide text-center leading-12 header-title"
-      :style="{ fontSize: `${textSize * 1.5}px`, color: textColor }"
-    >
-      {{ topTitle }}
-    </h2>
-    <div class="flex gap-3">
-      <button
-        v-if="tableData.length <= 0" class="cursor-pointer btn btn-outline btn-secondary btn-lg"
-        @click="router.push('config')"
+  <div class="home-page">
+    <!-- 背景动画 -->
+    <div class="bg-animation">
+      <div class="stars"></div>
+      <div class="stars2"></div>
+      <div class="stars3"></div>
+    </div>
+    
+  <!-- 顶部标题区域 -->
+  <div class="header-area">
+    <div class="title-container">
+      <h2
+        class="main-title header-title"
+        :style="{ fontSize: `${textSize * 1.5}px` }"
       >
+        {{ topTitle }}
+      </h2>
+      <div class="title-decoration"></div>
+    </div>
+    
+    <!-- 空数据提示 -->
+    <div v-if="tableData.length <= 0" class="empty-actions">
+      <button class="action-btn primary" @click="router.push('config')">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+        </svg>
         {{ t('button.noInfoAndImport') }}
       </button>
-      <button
-        v-if="tableData.length <= 0" class="cursor-pointer btn btn-outline btn-secondary btn-lg"
-        @click="setDefaultPersonList"
-      >
+      <button class="action-btn secondary" @click="setDefaultPersonList">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
         {{ t('button.useDefault') }}
       </button>
     </div>
   </div>
-  <div id="container" ref="containerRef" class="3dContainer">
-    <!-- 选中菜单结构 start -->
-    <div id="menu">
-      <button v-if="currentStatus === 0 && tableData.length > 0" class="btn-end " @click="enterLottery">
-        {{ t('button.enterLottery') }}
+
+  <!-- 3D 容器 -->
+  <div id="container" ref="containerRef" class="lottery-container">
+    <!-- 底部操作菜单 -->
+    <div id="menu" class="menu-container">
+      <!-- 状态 0: 进入抽奖 -->
+      <button v-if="currentStatus === 0 && tableData.length > 0" class="lottery-btn enter-btn" @click="enterLottery">
+        <span class="btn-icon">🎰</span>
+        <span class="btn-text">{{ t('button.enterLottery') }}</span>
+        <span class="btn-glow"></span>
       </button>
 
+      <!-- 状态 1: 开始抽奖 -->
       <div v-if="currentStatus === 1" class="start">
-        <button class="btn-start" @click="startLottery">
-          <strong>{{ t('button.start') }}</strong>
-          <div id="container-stars">
-            <div id="stars" />
-          </div>
+        <button class="lottery-btn start-btn" @click="startLottery">
+          <span class="btn-icon">🎲</span>
+          <span class="btn-text">{{ t('button.start') }}</span>
+          <span class="btn-particles"></span>
+        </button>
+        <p class="status-hint">{{ t('button.start') }} - Space</p>
+      </div>
 
-          <div id="glow">
-            <div class="circle" />
-            <div class="circle" />
-          </div>
+      <!-- 状态 2: 抽取幸运儿 -->
+      <div v-if="currentStatus === 2" class="rolling-state">
+        <button class="lottery-btn stop-btn" @click="stopLottery">
+          <span class="btn-icon spinning">🎯</span>
+          <span class="btn-text">{{ t('button.selectLucky') }}</span>
+        </button>
+        <p class="status-hint rolling">Rolling...</p>
+      </div>
+
+      <!-- 状态 3: 继续/取消 -->
+      <div v-if="currentStatus === 3" class="result-actions">
+        <button class="lottery-btn continue-btn" @click="continueLottery">
+          <span class="btn-icon">🎉</span>
+          <span class="btn-text">{{ t('button.continue') }}</span>
+        </button>
+        <button class="lottery-btn cancel-btn" @click="quitLottery">
+          <span class="btn-icon">↩️</span>
+          <span class="btn-text">{{ t('button.cancel') }}</span>
         </button>
       </div>
-
-      <button v-if="currentStatus === 2" class="btn-end btn glass btn-lg" @click="stopLottery">
-        {{ t('button.selectLucky') }}
-      </button>
-
-      <div v-if="currentStatus === 3" class="flex justify-center gap-6 enStop">
-        <div class="start">
-          <button class="btn-start" @click="continueLottery">
-            <strong>{{ t('button.continue') }}</strong>
-            <div id="container-stars">
-              <div id="stars" />
-            </div>
-
-            <div id="glow">
-              <div class="circle" />
-              <div class="circle" />
-            </div>
-          </button>
-        </div>
-
-        <div class="start">
-          <button class="btn-cancel" @click="quitLottery">
-            <strong>{{ t('button.cancel') }}</strong>
-            <div id="container-stars">
-              <div id="stars" />
-            </div>
-
-            <div id="glow">
-              <div class="circle" />
-              <div class="circle" />
-            </div>
-          </button>
-        </div>
-      </div>
     </div>
-    <!-- end -->
   </div>
   <StarsBackground :home-background="homeBackground" />
   <PrizeList class="absolute left-0 top-32" />
@@ -921,13 +927,368 @@ onUnmounted(() => {
       <span class="share-text">{{ t('entry.shareLink') }}</span>
     </button>
   </div>
+  </div>
 </template>
 
 <style scoped lang="scss">
-// 返回按钮样式
+// ==================== 页面容器和背景 ====================
+.home-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+// 背景星星动画
+.bg-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.stars, .stars2, .stars3 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+.stars {
+  background-image: radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+    radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+    radial-gradient(2px 2px at 160px 120px, rgba(255,255,255,0.9), transparent);
+  background-size: 200px 200px;
+  animation: twinkle 5s ease-in-out infinite;
+}
+
+.stars2 {
+  background-image: radial-gradient(1px 1px at 50px 80px, #fff, transparent),
+    radial-gradient(1px 1px at 100px 150px, rgba(255,255,255,0.7), transparent),
+    radial-gradient(2px 2px at 180px 50px, #eee, transparent);
+  background-size: 250px 250px;
+  animation: twinkle 7s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+.stars3 {
+  background-image: radial-gradient(1px 1px at 30px 100px, rgba(255,255,255,0.6), transparent),
+    radial-gradient(2px 2px at 120px 20px, #fff, transparent);
+  background-size: 300px 300px;
+  animation: twinkle 9s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+// ==================== 头部区域 ====================
+.header-area {
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 40px;
+}
+
+.title-container {
+  position: relative;
+  text-align: center;
+}
+
+.main-title {
+  margin: 0 0 8px;
+  font-family: 'Arial', sans-serif;
+  font-weight: 700;
+  letter-spacing: 4px;
+  background: linear-gradient(135deg, #fff 0%, #a78bfa 50%, #f472b6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+  filter: drop-shadow(0 4px 20px rgba(167, 139, 250, 0.5));
+}
+
+.title-decoration {
+  width: 120px;
+  height: 3px;
+  margin: 0 auto;
+  background: linear-gradient(90deg, transparent, #a78bfa, #f472b6, #a78bfa, transparent);
+  border-radius: 2px;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0.5; transform: scaleX(0.8); }
+  50% { opacity: 1; transform: scaleX(1); }
+}
+
+// 空数据操作按钮
+.empty-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &.primary {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    color: white;
+    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+    
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(139, 92, 246, 0.5);
+    }
+  }
+  
+  &.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-3px);
+    }
+  }
+}
+
+// ==================== 3D 容器 ====================
+.lottery-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+// ==================== 底部菜单 ====================
+.menu-container {
+  position: absolute;
+  z-index: 100;
+  width: 100%;
+  bottom: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+// 通用抽奖按钮样式
+.lottery-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 18px 48px;
+  border: none;
+  border-radius: 60px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  .btn-icon {
+    font-size: 24px;
+    transition: transform 0.3s ease;
+  }
+  
+  .btn-text {
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  
+  &:hover .btn-icon {
+    transform: scale(1.2);
+  }
+}
+
+// 进入抽奖按钮
+.enter-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background-size: 200% 200%;
+  color: white;
+  box-shadow: 
+    0 8px 32px rgba(102, 126, 234, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  animation: gradient-flow 3s ease infinite, float 3s ease-in-out infinite;
+  
+  .btn-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  &:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 
+      0 15px 40px rgba(102, 126, 234, 0.5),
+      0 0 60px rgba(240, 147, 251, 0.3);
+    
+    .btn-glow {
+      opacity: 1;
+    }
+  }
+}
+
+@keyframes gradient-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+// 开始按钮
+.start-btn {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  box-shadow: 
+    0 8px 32px rgba(245, 87, 108, 0.5),
+    0 0 0 2px rgba(255, 255, 255, 0.2) inset;
+  animation: pulse-glow 1.5s ease-in-out infinite;
+  
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: 
+      0 15px 50px rgba(245, 87, 108, 0.6),
+      0 0 80px rgba(240, 147, 251, 0.4);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: 
+      0 8px 32px rgba(245, 87, 108, 0.5),
+      0 0 0 2px rgba(255, 255, 255, 0.2) inset;
+  }
+  50% { 
+    box-shadow: 
+      0 8px 50px rgba(245, 87, 108, 0.7),
+      0 0 40px rgba(240, 147, 251, 0.5),
+      0 0 0 2px rgba(255, 255, 255, 0.3) inset;
+  }
+}
+
+// 停止按钮
+.rolling-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.stop-btn {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  color: #1a1a2e;
+  box-shadow: 0 8px 32px rgba(250, 112, 154, 0.5);
+  animation: shake 0.5s ease-in-out infinite;
+  
+  .spinning {
+    animation: spin 1s linear infinite;
+  }
+  
+  &:hover {
+    transform: scale(1.1);
+    animation: none;
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+// 结果操作按钮
+.result-actions {
+  display: flex;
+  gap: 24px;
+}
+
+.continue-btn {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+  box-shadow: 0 8px 32px rgba(56, 239, 125, 0.4);
+  
+  &:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(56, 239, 125, 0.5);
+  }
+}
+
+.cancel-btn {
+  background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+  color: white;
+  box-shadow: 0 8px 32px rgba(45, 55, 72, 0.4);
+  
+  &:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(45, 55, 72, 0.5);
+  }
+}
+
+// 状态提示
+.status-hint {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  letter-spacing: 1px;
+  margin: 0;
+  
+  &.rolling {
+    color: #fee140;
+    animation: blink 0.5s ease-in-out infinite;
+  }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+// ==================== 右侧浮动按钮 ====================
 .back-btn-wrapper {
   position: fixed;
-  right: 30px;
+  right: 24px;
   bottom: 250px;
   z-index: 1000;
 }
@@ -935,8 +1296,8 @@ onUnmounted(() => {
 .back-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 20px;
+  gap: 10px;
+  padding: 14px 24px;
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   border: none;
   border-radius: 50px;
@@ -944,16 +1305,20 @@ onUnmounted(() => {
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+  box-shadow: 
+    0 4px 20px rgba(99, 102, 241, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
   transition: all 0.3s ease;
   
   &:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 
+      0 10px 30px rgba(99, 102, 241, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.2) inset;
   }
   
   &:active {
-    transform: translateY(-1px) scale(1.02);
+    transform: translateY(-2px) scale(1.02);
   }
 }
 
@@ -961,10 +1326,9 @@ onUnmounted(() => {
   white-space: nowrap;
 }
 
-// 分享按钮样式
 .share-btn-wrapper {
   position: fixed;
-  right: 30px;
+  right: 24px;
   bottom: 190px;
   z-index: 1000;
 }
@@ -972,8 +1336,8 @@ onUnmounted(() => {
 .share-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 20px;
+  gap: 10px;
+  padding: 14px 24px;
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   border: none;
   border-radius: 50px;
@@ -981,16 +1345,20 @@ onUnmounted(() => {
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  box-shadow: 
+    0 4px 20px rgba(16, 185, 129, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
   transition: all 0.3s ease;
   
   &:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 
+      0 10px 30px rgba(16, 185, 129, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.2) inset;
   }
   
   &:active {
-    transform: translateY(-1px) scale(1.02);
+    transform: translateY(-2px) scale(1.02);
   }
 }
 
@@ -998,308 +1366,17 @@ onUnmounted(() => {
   white-space: nowrap;
 }
 
-#menu {
-    position: absolute;
-    z-index: 100;
-    width: 100%;
-    bottom: 50px;
-    text-align: center;
-    margin: 0 auto;
-    font-size: 32px;
-}
-
+// ==================== 标题动画 ====================
 .header-title {
     -webkit-animation: tracking-in-expand-fwd 0.8s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
     animation: tracking-in-expand-fwd 0.8s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
 }
 
 .start {
-    // 居中
     display: flex;
-    justify-content: center;
-}
-
-.btn-start {
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    width: 13rem;
-    overflow: hidden;
-    height: 3rem;
-    background-size: 300% 300%;
-    backdrop-filter: blur(1rem);
-    border-radius: 5rem;
-    transition: 0.5s;
-    animation: gradient_301 5s ease infinite;
-    border: double 4px transparent;
-    background-image: linear-gradient(#212121, #212121), linear-gradient(137.48deg, #ffdb3b 10%, #FE53BB 45%, #8F51EA 67%, #0044ff 87%);
-    background-origin: border-box;
-    background-clip: content-box, border-box;
-    -webkit-animation: pulsate-fwd 1.2s ease-in-out infinite both;
-    animation: pulsate-fwd 1.2s ease-in-out infinite both;
-}
-
-.btn-cancel {
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 13rem;
-    overflow: hidden;
-    height: 3rem;
-    background-size: 300% 300%;
-    backdrop-filter: blur(1rem);
-    border-radius: 5rem;
-    transition: 0.5s;
-    animation: gradient_301 5s ease infinite;
-    border: double 4px transparent;
-    background-image: linear-gradient(#212121, #212121), linear-gradient(137.48deg, #ffdb3b 10%, #FE53BB 45%, #8F51EA 67%, #0044ff 87%);
-    background-origin: border-box;
-    background-clip: content-box, border-box;
-}
-
-#container-stars {
-    position: absolute;
-    z-index: -1;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    transition: 0.5s;
-    backdrop-filter: blur(1rem);
-    border-radius: 5rem;
-}
-
-strong {
-    z-index: 2;
-    font-family: 'Avalors Personal Use';
-    font-size: 12px;
-    letter-spacing: 5px;
-    color: #FFFFFF;
-    text-shadow: 0 0 4px white;
-}
-
-#glow {
-    position: absolute;
-    display: flex;
-    width: 12rem;
-}
-
-.circle {
-    width: 100%;
-    height: 30px;
-    filter: blur(2rem);
-    animation: pulse_3011 4s infinite;
-    z-index: -1;
-}
-
-.circle:nth-of-type(1) {
-    background: rgba(254, 83, 186, 0.636);
-}
-
-.circle:nth-of-type(2) {
-    background: rgba(142, 81, 234, 0.704);
-}
-
-.btn-start:hover #container-stars {
-    z-index: 1;
-    background-color: #212121;
-}
-
-.btn-start:hover {
-    transform: scale(1.1)
-}
-
-.btn-start:active {
-    border: double 4px #FE53BB;
-    background-origin: border-box;
-    background-clip: content-box, border-box;
-    animation: none;
-}
-
-.btn-start:active .circle {
-    background: #FE53BB;
-}
-
-#stars {
-    position: relative;
-    background: transparent;
-    width: 200rem;
-    height: 200rem;
-}
-
-#stars::after {
-    content: "";
-    position: absolute;
-    top: -10rem;
-    left: -100rem;
-    width: 100%;
-    height: 100%;
-    animation: animStarRotate 90s linear infinite;
-}
-
-#stars::after {
-    background-image: radial-gradient(#ffffff 1px, transparent 1%);
-    background-size: 50px 50px;
-}
-
-#stars::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -50%;
-    width: 170%;
-    height: 500%;
-    animation: animStar 60s linear infinite;
-}
-
-#stars::before {
-    background-image: radial-gradient(#ffffff 1px, transparent 1%);
-    background-size: 50px 50px;
-    opacity: 0.5;
-}
-
-@keyframes animStar {
-    from {
-        transform: translateY(0);
-    }
-
-    to {
-        transform: translateY(-135rem);
-    }
-}
-
-@keyframes animStarRotate {
-    from {
-        transform: rotate(360deg);
-    }
-
-    to {
-        transform: rotate(0);
-    }
-}
-
-@keyframes gradient_301 {
-    0% {
-        background-position: 0% 50%;
-    }
-
-    50% {
-        background-position: 100% 50%;
-    }
-
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
-@keyframes pulse_3011 {
-    0% {
-        transform: scale(0.75);
-        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
-    }
-
-    70% {
-        transform: scale(1);
-        box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
-    }
-
-    100% {
-        transform: scale(0.75);
-        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-    }
-}
-
-.btn-end {
-    -webkit-animation: pulsate-fwd 0.9s ease-in-out infinite both;
-    animation: pulsate-fwd 0.9s ease-in-out infinite both;
-    cursor: pointer;
-}
-
-.btn-end {
-    --glow-color: rgb(217, 176, 255);
-    --glow-spread-color: rgba(191, 123, 255, 0.781);
-    --enhanced-glow-color: rgb(231, 206, 255);
-    --btn-color: rgb(100, 61, 136);
-    border: .25em solid var(--glow-color);
-    padding: 1em 3em;
-    color: var(--glow-color);
-    font-size: 15px;
-    font-weight: bold;
-    background-color: var(--btn-color);
-    border-radius: 1em;
-    outline: none;
-    box-shadow: 0 0 1em .25em var(--glow-color),
-        0 0 4em 1em var(--glow-spread-color),
-        inset 0 0 .75em .25em var(--glow-color);
-    text-shadow: 0 0 .5em var(--glow-color);
-    position: relative;
-    transition: all 0.3s;
-    -webkit-animation: swing-in-top-fwd 0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
-    animation: swing-in-top-fwd 0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
-}
-
-.btn-end::after {
-    pointer-events: none;
-    content: "";
-    position: absolute;
-    top: 120%;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background-color: var(--glow-spread-color);
-    filter: blur(2em);
-    opacity: .7;
-    transform: perspective(1.5em) rotateX(35deg) scale(1, .6);
-}
-
-.btn-end:hover {
-    color: var(--btn-color);
-    background-color: var(--glow-color);
-    box-shadow: 0 0 1em .25em var(--glow-color),
-        0 0 4em 2em var(--glow-spread-color),
-        inset 0 0 .75em .25em var(--glow-color);
-}
-
-.btn-end:active {
-    box-shadow: 0 0 0.6em .25em var(--glow-color),
-        0 0 2.5em 2em var(--glow-spread-color),
-        inset 0 0 .5em .25em var(--glow-color);
-}
-
-// 按钮动画
-@-webkit-keyframes pulsate-fwd {
-    0% {
-        -webkit-transform: scale(1);
-        transform: scale(1);
-    }
-
-    50% {
-        -webkit-transform: scale(1.1);
-        transform: scale(1.1);
-    }
-
-    100% {
-        -webkit-transform: scale(1);
-        transform: scale(1);
-    }
-}
-
-@keyframes pulsate-fwd {
-    0% {
-        -webkit-transform: scale(1);
-        transform: scale(1);
-    }
-
-    50% {
-        -webkit-transform: scale(1.2);
-        transform: scale(1.2);
-    }
-
-    100% {
-        -webkit-transform: scale(1);
-        transform: scale(1);
-    }
+    gap: 12px;
 }
 
 @-webkit-keyframes tracking-in-expand-fwd {

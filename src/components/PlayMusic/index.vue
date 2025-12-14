@@ -111,22 +111,25 @@ watch(currentMusic, (val: any) => {
 
 <template>
   <div ref="settingRef" class="flex flex-col gap-3">
-    <div v-if="route.path.includes('/config')" class="tooltip tooltip-left" :data-tip="t('tooltip.toHome')">
-      <div
-        class="flex items-center justify-center w-10 h-10 p-0 m-0 cursor-pointer setting-container bg-slate-500/50 rounded-l-xl hover:bg-slate-500/80 hover:text-blue-400/90"
-        @click="enterHome"
-      >
-        <svg-icon name="home" />
+    <!-- 在 Entry 页面隐藏设置/首页按钮 -->
+    <template v-if="!route.path.includes('/entry')">
+      <div v-if="route.path.includes('/config')" class="tooltip tooltip-left" :data-tip="t('tooltip.toHome')">
+        <div
+          class="flex items-center justify-center w-10 h-10 p-0 m-0 cursor-pointer setting-container bg-slate-500/50 rounded-l-xl hover:bg-slate-500/80 hover:text-blue-400/90"
+          @click="enterHome"
+        >
+          <svg-icon name="home" />
+        </div>
       </div>
-    </div>
-    <div v-else class="tooltip tooltip-left" :data-tip="t('tooltip.settingConfiguration')">
-      <div
-        class="flex items-center justify-center w-10 h-10 p-0 m-0 cursor-pointer setting-container bg-slate-500/50 rounded-l-xl hover:bg-slate-500/80 hover:text-blue-400/90"
-        @click="enterConfig"
-      >
-        <svg-icon name="setting" />
+      <div v-else class="tooltip tooltip-left" :data-tip="t('tooltip.settingConfiguration')">
+        <div
+          class="flex items-center justify-center w-10 h-10 p-0 m-0 cursor-pointer setting-container bg-slate-500/50 rounded-l-xl hover:bg-slate-500/80 hover:text-blue-400/90"
+          @click="enterConfig"
+        >
+          <svg-icon name="setting" />
+        </div>
       </div>
-    </div>
+    </template>
 
     <div class="tooltip tooltip-left" :data-tip="currentMusic.item ? `${currentMusic.item.name}\n\r ${t('tooltip.nextSong')}` : t('tooltip.noSongPlay')">
       <div

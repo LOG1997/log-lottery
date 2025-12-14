@@ -344,8 +344,8 @@ const handleJoin = async () => {
 <style scoped lang="scss">
 .join-lottery-wrapper {
   position: fixed;
-  right: 30px;
-  bottom: 120px;
+  right: 24px;
+  bottom: 130px;
   z-index: 1000;
 }
 
