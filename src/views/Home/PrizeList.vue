@@ -33,7 +33,7 @@ function getPrizeListHeight() {
 
   return height
 }
-const prizeShow = ref(structuredClone(isShowPrizeList.value))
+const prizeShow = ref(JSON.parse(JSON.stringify(isShowPrizeList.value)))
 
 function addTemporaryPrize() {
   temporaryPrizeRef.value.showModal()

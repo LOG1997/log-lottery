@@ -1,8 +1,75 @@
 import type { IImage, IMusic } from '@/types/storeType'
 import i18n, { browserLanguage } from '@/locales/i18n'
 import { defineStore } from 'pinia'
+import { watch } from 'vue'
 import { defaultImageList, defaultMusicList, defaultPatternList } from './data'
-// import { IPrizeConfig } from '@/types/storeType';
+import { useThemeStore, isServerStorageEnabled } from './theme'
+import * as api from '@/api/lottery'
+
+// 获取存储key
+function getStorageKey() {
+  const themeStore = useThemeStore()
+  const themeId = themeStore.getCurrentThemeId || 'default'
+  return `globalConfig_${themeId}`
+}
+
+function getCurrentThemeId(): string | null {
+  const themeStore = useThemeStore()
+  const id = themeStore.getCurrentThemeId
+  if (!id || id === 'default' || id === 'undefined') {
+    return null
+  }
+  return id
+}
+
+// 从localStorage加载数据
+function loadFromLocalStorage() {
+  const key = getStorageKey()
+  const data = localStorage.getItem(key)
+  if (data) {
+    try {
+      return JSON.parse(data).globalConfig
+    }
+    catch {
+      return null
+    }
+  }
+  return null
+}
+
+// 保存到localStorage
+function saveToLocalStorage(data: any) {
+  const key = getStorageKey()
+  localStorage.setItem(key, JSON.stringify({ globalConfig: data }))
+}
+
+// 保存到服务器
+async function saveToServer(data: any) {
+  if (!isServerStorageEnabled()) return
+  const themeId = getCurrentThemeId()
+  if (!themeId) return
+  try {
+    await api.saveGlobalConfig(themeId, data)
+  }
+  catch (error) {
+    console.error('[GlobalConfig] Failed to save to server:', error)
+  }
+}
+
+// 从服务器加载
+async function loadFromServer(): Promise<any> {
+  if (!isServerStorageEnabled()) return null
+  const themeId = getCurrentThemeId()
+  if (!themeId) return null
+  try {
+    return await api.fetchGlobalConfig(themeId)
+  }
+  catch (error) {
+    console.error('[GlobalConfig] Failed to load from server:', error)
+    return null
+  }
+}
+
 export const useGlobalConfig = defineStore('global', {
   state() {
     return {
@@ -264,17 +331,66 @@ export const useGlobalConfig = defineStore('global', {
         item: defaultMusicList[0],
         paused: true,
       }
+      saveToLocalStorage(this.globalConfig)
+      saveToServer(this.globalConfig)
+    },
+    // 从存储加载数据（切换主题时调用）
+    async loadFromTheme() {
+      // 暂停自动保存
+      allowAutoSave = false
+      
+      // 优先从服务器加载
+      let data = await loadFromServer()
+      
+      // 服务器没有数据则从本地加载
+      if (!data) {
+        data = loadFromLocalStorage()
+      }
+      
+      if (data) {
+        this.globalConfig = data
+      }
+      else {
+        this.reset()
+      }
+      
+      // 数据加载完成，允许自动保存
+      allowAutoSave = true
+    },
+    // 保存当前数据
+    async saveToTheme() {
+      saveToLocalStorage(this.globalConfig)
+      await saveToServer(this.globalConfig)
     },
   },
-  persist: {
-    enabled: true,
-    strategies: [
-      {
-        // 如果要存储在localStorage中
-        storage: localStorage,
-        key: 'globalConfig',
-        paths: ['globalConfig'],
-      },
-    ],
-  },
 })
+
+// 是否允许自动保存
+let allowAutoSave = false
+
+export function setGlobalConfigAutoSave(allow: boolean) {
+  allowAutoSave = allow
+}
+
+// 防抖保存
+let saveTimer: ReturnType<typeof setTimeout> | null = null
+function debouncedSave(data: any) {
+  if (!allowAutoSave) return // 数据未加载完成，不自动保存
+  if (saveTimer) clearTimeout(saveTimer)
+  saveTimer = setTimeout(() => {
+    saveToLocalStorage(data)
+    saveToServer(data)
+  }, 500)
+}
+
+// 监听数据变化自动保存
+export function setupGlobalConfigWatcher() {
+  const store = useGlobalConfig()
+  watch(
+    () => store.globalConfig,
+    (newData) => {
+      debouncedSave(newData)
+    },
+    { deep: true },
+  )
+}

@@ -114,6 +114,38 @@ export const configRoutes = {
 }
 const routes = [
   {
+    path: '/',
+    redirect: '/log-lottery/entry',
+  },
+  {
+    path: '/log-lottery/entry',
+    name: 'Entry',
+    component: () => import('@/views/Entry/index.vue'),
+  },
+  {
+    path: '/log-lottery/t/:themeId',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        name: 'ThemeHome',
+        component: Home,
+      },
+      {
+        path: 'config',
+        name: 'ThemeConfig',
+        component: () => import('@/views/Config/index.vue'),
+        children: configRoutes.children,
+      },
+      {
+        path: 'demo',
+        name: 'ThemeDemo',
+        component: () => import('@/views/Demo/index.vue'),
+      },
+    ],
+  },
+  // 保留旧路由兼容
+  {
     path: '/log-lottery',
     component: Layout,
     redirect: '/log-lottery/home',
@@ -137,6 +169,54 @@ const router = createRouter({
     // 读取环境变量
   history: envMode==='file'?createWebHashHistory():createWebHistory(),
   routes,
+})
+
+// 路由守卫：检查是否已选择主题
+router.beforeEach((to, _from, next) => {
+  // 入口页面不需要检查
+  if (to.name === 'Entry') {
+    next()
+    return
+  }
+  
+  // 旧路由重定向到入口页面（强制用户选择主题）
+  if (to.path === '/log-lottery/home' || to.path === '/log-lottery' || to.name === 'Home') {
+    next({ name: 'Entry' })
+    return
+  }
+  
+  // 如果URL中有主题ID参数，设置当前主题ID（实际验证在页面加载时进行）
+  const themeIdFromUrl = to.params.themeId as string
+  if (themeIdFromUrl) {
+    // 设置当前主题ID到localStorage
+    const themeData = localStorage.getItem('themeStore')
+    try {
+      const parsed = themeData ? JSON.parse(themeData) : { themes: [], currentThemeId: '' }
+      parsed.currentThemeId = themeIdFromUrl
+      localStorage.setItem('themeStore', JSON.stringify(parsed))
+    } catch {
+      localStorage.setItem('themeStore', JSON.stringify({ themes: [], currentThemeId: themeIdFromUrl }))
+    }
+    next()
+    return
+  }
+  
+  // 检查是否已选择主题
+  const themeData = localStorage.getItem('themeStore')
+  if (themeData) {
+    try {
+      const parsed = JSON.parse(themeData)
+      if (parsed.currentThemeId) {
+        next()
+        return
+      }
+    } catch {
+      // 解析失败，跳转到入口页
+    }
+  }
+  
+  // 未选择主题，跳转到入口页
+  next({ name: 'Entry' })
 })
 
 export default router

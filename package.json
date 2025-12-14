@@ -13,7 +13,10 @@
         "test:ui": "vitest --ui",
         "preview": "vite preview",
         "lint": "eslint ./src",
-        "lint:fix": "eslint ./src --fix"
+        "lint:fix": "eslint ./src --fix",
+        "server": "cd server && npm start",
+        "server:dev": "cd server && npm run dev",
+        "server:install": "cd server && npm install"
     },
     "dependencies": {
         "@tweenjs/tween.js": "^23.1.2",

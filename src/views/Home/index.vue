@@ -13,11 +13,12 @@ import { storeToRefs } from 'pinia'
 import { Object3D, PerspectiveCamera, Scene, Vector3 } from 'three'
 import { CSS3DObject, CSS3DRenderer } from 'three-css3d'
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js'
-import { nextTick, onMounted, onUnmounted, ref } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toast-notification'
 import PrizeList from './PrizeList.vue'
+import JoinLottery from '@/components/JoinLottery/index.vue'
 import 'vue-toast-notification/dist/theme-sugar.css'
 
 const { t } = useI18n()
@@ -26,6 +27,39 @@ const router = useRouter()
 const personConfig = useStore().personConfig
 const globalConfig = useStore().globalConfig
 const prizeConfig = useStore().prizeConfig
+const themeStore = useStore().themeStore
+
+// 复制分享链接
+function copyShareLink() {
+  const themeId = themeStore.currentThemeId
+  if (!themeId) return
+  
+  const baseUrl = window.location.origin
+  const shareUrl = `${baseUrl}/log-lottery/t/${themeId}`
+  
+  navigator.clipboard.writeText(shareUrl).then(() => {
+    toast.open({
+      message: t('entry.linkCopied'),
+      type: 'success',
+      position: 'top-right',
+      duration: 3000,
+    })
+  }).catch(() => {
+    // 降级方案：创建临时输入框
+    const input = document.createElement('input')
+    input.value = shareUrl
+    document.body.appendChild(input)
+    input.select()
+    document.execCommand('copy')
+    document.body.removeChild(input)
+    toast.open({
+      message: t('entry.linkCopied'),
+      type: 'success',
+      position: 'top-right',
+      duration: 3000,
+    })
+  })
+}
 
 const { getAllPersonList: allPersonList, getNotPersonList: notPersonList, getNotThisPrizePersonList: notThisPrizePersonList,
 } = storeToRefs(personConfig)
@@ -62,6 +96,8 @@ const luckyCount = ref(10)
 const personPool = ref<IPersonConfig[]>([])
 
 const intervalTimer = ref<any>(null)
+const syncTimer = ref<any>(null)
+const lastPersonCount = ref(0)
 // 填充数据，填满七行
 function initTableData() {
   if (allPersonList.value.length <= 0) {
@@ -680,6 +716,83 @@ function cleanup() {
   renderer.value = null
   controls.value = null
 }
+// 重新初始化画布（不刷新页面）
+function reinitCanvas() {
+  // 清理现有的3D场景
+  cleanup()
+  
+  // 清空targets
+  targets.grid = []
+  targets.helix = []
+  targets.table = []
+  targets.sphere = []
+  
+  // 重新初始化数据和场景
+  tableData.value = []
+  initTableData()
+  
+  if (tableData.value.length > 0) {
+    init()
+    randomBallData()
+  }
+  
+  console.log('[Sync] Canvas reinitialized with new data')
+}
+
+// 同步数据 - 定期从服务器获取最新人员数据
+async function syncDataFromServer(isFirstSync = false) {
+  try {
+    // 重新加载人员数据
+    await personConfig.loadFromTheme()
+    
+    // 检查人员数量是否变化
+    const currentCount = allPersonList.value.length
+    
+    // 如果是首次同步且有数据，或者数量发生变化，重新初始化画布
+    if (isFirstSync) {
+      // 首次同步：如果当前显示的数据和服务器数据不一致
+      if (currentCount > 0 && tableData.value.length === 0) {
+        console.log(`[Sync] First sync: found ${currentCount} persons, reinitializing canvas...`)
+        reinitCanvas()
+      }
+    }
+    else if (currentCount !== lastPersonCount.value) {
+      // 后续同步：数量变化就重新初始化画布
+      console.log(`[Sync] Person count changed: ${lastPersonCount.value} -> ${currentCount}, reinitializing canvas...`)
+      reinitCanvas()
+    }
+    
+    lastPersonCount.value = currentCount
+  }
+  catch (error) {
+    console.error('[Sync] Failed to sync data:', error)
+  }
+}
+
+// 启动数据同步
+function startDataSync() {
+  // 记录初始人员数量
+  lastPersonCount.value = allPersonList.value.length
+  
+  // 首次同步（延迟1秒，等待页面初始化完成）
+  setTimeout(() => {
+    syncDataFromServer(true)
+  }, 1000)
+  
+  // 每5秒同步一次数据
+  syncTimer.value = setInterval(() => {
+    syncDataFromServer(false)
+  }, 5000)
+}
+
+// 停止数据同步
+function stopDataSync() {
+  if (syncTimer.value) {
+    clearInterval(syncTimer.value)
+    syncTimer.value = null
+  }
+}
+
 onMounted(() => {
   initTableData()
   init()
@@ -687,6 +800,9 @@ onMounted(() => {
   containerRef.value!.style.color = `${textColor}`
   randomBallData()
   window.addEventListener('keydown', listenKeyboard)
+  
+  // 启动数据同步
+  startDataSync()
 })
 onUnmounted(() => {
   nextTick(() => {
@@ -694,6 +810,10 @@ onUnmounted(() => {
   })
   clearInterval(intervalTimer.value)
   intervalTimer.value = null
+  
+  // 停止数据同步
+  stopDataSync()
+  
   window.removeEventListener('keydown', listenKeyboard)
 })
 </script>
@@ -780,9 +900,104 @@ onUnmounted(() => {
   </div>
   <StarsBackground :home-background="homeBackground" />
   <PrizeList class="absolute left-0 top-32" />
+  <JoinLottery />
+  
+  <!-- 返回主题选择按钮 -->
+  <div class="back-btn-wrapper">
+    <button class="back-btn" @click="router.push('/log-lottery/entry')" :title="t('entry.backToThemes')">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      <span class="back-text">{{ t('entry.backToThemes') }}</span>
+    </button>
+  </div>
+  
+  <!-- 分享按钮 -->
+  <div class="share-btn-wrapper">
+    <button class="share-btn" @click="copyShareLink" :title="t('entry.shareLink')">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+      </svg>
+      <span class="share-text">{{ t('entry.shareLink') }}</span>
+    </button>
+  </div>
 </template>
 
 <style scoped lang="scss">
+// 返回按钮样式
+.back-btn-wrapper {
+  position: fixed;
+  right: 30px;
+  bottom: 250px;
+  z-index: 1000;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border: none;
+  border-radius: 50px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+  }
+  
+  &:active {
+    transform: translateY(-1px) scale(1.02);
+  }
+}
+
+.back-text {
+  white-space: nowrap;
+}
+
+// 分享按钮样式
+.share-btn-wrapper {
+  position: fixed;
+  right: 30px;
+  bottom: 190px;
+  z-index: 1000;
+}
+
+.share-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border: none;
+  border-radius: 50px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+  }
+  
+  &:active {
+    transform: translateY(-1px) scale(1.02);
+  }
+}
+
+.share-text {
+  white-space: nowrap;
+}
+
 #menu {
     position: absolute;
     z-index: 100;

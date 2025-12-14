@@ -16,6 +16,7 @@ const audio = ref(new Audio())
 const settingRef = ref()
 // const audio = ref(new Audio())
 const globalConfig = useStore().globalConfig
+const themeStore = useStore().themeStore
 const { getMusicList: localMusicList, getCurrentMusic: currentMusic } = storeToRefs(globalConfig)
 // const localMusicListValue = ref(localMusicList)
 
@@ -70,10 +71,24 @@ function onPlayEnd() {
 }
 
 function enterConfig() {
-  router.push('/log-lottery/config')
+  // 跳转到当前主题的配置页面
+  const themeId = themeStore.currentThemeId
+  if (themeId) {
+    router.push(`/log-lottery/t/${themeId}/config`)
+  }
+  else {
+    router.push('/log-lottery/config')
+  }
 }
 function enterHome() {
-  router.push('/log-lottery')
+  // 跳转到当前主题的抽奖页面
+  const themeId = themeStore.currentThemeId
+  if (themeId) {
+    router.push(`/log-lottery/t/${themeId}`)
+  }
+  else {
+    router.push('/log-lottery/entry')
+  }
 }
 
 onMounted(() => {

@@ -2,8 +2,77 @@ import type { IPersonConfig, IPrizeConfig } from '@/types/storeType'
 
 import dayjs from 'dayjs'
 import { defineStore } from 'pinia'
+import { watch } from 'vue'
 import { defaultPersonList } from './data'
 import { usePrizeConfig } from './prizeConfig'
+import { useThemeStore, isServerStorageEnabled } from './theme'
+import * as api from '@/api/lottery'
+
+// 获取存储key
+function getStorageKey() {
+  const themeStore = useThemeStore()
+  const themeId = themeStore.getCurrentThemeId || 'default'
+  return `personConfig_${themeId}`
+}
+
+// 获取当前主题ID
+function getCurrentThemeId(): string | null {
+  const themeStore = useThemeStore()
+  const id = themeStore.getCurrentThemeId
+  // 返回有效的主题ID，否则返回null
+  if (!id || id === 'default' || id === 'undefined') {
+    return null
+  }
+  return id
+}
+
+// 从localStorage加载数据
+function loadFromLocalStorage() {
+  const key = getStorageKey()
+  const data = localStorage.getItem(key)
+  if (data) {
+    try {
+      return JSON.parse(data).personConfig
+    }
+    catch {
+      return null
+    }
+  }
+  return null
+}
+
+// 保存到localStorage
+function saveToLocalStorage(data: any) {
+  const key = getStorageKey()
+  localStorage.setItem(key, JSON.stringify({ personConfig: data }))
+}
+
+// 保存到服务器
+async function saveToServer(data: any) {
+  if (!isServerStorageEnabled()) return
+  const themeId = getCurrentThemeId()
+  if (!themeId) return // 没有有效的主题ID，不保存到服务器
+  try {
+    await api.savePersonConfig(themeId, data)
+  }
+  catch (error) {
+    console.error('[PersonConfig] Failed to save to server:', error)
+  }
+}
+
+// 从服务器加载
+async function loadFromServer(): Promise<any> {
+  if (!isServerStorageEnabled()) return null
+  const themeId = getCurrentThemeId()
+  if (!themeId) return null // 没有有效的主题ID，不从服务器加载
+  try {
+    return await api.fetchPersonConfig(themeId)
+  }
+  catch (error) {
+    console.error('[PersonConfig] Failed to load from server:', error)
+    return null
+  }
+}
 
 export const usePersonConfig = defineStore('person', {
   state() {
@@ -137,6 +206,8 @@ export const usePersonConfig = defineStore('person', {
     setDefaultPersonList() {
       this.personConfig.allPersonList = defaultPersonList
       this.personConfig.alreadyPersonList = []
+      saveToLocalStorage(this.personConfig)
+      saveToServer(this.personConfig)
     },
     // 重置所有配置
     reset() {
@@ -144,16 +215,75 @@ export const usePersonConfig = defineStore('person', {
         allPersonList: [] as IPersonConfig[],
         alreadyPersonList: [] as IPersonConfig[],
       }
+      saveToLocalStorage(this.personConfig)
+      saveToServer(this.personConfig)
+    },
+    // 从存储加载数据（切换主题时调用）
+    async loadFromTheme(enableAutoSaveAfter = true) {
+      // 暂停自动保存
+      const prevAutoSave = allowAutoSave
+      allowAutoSave = false
+      
+      // 优先从服务器加载
+      let data = await loadFromServer()
+      
+      // 服务器没有数据则从本地加载
+      if (!data) {
+        data = loadFromLocalStorage()
+      }
+      
+      if (data) {
+        // 只有数据真正变化时才更新
+        const newDataStr = JSON.stringify(data)
+        const oldDataStr = JSON.stringify(this.personConfig)
+        if (newDataStr !== oldDataStr) {
+          this.personConfig = data
+        }
+      }
+      else {
+        this.personConfig = {
+          allPersonList: [] as IPersonConfig[],
+          alreadyPersonList: [] as IPersonConfig[],
+        }
+      }
+      
+      // 数据加载完成，恢复自动保存状态
+      allowAutoSave = enableAutoSaveAfter ? true : prevAutoSave
+    },
+    // 保存当前数据
+    async saveToTheme() {
+      saveToLocalStorage(this.personConfig)
+      await saveToServer(this.personConfig)
     },
   },
-  persist: {
-    enabled: true,
-    strategies: [
-      {
-        // 如果要存储在localStorage中
-        storage: localStorage,
-        key: 'personConfig',
-      },
-    ],
-  },
 })
+
+// 是否允许自动保存（只有数据加载完成后才允许）
+let allowAutoSave = false
+
+export function setPersonConfigAutoSave(allow: boolean) {
+  allowAutoSave = allow
+}
+
+// 防抖保存
+let saveTimer: ReturnType<typeof setTimeout> | null = null
+function debouncedSave(data: any) {
+  if (!allowAutoSave) return // 数据未加载完成，不自动保存
+  if (saveTimer) clearTimeout(saveTimer)
+  saveTimer = setTimeout(() => {
+    saveToLocalStorage(data)
+    saveToServer(data)
+  }, 500)
+}
+
+// 监听数据变化自动保存
+export function setupPersonConfigWatcher() {
+  const store = usePersonConfig()
+  watch(
+    () => store.personConfig,
+    (newData) => {
+      debouncedSave(newData)
+    },
+    { deep: true },
+  )
+}
