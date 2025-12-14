@@ -43,9 +43,13 @@ or
 - [x] 🧨 国际化多语言
 - [x] 🍃 更换背景图片
 - [x] 🚅 添加docker构建
+- [x] 📚 添加服务器后端使用Sqllite数据库存储数据，用于多用户共享数据
+- [x] 😳 增加分享抽奖页面链接，使用户可以主动加入抽奖名单
+- [x] 🈶 增加主题功能，每个主题隔离数据，类似多租户
+- [x] 📱  手机打开抽奖页面加入抽奖增加设备指纹 一个设备只能加入一次
+- [x] 🐰 增加主题密码验证防止被其他用户删除
 - [x] 😘 弹幕（开发中）
 - [ ] 🧵 卡片组成多种形状
-
 ...
 需要更多功能或发现bug请留言[issues](https://github.com/LOG1997/log-lottery/issues)
 
@@ -73,11 +77,19 @@ or
 
 ![image_home](./static/images/home.png)
 
-![image_home_prize_list](./static//images/home_prizelist.png)
+![create.png](./static/images/create.png)
+
+![pass.png](./static/images/pass.png)
+
+![lottery](./static//images/lottery.png)
 
 抽奖
 
 ![image_lottery](./static/images/lottery-enter.png)
+
+![add](./static/images/add.png)
+
+![addok](./static/images/addok.png)
 
 ![image_lottery_done](./static/images/lottery-done.png)
 
