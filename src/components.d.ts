@@ -12,6 +12,7 @@ declare module 'vue' {
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     ImageSync: typeof import('./components/ImageSync/index.vue')['default']
     JoinLottery: typeof import('./components/JoinLottery/index.vue')['default']
+    MobileJoinLottery: typeof import('./components/MobileJoinLottery/index.vue')['default']
     PlayMusic: typeof import('./components/PlayMusic/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

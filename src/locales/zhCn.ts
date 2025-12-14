@@ -142,6 +142,7 @@ export default {
     operation: '操作',
     delete: '删除',
     removePerson: '移入未中奖名单',
+    fingerprint: '设备指纹',
     defaultTitle: '大明内阁六部御前奏对',
     xlsxName: '人口登记表-zhCn.xlsx',
     readmeName: 'readme-zhCn.md',
@@ -167,6 +168,9 @@ export default {
     welcomeMessage: '欢迎加入抽奖！',
     defaultDepartment: '参与者',
     defaultIdentity: '幸运儿',
+    alreadyJoined: '您已经加入过此抽奖了',
+    alreadyJoinedTitle: '已加入抽奖',
+    waitForLottery: '请等待抽奖开始',
   },
   entry: {
     title: '抽奖系统',

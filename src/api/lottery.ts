@@ -100,3 +100,49 @@ export async function checkServerAvailable(): Promise<boolean> {
     return false
   }
 }
+
+// ==================== 指纹 API ====================
+
+// 检查指纹是否已存在
+export async function checkFingerprint(themeId: string, fingerprint: string): Promise<{ exists: boolean, data: any }> {
+  try {
+    const res = await api.get(`/themes/${themeId}/fingerprint/${fingerprint}`)
+    return { exists: res.data.exists, data: res.data.data }
+  }
+  catch {
+    return { exists: false, data: null }
+  }
+}
+
+// 记录指纹
+export async function recordFingerprint(themeId: string, fingerprint: string, personName: string): Promise<{ success: boolean, error?: string }> {
+  try {
+    const res = await api.post(`/themes/${themeId}/fingerprint`, { fingerprint, personName })
+    return { success: res.data.success, error: res.data.error }
+  }
+  catch (error: any) {
+    return { success: false, error: error.message }
+  }
+}
+
+// 获取主题下所有指纹
+export async function fetchFingerprints(themeId: string): Promise<any[]> {
+  try {
+    const res = await api.get(`/themes/${themeId}/fingerprints`)
+    return res.data.data || []
+  }
+  catch {
+    return []
+  }
+}
+
+// 根据用户名删除指纹
+export async function deleteFingerprintByName(themeId: string, personName: string): Promise<boolean> {
+  try {
+    await api.delete(`/themes/${themeId}/fingerprint/by-name/${encodeURIComponent(personName)}`)
+    return true
+  }
+  catch {
+    return false
+  }
+}

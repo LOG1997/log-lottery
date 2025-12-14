@@ -142,6 +142,7 @@ export default {
     operation: 'Operation',
     delete: 'Delete',
     removePerson: 'Remove the Person',
+    fingerprint: 'Fingerprint',
     defaultTitle: 'The Prelude to the Six Ministries of the Ming Dynasty Cabinet',
     xlsxName: 'personListTemplate-en.xlsx',
     readmeName: 'readme-en.md',
@@ -167,6 +168,9 @@ export default {
     welcomeMessage: 'Welcome to the Lottery!',
     defaultDepartment: 'Participant',
     defaultIdentity: 'Lucky One',
+    alreadyJoined: 'You have already joined this lottery',
+    alreadyJoinedTitle: 'Already Joined',
+    waitForLottery: 'Please wait for the lottery to begin',
   },
   entry: {
     title: 'Lottery System',

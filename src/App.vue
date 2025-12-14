@@ -115,6 +115,12 @@ function judgeChromeOrEdge() {
 
   return isChrome || isEdge
 }
+// 检查是否是抽奖页面（手机端可以正常访问）
+function isLotteryPage() {
+  const path = window.location.pathname
+  return path.includes('/log-lottery/t/')
+}
+
 onMounted(async () => {
   // 初始化服务器存储
   await initServerStorage()
@@ -132,7 +138,10 @@ onMounted(async () => {
   
   themeChange(localTheme.value.name)
   setCurrentPrize()
-  if (judgeMobile() || !judgeChromeOrEdge()) {
+  
+  // 抽奖页面的手机端不显示提示（因为有专门的手机端UI）
+  const isMobileOnLotteryPage = judgeMobile() && isLotteryPage()
+  if (!isMobileOnLotteryPage && (judgeMobile() || !judgeChromeOrEdge())) {
     tipDialog.value.showModal()
   }
 })

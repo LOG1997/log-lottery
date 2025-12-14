@@ -199,6 +199,83 @@ app.post('/api/themes/:themeId/global', (req, res) => {
   }
 })
 
+// ==================== 指纹 API ====================
+
+// 检查指纹是否已存在
+app.get('/api/themes/:themeId/fingerprint/:fingerprint', (req, res) => {
+  try {
+    const { themeId, fingerprint } = req.params
+    const record = db.prepare(
+      'SELECT * FROM fingerprints WHERE theme_id = ? AND fingerprint = ?'
+    ).get(themeId, fingerprint)
+    
+    res.json({ 
+      success: true, 
+      exists: !!record,
+      data: record || null
+    })
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message })
+  }
+})
+
+// 记录指纹
+app.post('/api/themes/:themeId/fingerprint', (req, res) => {
+  try {
+    const { themeId } = req.params
+    const { fingerprint, personName } = req.body
+    const now = new Date().toISOString()
+    
+    // 检查是否已存在
+    const existing = db.prepare(
+      'SELECT * FROM fingerprints WHERE theme_id = ? AND fingerprint = ?'
+    ).get(themeId, fingerprint)
+    
+    if (existing) {
+      return res.json({ 
+        success: false, 
+        error: 'already_joined',
+        message: 'You have already joined this lottery'
+      })
+    }
+    
+    // 插入新记录
+    db.prepare(`
+      INSERT INTO fingerprints (theme_id, fingerprint, person_name, created_at)
+      VALUES (?, ?, ?, ?)
+    `).run(themeId, fingerprint, personName || '', now)
+    
+    res.json({ success: true })
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message })
+  }
+})
+
+// 获取主题下所有指纹
+app.get('/api/themes/:themeId/fingerprints', (req, res) => {
+  try {
+    const fingerprints = db.prepare(
+      'SELECT * FROM fingerprints WHERE theme_id = ? ORDER BY created_at DESC'
+    ).all(req.params.themeId)
+    res.json({ success: true, data: fingerprints })
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message })
+  }
+})
+
+// 根据用户名删除指纹
+app.delete('/api/themes/:themeId/fingerprint/by-name/:personName', (req, res) => {
+  try {
+    const { themeId, personName } = req.params
+    db.prepare(
+      'DELETE FROM fingerprints WHERE theme_id = ? AND person_name = ?'
+    ).run(themeId, decodeURIComponent(personName))
+    res.json({ success: true })
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message })
+  }
+})
+
 app.listen(PORT, () => {
   console.log(`🎉 Lottery Server running at http://localhost:${PORT}`)
 })

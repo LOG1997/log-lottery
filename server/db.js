@@ -44,6 +44,17 @@ db.exec(`
     updated_at TEXT NOT NULL,
     FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE
   );
+
+  -- 指纹记录表（防止重复加入）
+  CREATE TABLE IF NOT EXISTS fingerprints (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    theme_id TEXT NOT NULL,
+    fingerprint TEXT NOT NULL,
+    person_name TEXT,
+    created_at TEXT NOT NULL,
+    UNIQUE(theme_id, fingerprint),
+    FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE
+  );
 `)
 
 export default db

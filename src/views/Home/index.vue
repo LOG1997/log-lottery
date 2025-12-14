@@ -2,6 +2,7 @@
 import type { IPersonConfig } from '@/types/storeType'
 import type { Material } from 'three'
 import StarsBackground from '@/components/StarsBackground/index.vue'
+import MobileJoinLottery from '@/components/MobileJoinLottery/index.vue'
 import { useElementPosition, useElementStyle } from '@/hooks/useElement'
 import i18n from '@/locales/i18n'
 import useStore from '@/store'
@@ -13,13 +14,19 @@ import { storeToRefs } from 'pinia'
 import { Object3D, PerspectiveCamera, Scene, Vector3 } from 'three'
 import { CSS3DObject, CSS3DRenderer } from 'three-css3d'
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js'
-import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toast-notification'
 import PrizeList from './PrizeList.vue'
 import JoinLottery from '@/components/JoinLottery/index.vue'
 import 'vue-toast-notification/dist/theme-sugar.css'
+
+// 检测是否为移动端
+const isMobile = computed(() => {
+  const ua = navigator.userAgent
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)
+})
 
 const { t } = useI18n()
 const toast = useToast()
@@ -799,10 +806,17 @@ function stopDataSync() {
 }
 
 onMounted(() => {
+  // 移动端不初始化3D场景
+  if (isMobile.value) {
+    return
+  }
+  
   initTableData()
   init()
   animation()
-  containerRef.value!.style.color = `${textColor}`
+  if (containerRef.value) {
+    containerRef.value.style.color = `${textColor}`
+  }
   randomBallData()
   window.addEventListener('keydown', listenKeyboard)
   
@@ -810,6 +824,11 @@ onMounted(() => {
   startDataSync()
 })
 onUnmounted(() => {
+  // 移动端不需要清理3D场景
+  if (isMobile.value) {
+    return
+  }
+  
   nextTick(() => {
     cleanup()
   })
@@ -824,7 +843,11 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="home-page">
+  <!-- 移动端显示专用UI -->
+  <MobileJoinLottery v-if="isMobile" />
+  
+  <!-- PC端显示完整抽奖页面 -->
+  <div v-else class="home-page">
     <!-- 背景动画 -->
     <div class="bg-animation">
       <div class="stars"></div>

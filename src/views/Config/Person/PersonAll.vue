@@ -6,6 +6,7 @@ import i18n from '@/locales/i18n'
 import useStore from '@/store'
 import { addOtherInfo } from '@/utils'
 import { readFileBinary } from '@/utils/file'
+import { fetchFingerprints, deleteFingerprintByName } from '@/api/lottery'
 import { storeToRefs } from 'pinia'
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -13,12 +14,29 @@ import * as XLSX from 'xlsx'
 
 const { t } = useI18n()
 const personConfig = useStore().personConfig
+const themeStore = useStore().themeStore
 const { getAllPersonList: allPersonList, getAlreadyPersonList: alreadyPersonList } = storeToRefs(personConfig)
 const limitType = '.xlsx,.xls'
-// const personList = ref<any[]>([])
+
+// 指纹映射表 (personName -> fingerprint)
+const fingerprintMap = ref<Record<string, string>>({})
 
 const resetDataDialog = ref()
 const delAllDataDialog = ref()
+
+// 加载指纹数据
+async function loadFingerprints() {
+  const themeId = themeStore.currentThemeId
+  if (!themeId) return
+  
+  const fingerprints = await fetchFingerprints(themeId)
+  fingerprintMap.value = {}
+  fingerprints.forEach((fp: any) => {
+    if (fp.person_name) {
+      fingerprintMap.value[fp.person_name] = fp.fingerprint
+    }
+  })
+}
 
 async function handleFileChange(e: Event) {
   const dataBinary = await readFileBinary(((e.target as HTMLInputElement).files as FileList)[0]!)
@@ -78,8 +96,23 @@ function deleteAll() {
   personConfig.deleteAllPerson()
 }
 
-function delPersonItem(row: IPersonConfig) {
+async function delPersonItem(row: IPersonConfig) {
+  const themeId = themeStore.currentThemeId
+  
+  // 同时删除指纹记录
+  if (themeId && row.name) {
+    await deleteFingerprintByName(themeId, row.name)
+    // 更新本地指纹映射
+    delete fingerprintMap.value[row.name]
+  }
+  
   personConfig.deletePerson(row)
+}
+
+// 获取用户的指纹（截取前8位显示）
+function getFingerprint(name: string): string {
+  const fp = fingerprintMap.value[name]
+  return fp ? fp.substring(0, 8) + '...' : '-'
 }
 
 const tableColumns = [
@@ -99,12 +132,19 @@ const tableColumns = [
     label: i18n.global.t('data.avatar'),
     props: 'avatar',
     formatValue(row: any) {
-       return row.avatar ? `<img src="${row.avatar}" alt="avatar" style="width: 50px; height: 50px;"/>` : '-';
-    }
+      return row.avatar ? `<img src="${row.avatar}" alt="avatar" style="width: 50px; height: 50px;"/>` : '-'
+    },
   },
   {
     label: i18n.global.t('data.identity'),
     props: 'identity',
+  },
+  {
+    label: i18n.global.t('data.fingerprint'),
+    props: 'name',
+    formatValue(row: IPersonConfig) {
+      return `<span class="text-xs font-mono opacity-70" title="${fingerprintMap.value[row.name] || ''}">${getFingerprint(row.name)}</span>`
+    },
   },
   {
     label: i18n.global.t('data.isWin'),
@@ -116,13 +156,6 @@ const tableColumns = [
   {
     label: i18n.global.t('data.operation'),
     actions: [
-      // {
-      //     label: '编辑',
-      //     type: 'btn-info',
-      //     onClick: (row: any) => {
-      //         delPersonItem(row)
-      //     }
-      // },
       {
         label: i18n.global.t('data.delete'),
         type: 'btn-error',
@@ -130,11 +163,12 @@ const tableColumns = [
           delPersonItem(row)
         },
       },
-
     ],
   },
 ]
+
 onMounted(() => {
+  loadFingerprints()
 })
 </script>
 
