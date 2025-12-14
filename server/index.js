@@ -10,20 +10,20 @@ app.use(express.json({ limit: '50mb' }))
 
 // ==================== 主题 API ====================
 
-// 获取所有主题
+// 获取所有主题（不返回密码）
 app.get('/api/themes', (req, res) => {
   try {
-    const themes = db.prepare('SELECT * FROM themes ORDER BY created_at DESC').all()
+    const themes = db.prepare('SELECT id, name, description, created_at, updated_at FROM themes ORDER BY created_at DESC').all()
     res.json({ success: true, data: themes })
   } catch (error) {
     res.status(500).json({ success: false, error: error.message })
   }
 })
 
-// 获取单个主题
+// 获取单个主题（不返回密码）
 app.get('/api/themes/:id', (req, res) => {
   try {
-    const theme = db.prepare('SELECT * FROM themes WHERE id = ?').get(req.params.id)
+    const theme = db.prepare('SELECT id, name, description, created_at, updated_at FROM themes WHERE id = ?').get(req.params.id)
     if (!theme) {
       return res.status(404).json({ success: false, error: 'Theme not found' })
     }
@@ -33,18 +33,35 @@ app.get('/api/themes/:id', (req, res) => {
   }
 })
 
-// 创建主题
+// 验证主题密码
+app.post('/api/themes/:id/verify-password', (req, res) => {
+  try {
+    const { password } = req.body
+    const theme = db.prepare('SELECT password FROM themes WHERE id = ?').get(req.params.id)
+    
+    if (!theme) {
+      return res.status(404).json({ success: false, error: 'Theme not found' })
+    }
+    
+    const isValid = theme.password === password
+    res.json({ success: true, valid: isValid })
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message })
+  }
+})
+
+// 创建主题（带密码）
 app.post('/api/themes', (req, res) => {
   try {
-    const { id, name, description } = req.body
+    const { id, name, description, password } = req.body
     const now = new Date().toISOString()
     
     db.prepare(`
-      INSERT INTO themes (id, name, description, created_at, updated_at)
-      VALUES (?, ?, ?, ?, ?)
-    `).run(id, name, description || '', now, now)
+      INSERT INTO themes (id, name, description, password, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).run(id, name, description || '', password || '', now, now)
     
-    const theme = db.prepare('SELECT * FROM themes WHERE id = ?').get(id)
+    const theme = db.prepare('SELECT id, name, description, created_at, updated_at FROM themes WHERE id = ?').get(id)
     res.json({ success: true, data: theme })
   } catch (error) {
     res.status(500).json({ success: false, error: error.message })
@@ -69,13 +86,26 @@ app.put('/api/themes/:id', (req, res) => {
   }
 })
 
-// 删除主题
+// 删除主题（需要验证密码）
 app.delete('/api/themes/:id', (req, res) => {
   try {
+    const { password } = req.body || {}
+    
+    // 验证密码
+    const theme = db.prepare('SELECT password FROM themes WHERE id = ?').get(req.params.id)
+    if (!theme) {
+      return res.status(404).json({ success: false, error: 'Theme not found' })
+    }
+    
+    if (theme.password && theme.password !== password) {
+      return res.status(403).json({ success: false, error: 'Invalid password' })
+    }
+    
     // 删除关联数据
     db.prepare('DELETE FROM person_config WHERE theme_id = ?').run(req.params.id)
     db.prepare('DELETE FROM prize_config WHERE theme_id = ?').run(req.params.id)
     db.prepare('DELETE FROM global_config WHERE theme_id = ?').run(req.params.id)
+    db.prepare('DELETE FROM fingerprints WHERE theme_id = ?').run(req.params.id)
     // 删除主题
     db.prepare('DELETE FROM themes WHERE id = ?').run(req.params.id)
     

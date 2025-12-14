@@ -34,10 +34,21 @@ export async function fetchTheme(id: string): Promise<IThemeData | null> {
   }
 }
 
-// 创建主题
-export async function createTheme(data: { id: string, name: string, description?: string }): Promise<IThemeData> {
+// 创建主题（带密码）
+export async function createTheme(data: { id: string, name: string, description?: string, password?: string }): Promise<IThemeData> {
   const res = await api.post('/themes', data)
   return res.data.data
+}
+
+// 验证主题密码
+export async function verifyThemePassword(themeId: string, password: string): Promise<boolean> {
+  try {
+    const res = await api.post(`/themes/${themeId}/verify-password`, { password })
+    return res.data.valid === true
+  }
+  catch {
+    return false
+  }
 }
 
 // 更新主题
@@ -46,9 +57,15 @@ export async function updateTheme(id: string, data: { name: string, description?
   return res.data.data
 }
 
-// 删除主题
-export async function deleteTheme(id: string): Promise<void> {
-  await api.delete(`/themes/${id}`)
+// 删除主题（需要密码）
+export async function deleteTheme(id: string, password?: string): Promise<{ success: boolean, error?: string }> {
+  try {
+    await api.delete(`/themes/${id}`, { data: { password } })
+    return { success: true }
+  }
+  catch (error: any) {
+    return { success: false, error: error.response?.data?.error || error.message }
+  }
 }
 
 // ==================== 人员配置 API ====================
