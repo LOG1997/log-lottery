@@ -15,7 +15,7 @@ export const configRoutes = {
         {
             path: '/log-lottery/config/person',
             name: 'PersonConfig',
-            component: () => import('@/views/Config/Person/PersonConfig.vue'),
+            component: () => import('@/views/Config/Person/index.vue'),
             meta: {
                 title: i18n.global.t('sidebar.personConfiguration'),
                 icon: 'person',
@@ -37,7 +37,7 @@ export const configRoutes = {
                 {
                     path: '/log-lottery/config/person/already',
                     name: 'AlreadyPerson',
-                    component: () => import('@/views/Config/Person/PersonAlready.vue'),
+                    component: () => import('@/views/Config/Person/PersonAlready/index.vue'),
                     meta: {
                         title: i18n.global.t('sidebar.winnerList'),
                         icon: 'already',
