@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/no-parsing-error -->
 <script setup lang='ts'>
 import type { IPersonConfig } from '@/types/storeType'
 import { storeToRefs } from 'pinia'
@@ -6,6 +5,7 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import DaiysuiTable from '@/components/DaiysuiTable/index.vue'
 import PageHeader from '@/components/PageHeader/index.vue'
+import { Switch } from '@/components/ui/switch'
 import i18n from '@/locales/i18n'
 import useStore from '@/store'
 
@@ -129,11 +129,14 @@ const tableColumnsDetail = [
             <span>{{ t('table.luckyPeopleNumber') }}：</span>
             <span>{{ alreadyPersonList.length }}</span>
           </div>
+
           <div class="flex flex-col">
             <div class="form-control">
-              <label class="cursor-pointer label">
-                <span class="label-text">{{ t('table.detail') }}:</span>
-                <input v-model="isDetail" type="checkbox" class="border-solid toggle toggle-primary border-1">
+              <label class="label flex items-center gap-2">
+                <p class="label-text">{{ t('table.detail') }}:</p>
+                <div class="flex items-center">
+                  <Switch v-model="isDetail" class="cursor-pointer" />
+                </div>
               </label>
             </div>
           </div>
