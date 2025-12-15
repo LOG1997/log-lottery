@@ -25,7 +25,7 @@ const isDataLoaded = ref(false)
 // 从URL获取主题ID
 function getThemeIdFromUrl(): string | null {
   const path = window.location.pathname
-  const match = path.match(/\/log-lottery\/t\/([^/]+)/)
+  const match = path.match(/\/t\/([^/]+)/)
   if (match && match[1] && match[1] !== 'undefined') {
     return match[1]
   }
@@ -118,7 +118,9 @@ function judgeChromeOrEdge() {
 // 检查是否是抽奖页面（手机端可以正常访问）
 function isLotteryPage() {
   const path = window.location.pathname
-  return path.includes('/log-lottery/t/')
+  const hash = window.location.hash
+  // 同时支持 history 和 hash 路由模式
+  return path.includes('/t/') || hash.includes('/t/')
 }
 
 onMounted(async () => {
@@ -139,9 +141,17 @@ onMounted(async () => {
   themeChange(localTheme.value.name)
   setCurrentPrize()
   
-  // 抽奖页面的手机端不显示提示（因为有专门的手机端UI）
-  const isMobileOnLotteryPage = judgeMobile() && isLotteryPage()
-  if (!isMobileOnLotteryPage && (judgeMobile() || !judgeChromeOrEdge())) {
+  // 移动端在抽奖页面不显示提示（有专门的手机端UI）
+  const isMobile = judgeMobile()
+  const onLotteryPage = isLotteryPage()
+  
+  if (isMobile && onLotteryPage) {
+    // 移动端访问抽奖页面，不显示提示
+    return
+  }
+  
+  // 非Chrome/Edge浏览器显示提示（移动端不在抽奖页面也显示）
+  if (!judgeChromeOrEdge()) {
     tipDialog.value.showModal()
   }
 })

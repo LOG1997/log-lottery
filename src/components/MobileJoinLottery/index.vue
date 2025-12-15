@@ -37,6 +37,22 @@ const themeName = computed(() => {
   return globalConfig.getTopTitle || t('entry.title')
 })
 
+// 简单哈希函数（用于非 HTTPS 环境的备用方案）
+function simpleHash(str: string): string {
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i)
+    hash = ((hash << 5) - hash) + char
+    hash = hash & hash // Convert to 32bit integer
+  }
+  // 生成更长的哈希值
+  const hash1 = Math.abs(hash).toString(16)
+  const hash2 = Math.abs(hash * 31).toString(16)
+  const hash3 = Math.abs(hash * 37).toString(16)
+  const hash4 = Math.abs(hash * 41).toString(16)
+  return (hash1 + hash2 + hash3 + hash4).padStart(32, '0')
+}
+
 // 生成浏览器指纹
 async function generateFingerprint(): Promise<string> {
   const components = []
@@ -50,8 +66,14 @@ async function generateFingerprint(): Promise<string> {
   // 语言
   components.push(navigator.language)
   
-  // 平台
-  components.push(navigator.platform)
+  // 平台 (使用 userAgentData 作为备选)
+  try {
+    // @ts-ignore - userAgentData 是较新的 API
+    const platform = navigator.userAgentData?.platform || navigator.platform || 'unknown'
+    components.push(platform)
+  } catch {
+    components.push('unknown')
+  }
   
   // User Agent
   components.push(navigator.userAgent)
@@ -90,11 +112,23 @@ async function generateFingerprint(): Promise<string> {
   
   // 生成哈希
   const str = components.join('|')
-  const encoder = new TextEncoder()
-  const data = encoder.encode(str)
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
-  const hashArray = Array.from(new Uint8Array(hashBuffer))
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+  
+  // 检查 crypto.subtle 是否可用（仅在 HTTPS 或 localhost 下可用）
+  if (window.crypto && window.crypto.subtle) {
+    try {
+      const encoder = new TextEncoder()
+      const data = encoder.encode(str)
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+      const hashArray = Array.from(new Uint8Array(hashBuffer))
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+    } catch (e) {
+      console.warn('crypto.subtle failed, using fallback hash:', e)
+    }
+  }
+  
+  // 备用方案：使用简单哈希
+  console.warn('crypto.subtle not available (non-HTTPS?), using fallback hash')
+  return simpleHash(str)
 }
 
 // 检查是否已加入

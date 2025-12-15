@@ -23,6 +23,10 @@ log-lottery是一个可配置可定制化的抽奖应用，炫酷3D球体，可�
 
 使用PC端最新版Chrome或Edge浏览器。
 
+最新版体验地址：
+
+[http://lottery.teixing.com](http://lottery.teixing.com)
+
 访问地址：
 
 <https://to2026.xyz/log-lottery>

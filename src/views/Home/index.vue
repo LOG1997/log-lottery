@@ -39,33 +39,58 @@ const themeStore = useStore().themeStore
 // 复制分享链接
 function copyShareLink() {
   const themeId = themeStore.currentThemeId
-  if (!themeId) return
+  if (!themeId) {
+    console.warn('[copyShareLink] No theme ID')
+    return
+  }
   
   const baseUrl = window.location.origin
-  const shareUrl = `${baseUrl}/log-lottery/t/${themeId}`
+  const shareUrl = `${baseUrl}/t/${themeId}`
   
-  navigator.clipboard.writeText(shareUrl).then(() => {
-    toast.open({
-      message: t('entry.linkCopied'),
-      type: 'success',
-      position: 'top-right',
-      duration: 3000,
-    })
-  }).catch(() => {
-    // 降级方案：创建临时输入框
+  // 降级方案：创建临时输入框（兼容非 HTTPS 环境）
+  const fallbackCopy = () => {
     const input = document.createElement('input')
     input.value = shareUrl
+    input.style.position = 'fixed'
+    input.style.left = '-9999px'
     document.body.appendChild(input)
     input.select()
-    document.execCommand('copy')
+    input.setSelectionRange(0, 99999) // 移动端兼容
+    try {
+      document.execCommand('copy')
+      toast.open({
+        message: t('entry.linkCopied'),
+        type: 'success',
+        position: 'top-right',
+        duration: 3000,
+      })
+    } catch (e) {
+      console.error('[copyShareLink] execCommand failed:', e)
+      toast.open({
+        message: shareUrl,
+        type: 'info',
+        position: 'top-right',
+        duration: 5000,
+      })
+    }
     document.body.removeChild(input)
-    toast.open({
-      message: t('entry.linkCopied'),
-      type: 'success',
-      position: 'top-right',
-      duration: 3000,
+  }
+  
+  // 优先使用 clipboard API（仅 HTTPS 可用）
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      toast.open({
+        message: t('entry.linkCopied'),
+        type: 'success',
+        position: 'top-right',
+        duration: 3000,
+      })
+    }).catch(() => {
+      fallbackCopy()
     })
-  })
+  } else {
+    fallbackCopy()
+  }
 }
 
 const { getAllPersonList: allPersonList, getNotPersonList: notPersonList, getNotThisPrizePersonList: notThisPrizePersonList,
@@ -933,7 +958,7 @@ onUnmounted(() => {
   
   <!-- 返回主题选择按钮 -->
   <div class="back-btn-wrapper">
-    <button class="back-btn" @click="router.push('/log-lottery/entry')" :title="t('entry.backToThemes')">
+    <button class="back-btn" @click="router.push('/entry')" :title="t('entry.backToThemes')">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
       </svg>

@@ -150,7 +150,7 @@ const doEnterTheme = async (theme: ITheme, isNewTheme = false) => {
 
   setTimeout(() => {
     // 跳转到带主题ID的URL
-    router.push(`/log-lottery/t/${theme.id}`)
+    router.push(`/t/${theme.id}`)
   }, 500)
 }
 

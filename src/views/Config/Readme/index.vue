@@ -6,7 +6,7 @@ import { onMounted, ref } from 'vue'
 const md = markdownit()
 const readmeHtml = ref('')
 function readMd() {
-  fetch(`/log-lottery/${i18n.global.t('data.readmeName')}`)
+  fetch(`/${i18n.global.t('data.readmeName')}`)
     .then(res => res.text())
     .then((res) => {
       readmeHtml.value = md.render(res)

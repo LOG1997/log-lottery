@@ -74,20 +74,20 @@ function enterConfig() {
   // 跳转到当前主题的配置页面
   const themeId = themeStore.currentThemeId
   if (themeId) {
-    router.push(`/log-lottery/t/${themeId}/config`)
+    router.push(`/t/${themeId}/config`)
   }
   else {
-    router.push('/log-lottery/config')
+    router.push('/config')
   }
 }
 function enterHome() {
   // 跳转到当前主题的抽奖页面
   const themeId = themeStore.currentThemeId
   if (themeId) {
-    router.push(`/log-lottery/t/${themeId}`)
+    router.push(`/t/${themeId}`)
   }
   else {
-    router.push('/log-lottery/entry')
+    router.push('/entry')
   }
 }
 

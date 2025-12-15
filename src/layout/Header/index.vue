@@ -33,7 +33,7 @@ function switchTheme(theme: ITheme) {
   globalConfig.loadFromTheme()
   
   // 跳转到新主题的URL
-  router.push(`/log-lottery/t/${theme.id}`)
+  router.push(`/t/${theme.id}`)
   
   // 刷新页面以重新渲染
   setTimeout(() => {
@@ -43,11 +43,11 @@ function switchTheme(theme: ITheme) {
 
 function exitTheme() {
   themeStore.exitTheme()
-  router.push('/log-lottery/entry')
+  router.push('/entry')
 }
 
 function goToEntry() {
-  router.push('/log-lottery/entry')
+  router.push('/entry')
 }
 
 // 复制分享链接
@@ -55,16 +55,39 @@ function copyShareLink() {
   if (!currentTheme.value) return
   
   const baseUrl = window.location.origin
-  const shareUrl = `${baseUrl}/log-lottery/t/${currentTheme.value.id}`
+  const shareUrl = `${baseUrl}/t/${currentTheme.value.id}`
   
-  navigator.clipboard.writeText(shareUrl).then(() => {
-    // 显示复制成功提示
+  const showToast = () => {
     const toast = document.createElement('div')
     toast.className = 'toast toast-top toast-center z-[9999]'
     toast.innerHTML = `<div class="alert alert-success"><span>${t('entry.linkCopied')}</span></div>`
     document.body.appendChild(toast)
     setTimeout(() => toast.remove(), 2000)
-  })
+  }
+  
+  // 降级方案
+  const fallbackCopy = () => {
+    const input = document.createElement('input')
+    input.value = shareUrl
+    input.style.position = 'fixed'
+    input.style.left = '-9999px'
+    document.body.appendChild(input)
+    input.select()
+    input.setSelectionRange(0, 99999)
+    try {
+      document.execCommand('copy')
+      showToast()
+    } catch (e) {
+      console.error('[copyShareLink] execCommand failed:', e)
+    }
+    document.body.removeChild(input)
+  }
+  
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(shareUrl).then(showToast).catch(fallbackCopy)
+  } else {
+    fallbackCopy()
+  }
 }
 </script>
 
