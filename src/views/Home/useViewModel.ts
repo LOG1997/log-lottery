@@ -52,6 +52,7 @@ export function useViewModel() {
     const personPool = ref<IPersonConfig[]>([])
     const intervalTimer = ref<any>(null)
     const isInitialDone = ref<boolean>(false)
+    const animationFrameId = ref<any>(null)
 
     function initThreeJs() {
         const felidView = 40
@@ -214,7 +215,7 @@ export function useViewModel() {
         }
         // 设置自动旋转
         // 设置相机位置
-        requestAnimationFrame(animation)
+        animationFrameId.value = requestAnimationFrame(animation)
     }
     /**
      * @description: 旋转的动画
@@ -531,6 +532,13 @@ export function useViewModel() {
      * @description: 清理资源，避免内存溢出
      */
     function cleanup() {
+        // 停止所有Tween动画
+        TWEEN.removeAll()
+
+        // 清理动画循环
+        if ((window as any).cancelAnimationFrame) {
+            (window as any).cancelAnimationFrame(animationFrameId.value)
+        }
         clearInterval(intervalTimer.value)
         intervalTimer.value = null
         if (scene.value) {
