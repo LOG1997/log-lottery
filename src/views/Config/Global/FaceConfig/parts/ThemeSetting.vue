@@ -83,6 +83,11 @@ const patternColorValue = defineModel<string>('patternColorValue')
       <div class="flex flex-col items-center max-w-xs gap-1 form-control">
         <label class="label">
           <span class="label-text">{{ t('table.textColor') }}</span>
+          <div class="tooltip" data-tip="设置文本颜色会覆盖标题样式">
+            <button class="btn btn-circle hover:bg-base-300">
+              ?
+            </button>
+          </div>
         </label>
         <ColorPicker v-model="textColorValue" v-model:pure-color="textColorValue" />
       </div>
