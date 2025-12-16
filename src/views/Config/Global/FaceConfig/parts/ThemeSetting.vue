@@ -84,7 +84,7 @@ const patternColorValue = defineModel<string>('patternColorValue')
         <label class="label">
           <span class="label-text">{{ t('table.textColor') }}</span>
           <div class="tooltip" data-tip="设置文本颜色会覆盖标题样式">
-            <button class="btn btn-circle hover:bg-base-300">
+            <button class="btn btn-circle h-4 hover:bg-base-300">
               ?
             </button>
           </div>
