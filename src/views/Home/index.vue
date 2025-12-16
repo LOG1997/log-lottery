@@ -37,6 +37,7 @@ const ballRotationY = ref(0)
 const containerRef = ref<HTMLElement>()
 const canOperate = ref(true)
 const cameraZ = ref(3000)
+const animationFrameId = ref<any>(null)
 
 const scene = ref()
 const camera = ref()
@@ -119,29 +120,33 @@ function init() {
     const number = document.createElement('div')
     number.className = 'card-id'
     number.textContent = tableData.value[i].uid
-    if(isShowAvatar.value) number.style.display = 'none'
+    if (isShowAvatar.value)
+      number.style.display = 'none'
     element.appendChild(number)
 
     const symbol = document.createElement('div')
     symbol.className = 'card-name'
     symbol.textContent = tableData.value[i].name
-    if(isShowAvatar.value) symbol.className = 'card-name card-avatar-name'
+    if (isShowAvatar.value)
+      symbol.className = 'card-name card-avatar-name'
     element.appendChild(symbol)
 
     const detail = document.createElement('div')
     detail.className = 'card-detail'
     detail.innerHTML = `${tableData.value[i].department}<br/>${tableData.value[i].identity}`
-    if(isShowAvatar.value) detail.style.display = 'none'
+    if (isShowAvatar.value)
+      detail.style.display = 'none'
     element.appendChild(detail)
 
-    const avatar = document.createElement('img');
-    avatar.className = 'card-avatar';
-    avatar.src = tableData.value[i].avatar;
-    avatar.alt = 'avatar';
-    avatar.style.width = '140px';
-    avatar.style.height = '140px';
-    if(!isShowAvatar.value) avatar.style.display = 'none'
-    element.appendChild(avatar);
+    const avatar = document.createElement('img')
+    avatar.className = 'card-avatar'
+    avatar.src = tableData.value[i].avatar
+    avatar.alt = 'avatar'
+    avatar.style.width = '140px'
+    avatar.style.height = '140px'
+    if (!isShowAvatar.value)
+      avatar.style.display = 'none'
+    element.appendChild(avatar)
 
     element = useElementStyle(element, tableData.value[i], i, patternList.value, patternColor.value, cardColor.value, cardSize.value, textSize.value)
     const object = new CSS3DObject(element)
@@ -286,7 +291,7 @@ function animation() {
   }
   // 设置自动旋转
   // 设置相机位置
-  requestAnimationFrame(animation)
+  animationFrameId.value = requestAnimationFrame(animation)
 }
 
 // // 旋转的动画
@@ -635,7 +640,14 @@ function listenKeyboard(e: any) {
 }
 
 function cleanup() {
-//   animationRunning.value = false
+  // 停止所有Tween动画
+  TWEEN.removeAll()
+
+  // 清理动画循环
+  if ((window as any).cancelAnimationFrame) {
+    (window as any).cancelAnimationFrame(animationFrameId.value)
+  }
+  //   animationRunning.value = false
   clearInterval(intervalTimer.value)
   intervalTimer.value = null
   if (scene.value) {
