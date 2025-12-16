@@ -67,7 +67,7 @@ ul {
     /* IE9+, News */
 }
 
-@theme inline {
+/* @theme inline {
     --radius-sm: calc(var(--radius) - 4px);
     --radius-md: calc(var(--radius) - 2px);
     --radius-lg: var(--radius);
@@ -103,9 +103,9 @@ ul {
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
-}
+} */
 
-:root {
+/* :root {
     --radius: 0.625rem;
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
@@ -173,8 +173,9 @@ ul {
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
 }
+    */
 
-@layer base {
+/* @layer base {
     * {
         @apply border-border outline-ring/50;
     }
@@ -182,4 +183,4 @@ ul {
     body {
         @apply bg-background text-foreground;
     }
-}
+} */

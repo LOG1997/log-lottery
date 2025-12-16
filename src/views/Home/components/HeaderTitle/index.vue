@@ -1,8 +1,9 @@
 <script setup lang='ts'>
+import type { CSSProperties } from 'vue'
 import { computed, toRefs } from 'vue'
 import { useI18n } from 'vue-i18n'
-
 import { useRouter } from 'vue-router'
+import { rgbToHex } from '@/utils/color'
 
 interface Props {
   textSize: number
@@ -18,24 +19,21 @@ interface Props {
 const props = defineProps<Props>()
 const router = useRouter()
 const { tableData, textSize, textColor, topTitle, setDefaultPersonList, titleFont, titleFontSyncGlobal } = toRefs(props)
-
+const isTextColor = computed(() => {
+  return rgbToHex(textColor.value) !== '#00000000'
+})
 const titleStyle = computed(() => {
-  const baseStyle = {
+  const style: CSSProperties = {
     fontSize: `${textSize.value * 1.5}px`,
-    color: textColor.value,
+  }
+  if (!titleFontSyncGlobal.value) {
+    style.fontFamily = titleFont.value
+  }
+  if (isTextColor.value) {
+    style.color = textColor.value
   }
 
-  if (titleFontSyncGlobal.value) {
-    return {
-      ...baseStyle,
-    }
-  }
-  else {
-    return {
-      ...baseStyle,
-      fontFamily: titleFont.value,
-    }
-  }
+  return style
 })
 const { t } = useI18n()
 </script>
@@ -43,7 +41,8 @@ const { t } = useI18n()
 <template>
   <div class="absolute z-10 flex flex-col items-center justify-center -translate-x-1/2 left-1/2">
     <h2
-      class="pt-12 m-0 mb-12 tracking-wide text-center leading-12 header-title"
+      class="pt-12 m-0 mb-12 tracking-wide text-center leading-12"
+      :class="{ 'animate-pulse bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent': !isTextColor }"
       :style="titleStyle"
     >
       {{ topTitle }}

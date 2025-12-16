@@ -1,113 +1,29 @@
 <script setup lang='ts'>
-import { refDebounced } from '@vueuse/core'
-import { ChevronRight, ChevronsUpDownIcon } from 'lucide-vue-next'
-import { PopoverArrow } from 'reka-ui'
 import { ref } from 'vue'
-import { Button } from '@/components/ui/button'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
-
-import { useLocalFonts } from '@/hooks/useLocalFonts'
-import { cn } from '@/lib/utils'
-
-const { getFonts, disabled, fonts } = useLocalFonts()
-const open = ref(false)
-const activeKey = ref('Arial')
-const debouncedActiveKey = refDebounced(activeKey, 20)
-const selectedFont = ref('')
-
-function selectFont(selectedValue: any) {
-  open.value = false
-  activeKey.value = ''
-  selectedFont.value = selectedValue
-}
-
-function handelActiveKey(val: string) {
-  activeKey.value = val
-}
-
-function handleScroll() {
-  activeKey.value = ''
-}
 </script>
 
 <template>
-  <div class="w-full h-full flex justify-center items-center">
-    <Popover v-model:open="open">
-      <PopoverTrigger as-child :disabled="disabled">
-        <Button
-          variant="outline"
-          role="combobox"
-          :aria-expanded="open"
-          class="w-[200px] justify-between"
-          @click="getFonts"
-        >
-          {{ selectedFont || "选择字体..." }}
-          <ChevronsUpDownIcon class="opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent class="w-[200px] p-0">
-        <Command>
-          <CommandInput class="h-9" placeholder="Search framework..." />
-          <CommandList @scroll="handleScroll">
-            <CommandEmpty>No framework found.</CommandEmpty>
-            <CommandGroup>
-              <CommandItem
-                v-for="[key, value] in fonts"
-                :key="key"
-                :value="key"
-                class="w-full hover:bg-gray-200/50"
-                @select="selectFont(key)"
-              >
-                <Popover :open="debouncedActiveKey === key" class="w-full">
-                  <PopoverTrigger class="w-full">
-                    <div :style="{ fontFamily: `${key}` }" class="w-full flex justify-between items-center" @mouseleave="handelActiveKey('')" @mouseenter="handelActiveKey(key)">
-                      {{ key }}
-                      <ChevronRight
-                        :class="cn(
-                          'ml-auto',
-                        )"
-                      />
-                    </div>
-                  </PopoverTrigger>
-                  <PopoverContent class="p-2" side="right" @mouseleave="handelActiveKey('')" @mouseenter="handelActiveKey(key)">
-                    <PopoverArrow />
-                    <Command>
-                      <CommandGroup>
-                        <CommandItem
-                          v-for="child in value"
-                          :key="child.value"
-                          :value="child.value"
-                          class="w-full hover:bg-gray-200/50"
-                          :style="{ fontFamily: `${key}` }"
-                          @select="selectFont(child.value)"
-                        >
-                          {{ child.name }}
-                        </CommandItem>
-                      </CommandGroup>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-              </CommandItem>
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
+  <div>
+    <h2 class="text-3xl animate-pulse bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+      两京一十三省
+    </h2>
+
+    <h2>两京一十三省</h2>
+
+    <h2>两京一十三省</h2>
+
+    <h2>两京一十三省</h2>
+
+    <h2>两京一十三省</h2>
+
+    <h2>两京一十三省</h2>
+
+    <h2>两京一十三省</h2>
   </div>
 </template>
 
 <style lang='scss' scoped>
-
+.dark-title {
+  color: red;
+}
 </style>

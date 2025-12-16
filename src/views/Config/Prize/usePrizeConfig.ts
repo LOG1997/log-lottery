@@ -1,18 +1,13 @@
 import type { IPrizeConfig } from '@/types/storeType'
 import localforage from 'localforage'
 import { cloneDeep } from 'lodash-es'
-import { Grip } from 'lucide-vue-next'
 import { storeToRefs } from 'pinia'
 import { onMounted, ref, watch } from 'vue'
-import { VueDraggable } from 'vue-draggable-plus'
-import { useI18n } from 'vue-i18n'
-import EditSeparateDialog from '@/components/NumberSeparate/EditSeparateDialog.vue'
-import PageHeader from '@/components/PageHeader/index.vue'
+import { toast } from 'vue-sonner'
 import i18n from '@/locales/i18n'
 import useStore from '@/store'
 
 export function usePrizeConfig() {
-    const { t } = useI18n()
     const imageDbStore = localforage.createInstance({
         name: 'imgStore',
     })
@@ -84,6 +79,41 @@ export function usePrizeConfig() {
 
     function delItem(item: IPrizeConfig) {
         prizeConfig.deletePrizeConfig(item.id)
+        toast.success('删除成功')
+    }
+    function addPrize() {
+        const defaultPrizeCOnfig: IPrizeConfig = {
+            id: new Date().getTime().toString(),
+            name: i18n.global.t('data.prizeName'),
+            sort: 0,
+            isAll: false,
+            count: 1,
+            isUsedCount: 0,
+            picture: {
+                id: '',
+                name: '',
+                url: '',
+            },
+            separateCount: {
+                enable: false,
+                countList: [],
+            },
+            desc: '',
+            isUsed: false,
+            isShow: true,
+            frequency: 1,
+        }
+        prizeList.value.push(defaultPrizeCOnfig)
+        toast.success('添加成功')
+    }
+    function resetDefault() {
+        prizeConfig.resetDefault()
+        prizeList.value = cloneDeep(localPrizeList.value)
+        toast.success('重置成功')
+    }
+    async function delAll() {
+        prizeList.value = []
+        toast.success('删除成功')
     }
     onMounted(() => {
         getImageDbStore()
@@ -93,7 +123,17 @@ export function usePrizeConfig() {
     }, { deep: true })
 
     return {
+        addPrize,
+        resetDefault,
+        delAll,
+        delItem,
+        prizeList,
         currentPrize,
-
+        selectedPrize,
+        submitData,
+        changePrizePerson,
+        changePrizeStatus,
+        selectPrize,
+        localImageList,
     }
 }
