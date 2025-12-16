@@ -57,13 +57,13 @@ const disabledStyle = computed(() => {
 
 <template>
   <div class="w-full h-full flex justify-center items-center max-w-xs" :style="disabledStyle">
-    <Popover v-model:open="open">
+    <Popover v-model:open="open" class="w-full">
       <PopoverTrigger as-child :disabled="browserDisabled || disabled">
         <Button
           variant="outline"
           role="combobox"
           :aria-expanded="open"
-          class="w-full justify-between truncate bg-transparent hover:bg-transparent hover:text-inherit"
+          class="w-full justify-between truncate hover:bg-transparent hover:text-inherit"
           @click="getFonts"
         >
           <span class="w-7/8 text-left truncate" :style="{ fontFamily: `${selectedFont}` }">
@@ -72,7 +72,7 @@ const disabledStyle = computed(() => {
           <ChevronsUpDownIcon class="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent class="w-full p-0">
+      <PopoverContent class="w-full p-0 bg-base-100">
         <Command>
           <CommandInput class="h-9" placeholder="Search framework..." />
           <CommandList @scroll="handleScroll">
@@ -82,7 +82,7 @@ const disabledStyle = computed(() => {
                 v-for="[key, value] in fonts"
                 :key="key"
                 :value="key"
-                class="w-full hover:bg-gray-200/50"
+                class="w-full hover:bg-gray-200/60"
                 @select="selectFont(key)"
               >
                 <Popover :open="debouncedActiveKey === key" class="w-full">
@@ -96,7 +96,7 @@ const disabledStyle = computed(() => {
                       />
                     </div>
                   </PopoverTrigger>
-                  <PopoverContent class="p-2" side="right" @mouseleave="handelActiveKey('')" @mouseenter="handelActiveKey(key)">
+                  <PopoverContent class="p-2 bg-base-100" side="right" @mouseleave="handelActiveKey('')" @mouseenter="handelActiveKey(key)">
                     <PopoverArrow />
                     <Command>
                       <CommandGroup>
@@ -104,7 +104,7 @@ const disabledStyle = computed(() => {
                           v-for="child in value"
                           :key="child.value"
                           :value="child.value"
-                          class="w-full hover:bg-gray-200/50"
+                          class="w-full hover:bg-gray-200/60"
                           :style="{ fontFamily: `${key}` }"
                           @select="selectFont(child.value)"
                         >
