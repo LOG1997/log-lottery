@@ -117,7 +117,7 @@ onMounted(() => {
             </div>
             <input
               type="checkbox" :checked="temporaryPrize.isAll"
-              class="mt-2 border-solid checkbox checkbox-secondary border-1"
+              class="mt-2 border-solid checkbox checkbox-secondary border"
               @change="temporaryPrize.isAll = !temporaryPrize.isAll"
             >
           </label>

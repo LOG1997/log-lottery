@@ -28,9 +28,9 @@ export interface IPrizeConfig {
     count: number
     isUsedCount: number
     picture: {
-        id: string | number
+        id: string
         name: string
-        url: string
+        url: string | Blob | ArrayBuffer
     }
     separateCount: {
         enable: boolean
