@@ -52,7 +52,7 @@ async function uploadFile(fileData: IFileData | null) {
 async function getAudioDbStore() {
   const keys = await audioDbStore.keys()
   if (keys.length > 0) {
-    audioDbStore.iterate((value: { fileName: string, dataUrl: string }, key: string) => {
+    audioDbStore.iterate((value: { fileName: string, data: Blob }, key: string) => {
       globalConfig.addMusic({
         id: key,
         name: value.fileName,
@@ -63,10 +63,10 @@ async function getAudioDbStore() {
 }
 function submitUpload() {
   if (audioData.value) {
-    const { dataUrl, fileName } = audioData.value
+    const { data, fileName } = audioData.value
     const uniqueId = uuidv4()
     audioDbStore.setItem(uniqueId, {
-      dataUrl,
+      data,
       fileName,
     })
       .then(() => {

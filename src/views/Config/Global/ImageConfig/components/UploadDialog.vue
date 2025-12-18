@@ -48,7 +48,7 @@ async function uploadFile(fileData: IFileData | null) {
 async function getImageDbStore() {
   const keys = await imageDbStore.keys()
   if (keys.length > 0) {
-    imageDbStore.iterate((value: { fileName: string, dataUrl: string }, key: string) => {
+    imageDbStore.iterate((value: { fileName: string, data: Blob }, key: string) => {
       globalConfig.addImage({
         id: key,
         name: value.fileName,
@@ -59,10 +59,10 @@ async function getImageDbStore() {
 }
 function submitUpload() {
   if (imageData.value) {
-    const { dataUrl, fileName } = imageData.value
+    const { data, fileName } = imageData.value
     const uniqueId = uuidv4()
     imageDbStore.setItem(uniqueId, {
-      dataUrl,
+      data,
       fileName,
     })
       .then(() => {

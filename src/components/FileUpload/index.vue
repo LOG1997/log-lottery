@@ -2,7 +2,7 @@
 import type { IFileData } from './type'
 import { ListMusic, Upload, X } from 'lucide-vue-next'
 import { ref } from 'vue'
-import { readFileAsJsonData, readFileData } from '@/utils/file'
+import { getBlobObjectUrl, readFileAsJsonData, readFileData, readFileDataAsBlob } from '@/utils/file'
 
 const props = defineProps<{
   limitType?: string
@@ -21,13 +21,14 @@ async function handleFileChange(e: Event) {
   if (props.mode === 'json') {
     const fileRes = await readFileAsJsonData(file)
     const jsonData = JSON.parse(fileRes)
-    fileData.value = { dataUrl: jsonData, fileName: file.name, type }
+    fileData.value = { data: jsonData, fileName: file.name, type }
     originFileName.value = file.name
     emits('uploadFile', fileData.value)
     return
   }
-  const { dataUrl, fileName } = await readFileData(file)
-  fileData.value = { dataUrl, fileName, type }
+  const { data: blobData, fileName } = await readFileDataAsBlob(file)
+  console.log('datafile', blobData, fileName)
+  fileData.value = { data: blobData, fileName, type }
   originFileName.value = fileName
   emits('uploadFile', fileData.value)
 }
@@ -46,7 +47,7 @@ function removeFile() {
       @change="handleFileChange"
     >
     <label for="file-upload" :class="fileData ? 'cursor-not-allowed' : null" class="w-full h-52 cursor-pointer border-2 border-dashed flex items-center justify-center overflow-hidden">
-      <img v-if="fileData && fileData.type.includes('image')" class="w-full object-cover stroke-0" :src="fileData.dataUrl" alt="">
+      <img v-if="fileData && fileData.type.includes('image')" class="w-full object-cover stroke-0" :src="getBlobObjectUrl(fileData.data as Blob)" alt="">
       <ListMusic v-else-if="fileData && fileData.type.includes('audio')" class="w-2/3 h-2/3 stroke-1 text-gray-500/50" />
       <div v-else class="w-full h-full flex justify-center items-center flex-col gap-4">
         <Upload class="w-2/3 h-2/3 stroke-1 text-gray-500/50" />

@@ -40,7 +40,7 @@ async function getImageStoreItem(item: any): Promise<string> {
   if (item.url === 'Storage') {
     const key = item.id
     const imageData = await imageDbStore.getItem(key) as any
-    image = imageData.dataUrl
+    image = URL.createObjectURL(imageData.data)
   }
   else {
     image = item.url

@@ -26,7 +26,9 @@ export function usePlayMusic() {
             return
         }
         if (item.url === 'Storage') {
-            audioUrl = await audioDbStore.getItem(item.name) as string
+            const key = item.id
+            const audioData = await audioDbStore.getItem(key) as any
+            audioUrl = URL.createObjectURL(audioData.data)
         }
         else {
             audioUrl = item.url
