@@ -1,4 +1,5 @@
 <script setup lang='ts'>
+import type { IImage } from '@/types/storeType'
 import { reactive } from 'vue'
 import { ColorPicker } from 'vue3-colorpicker'
 import { useI18n } from 'vue-i18n'
@@ -7,7 +8,7 @@ import { daisyuiThemes } from '@/constant/theme'
 import 'vue3-colorpicker/style.css'
 
 interface Props {
-  imageList: Array<{ name: string, url: string, id: string }>
+  imageList: Array<IImage>
 }
 defineProps<Props>()
 const themeList = reactive(daisyuiThemes)
@@ -23,7 +24,7 @@ const patternColorValue = defineModel<string>('patternColorValue')
 </script>
 
 <template>
-  <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs  pb-10">
+  <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs pb-10">
     <legend class="fieldset-legend">
       主题设置
     </legend>

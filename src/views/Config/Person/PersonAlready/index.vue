@@ -25,7 +25,8 @@ const { alreadyPersonList, alreadyPersonDetail, isDetail, tableColumnsList, tabl
               <label class="label flex items-center gap-2">
                 <p class="label-text">{{ t('table.detail') }}:</p>
                 <div class="flex items-center">
-                  <Switch v-model="isDetail" class="cursor-pointer" />
+                  <!-- <Switch v-model="isDetail" class="cursor-pointer" /> -->
+                  <input v-model="isDetail" type="checkbox" :checked="isDetail" class="toggle toggle-primary">
                 </div>
               </label>
             </div>

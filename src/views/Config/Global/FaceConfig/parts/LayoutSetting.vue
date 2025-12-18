@@ -16,7 +16,7 @@ const isShowAvatarValue = defineModel<boolean>('isShowAvatarValue', { required: 
 </script>
 
 <template>
-  <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs  pb-10">
+  <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs pb-10">
     <legend class="fieldset-legend">
       布局设置
     </legend>

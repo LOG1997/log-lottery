@@ -10,7 +10,7 @@ import { useViewModel } from './useViewModel'
 const resetDataDialogRef = ref()
 const delAllDataDialogRef = ref()
 const exportInputFileRef = ref()
-const { resetData, deleteAll, handleFileChange, exportData, alreadyPersonList, allPersonList, tableColumns } = useViewModel({ exportInputFileRef })
+const { resetData, deleteAll, handleFileChange, exportData, alreadyPersonList, allPersonList, tableColumnList } = useViewModel({ exportInputFileRef })
 const { t } = useI18n()
 const limitType = '.xlsx,.xls'
 </script>
@@ -70,7 +70,7 @@ const limitType = '.xlsx,.xls'
       </template>
     </PageHeader>
 
-    <DaiysuiTable :table-columns="tableColumns" :data="allPersonList" />
+    <DaiysuiTable :table-columns="tableColumnList" :data="allPersonList" />
   </div>
 </template>
 

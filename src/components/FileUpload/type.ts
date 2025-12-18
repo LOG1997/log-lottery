@@ -1,5 +1,5 @@
 export interface IFileData {
-    dataUrl: string
+    data: string | Blob | ArrayBuffer
     fileName: string
     type: string
 }

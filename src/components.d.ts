@@ -62,5 +62,6 @@ declare module 'vue' {
     SvgIcon: typeof import('./components/SvgIcon/index.vue')['default']
     Switch: typeof import('./components/ui/switch/Switch.vue')['default']
     ToTop: typeof import('./components/ToTop/index.vue')['default']
+    Waterfall: typeof import('./components/Waterfall/index.vue')['default']
   }
 }

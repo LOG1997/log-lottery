@@ -8,6 +8,7 @@ import { loadingKey } from '@/components/Loading'
 import i18n from '@/locales/i18n'
 import useStore from '@/store'
 import { readFileBinary, readLocalFileAsArraybuffer } from '@/utils/file'
+import { tableColumns } from './columns'
 import ImportExcelWorker from './importExcel.worker?worker'
 
 export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<HTMLInputElement> }) {
@@ -15,52 +16,7 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
     const loading = inject(loadingKey)
     const personConfig = useStore().personConfig
     const { getAllPersonList: allPersonList, getAlreadyPersonList: alreadyPersonList } = storeToRefs(personConfig)
-    const tableColumns = [
-        {
-            label: i18n.global.t('data.number'),
-            props: 'uid',
-        },
-        {
-            label: i18n.global.t('data.name'),
-            props: 'name',
-        },
-        {
-            label: i18n.global.t('data.department'),
-            props: 'department',
-        },
-        {
-            label: i18n.global.t('data.avatar'),
-            props: 'avatar',
-            formatValue(row: any) {
-                return row.avatar ? `<img src="${row.avatar}" alt="avatar" style="width: 50px; height: 50px;"/>` : '-'
-            },
-        },
-        {
-            label: i18n.global.t('data.identity'),
-            props: 'identity',
-        },
-        {
-            label: i18n.global.t('data.isWin'),
-            props: 'isWin',
-            formatValue(row: IPersonConfig) {
-                return row.isWin ? i18n.global.t('data.yes') : i18n.global.t('data.no')
-            },
-        },
-        {
-            label: i18n.global.t('data.operation'),
-            actions: [
-                {
-                    label: i18n.global.t('data.delete'),
-                    type: 'btn-error',
-                    onClick: (row: IPersonConfig) => {
-                        delPersonItem(row)
-                    },
-                },
-
-            ],
-        },
-    ]
-
+    const tableColumnList = tableColumns({ handleDeletePerson: delPersonItem })
     async function getExcelTemplateContent() {
         const locale = i18n.global.locale.value
         if (locale === 'zhCn') {
@@ -171,6 +127,6 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
         exportData,
         alreadyPersonList,
         allPersonList,
-        tableColumns,
+        tableColumnList,
     }
 }

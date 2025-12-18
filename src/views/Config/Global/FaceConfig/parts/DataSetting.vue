@@ -17,32 +17,32 @@ const uploadVisible = ref(false)
 </script>
 
 <template>
-  <dialog id="my_modal_1" ref="resetDataDialogRef" class="border-none modal">
-    <div class="modal-box">
-      <h3 class="text-lg font-bold">
-        {{ t('dialog.titleTip') }}
-      </h3>
-      <p class="py-4">
-        {{ t('dialog.dialogResetAllData') }}
-      </p>
-      <div class="modal-action">
-        <form method="dialog" class="flex gap-3">
-          <!-- if there is a button in form, it will close the modal -->
-          <button class="btn" @click="resetDataDialogRef.close()">
-            {{ t(`button.cancel`) }}
-          </button>
-          <button class="btn" @click="resetData">
-            {{ t('button.confirm') }}
-          </button>
-        </form>
-      </div>
-    </div>
-  </dialog>
-  <UploadJsonModal v-model:visible="uploadVisible" :import-all-config-data="importAllConfigData" />
-  <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs  pb-10">
+  <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs pb-10">
     <legend class="fieldset-legend">
       数据操作
     </legend>
+    <dialog id="my_modal_1" ref="resetDataDialogRef" class="border-none modal">
+      <div class="modal-box">
+        <h3 class="text-lg font-bold">
+          {{ t('dialog.titleTip') }}
+        </h3>
+        <p class="py-4">
+          {{ t('dialog.dialogResetAllData') }}
+        </p>
+        <div class="modal-action">
+          <form method="dialog" class="flex gap-3">
+            <!-- if there is a button in form, it will close the modal -->
+            <button class="btn" @click="resetDataDialogRef.close()">
+              {{ t(`button.cancel`) }}
+            </button>
+            <button class="btn" @click="resetData">
+              {{ t('button.confirm') }}
+            </button>
+          </form>
+        </div>
+      </div>
+    </dialog>
+    <UploadJsonModal v-model:visible="uploadVisible" :import-all-config-data="importAllConfigData" />
     <label class="flex flex-row items-center form-control">
       <div class="">
         <div class="label flex flex-col justify-start items-start">
