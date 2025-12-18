@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
 import type { IPersonConfig } from '@/types/storeType'
 import { storeToRefs } from 'pinia'
-import { inject } from 'vue'
+import { inject, ref } from 'vue'
 import { toast } from 'vue-sonner'
 import * as XLSX from 'xlsx'
 import { loadingKey } from '@/components/Loading'
@@ -17,6 +17,14 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
     const personConfig = useStore().personConfig
     const { getAllPersonList: allPersonList, getAlreadyPersonList: alreadyPersonList } = storeToRefs(personConfig)
     const tableColumnList = tableColumns({ handleDeletePerson: delPersonItem })
+    const addPersonModalVisible = ref(false)
+    const singlePersonData = ref<IPersonConfig>({
+        uid: '',
+        name: '',
+        department: '',
+        avatar?: '',
+        identity: '',
+    })
     async function getExcelTemplateContent() {
         const locale = i18n.global.locale.value
         if (locale === 'zhCn') {
@@ -120,6 +128,25 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
     function delPersonItem(row: IPersonConfig) {
         personConfig.deletePerson(row)
     }
+    function addOnePerson(addOnePersonDrawerRef: any, event: any) {
+        console.log('addOnePerson')
+        event.preventDefault()
+
+        console.log('addOnePerson1')
+
+        // 表单验证通过，执行添加人员逻辑
+        // 这里假设 addOnePerson 返回一个 Promise，表示操作完成
+        // Promise.resolve(addOnePerson()).then(() => {
+        //     // 成功后关闭抽屉
+        addOnePersonDrawerRef.closeDrawer()
+
+        //     // 可选：重置表单
+        //     form.reset()
+        // }).catch((error) => {
+        //     // 处理可能的错误情况
+        //     console.error('添加人员失败:', error)
+        // })
+    }
     return {
         resetData,
         deleteAll,
@@ -128,5 +155,8 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
         alreadyPersonList,
         allPersonList,
         tableColumnList,
+        addOnePerson,
+        addPersonModalVisible,
+        singlePersonData,
     }
 }
