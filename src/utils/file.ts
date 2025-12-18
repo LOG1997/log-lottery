@@ -8,17 +8,17 @@ export function readFileBinary(file: File | Blob): Promise<string> {
     })
 }
 
-export function readFileData(file: any): Promise<{ data: string, fileName: string }> {
+export function readFileData(file: File): Promise<{ data: string, fileName: string }> {
     return new Promise((resolve) => {
         const reader = new FileReader()
         reader.readAsDataURL(file)
         reader.onload = (ev: any) => {
-            resolve({ data: ev.target.result, fileName: file.name })
+            resolve({ data: ev.target!.result, fileName: file.name })
         }
     })
 }
 
-export function readFileDataAsBlob(file: any): Promise<{ data: Blob, fileName: string }> {
+export function readFileDataAsBlob(file: File): Promise<{ data: Blob, fileName: string }> {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
 

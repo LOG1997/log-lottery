@@ -1,3 +1,5 @@
+import type { IFileData } from '@/components/FileUpload/type'
+import type { IMusic } from '@/types/storeType'
 import localforage from 'localforage'
 import { storeToRefs } from 'pinia'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
@@ -12,7 +14,7 @@ export function usePlayMusic() {
     const { getMusicList: localMusicList, getCurrentMusic: currentMusic } = storeToRefs(globalConfig)
     const audio = ref(new Audio())
 
-    async function play(item: any) {
+    async function play(item: IMusic) {
         if (!item) {
             return
         }
@@ -27,17 +29,17 @@ export function usePlayMusic() {
         }
         if (item.url === 'Storage') {
             const key = item.id
-            const audioData = await audioDbStore.getItem(key) as any
-            audioUrl = URL.createObjectURL(audioData.data)
+            const audioData = await audioDbStore.getItem<IFileData>(key)
+            audioUrl = URL.createObjectURL(audioData?.data as Blob)
         }
         else {
-            audioUrl = item.url
+            audioUrl = item.url as string
         }
         audio.value.pause()
         audio.value.src = audioUrl
         audio.value.play()
     }
-    function playMusic(item: any, skip = false) {
+    function playMusic(item: IMusic, skip = false) {
         if (!item) {
             return
         }
@@ -51,7 +53,7 @@ export function usePlayMusic() {
     function nextPlay() {
         // 播放下一首
         if (localMusicList.value.length >= 1) {
-            let index = localMusicList.value.findIndex((item: any) => item.name === currentMusic.value.item.name)
+            let index = localMusicList.value.findIndex((item: IMusic) => item.name === currentMusic.value.item.name)
             index++
             if (index >= localMusicList.value.length) {
                 index = 0
@@ -71,7 +73,7 @@ export function usePlayMusic() {
     onUnmounted(() => {
         audio.value.removeEventListener('ended', nextPlay)
     })
-    watch(currentMusic, (val: any) => {
+    watch(currentMusic, (val: { item: IMusic, paused: boolean }) => {
         if (!val.paused && audio.value) {
             play(val.item)
         }
