@@ -32,7 +32,7 @@ export const useGlobalConfig = defineStore('global', {
                 imageList: defaultImageList as IImage[],
             },
             currentMusic: {
-                item: defaultMusicList[0],
+                item: defaultMusicList[0] as IMusic,
                 paused: true,
             },
         }
