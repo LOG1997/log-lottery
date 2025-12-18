@@ -1,19 +1,18 @@
 <script setup lang='ts'>
 import { useI18n } from 'vue-i18n'
+import GridWaterfall from '@/components/Waterfall/index.vue'
 import { DataSetting, LayoutSetting, PatternSetting, TextSetting, ThemeSetting } from './parts'
-
 import { useViewModel } from './useViewModel'
 
 const { t } = useI18n()
-
 const { resetData, topTitleValue, languageValue, textSizeValue, currentFontValue, currentTitleFontValue, titleFontSyncGlobalValue, languageList, formErr, formData, cardSizeValue, isShowPrizeListValue, isShowAvatarValue, resetPersonLayout, isRowCountChange, themeValue, backgroundImageValue, cardColorValue, luckyCardColorValue, textColorValue, patternColorValue, imageList, rowCount, cardColor, patternColor, patternList, clearPattern, resetPattern, exportAllConfigData, importAllConfigData } = useViewModel()
 </script>
 
 <template>
-  <div class="flex flex-col gap-4">
+  <div class="w-4/5 flex flex-col gap-4">
     <h2>{{ t('viewTitle.globalSetting') }}</h2>
-
-    <div class="flex flex-wrap h-auto w-full gap-6">
+    <!-- <div class="flex flex-wrap h-auto w-full gap-6"> -->
+    <GridWaterfall>
       <!-- 数据操作 -->
       <DataSetting :reset-data="resetData" :export-all-config-data="exportAllConfigData" :import-all-config-data="importAllConfigData" />
       <!-- 文本设置（主标题、语言、文字大小） -->
@@ -55,7 +54,8 @@ const { resetData, topTitleValue, languageValue, textSizeValue, currentFontValue
         :clear-pattern="clearPattern"
         :reset-pattern="resetPattern"
       />
-    </div>
+    </GridWaterfall>
+    <!-- </div> -->
   </div>
 </template>
 
