@@ -1,17 +1,16 @@
 name: Build and Release
 
 on:
-  push:
-    tags:
-      - 'v*'
+  pull_request:
+    branches: [main]
 
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
-    
+
     permissions:
       contents: write
-      
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -26,8 +25,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22.x'
-          cache: 'pnpm'
+          node-version: 22.x
+          cache: pnpm
 
       - name: Install dependencies
         run: pnpm install
