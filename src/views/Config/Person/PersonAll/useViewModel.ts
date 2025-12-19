@@ -1,15 +1,19 @@
 import type { Ref } from 'vue'
 import type { IPersonConfig } from '@/types/storeType'
 import { storeToRefs } from 'pinia'
-import { inject, ref } from 'vue'
+import { v4 as uuidv4 } from 'uuid'
+import { inject, ref, toRaw } from 'vue'
 import { toast } from 'vue-sonner'
 import * as XLSX from 'xlsx'
 import { loadingKey } from '@/components/Loading'
 import i18n from '@/locales/i18n'
 import useStore from '@/store'
+import { addOtherInfo } from '@/utils'
 import { readFileBinary, readLocalFileAsArraybuffer } from '@/utils/file'
 import { tableColumns } from './columns'
 import ImportExcelWorker from './importExcel.worker?worker'
+
+type IBasePersonConfig = Pick<IPersonConfig, 'uid' | 'name' | 'department' | 'identity' | 'avatar'>
 
 export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<HTMLInputElement> }) {
     const worker: Worker | null = new ImportExcelWorker()
@@ -18,11 +22,11 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
     const { getAllPersonList: allPersonList, getAlreadyPersonList: alreadyPersonList } = storeToRefs(personConfig)
     const tableColumnList = tableColumns({ handleDeletePerson: delPersonItem })
     const addPersonModalVisible = ref(false)
-    const singlePersonData = ref<IPersonConfig>({
+    const singlePersonData = ref<IBasePersonConfig>({
         uid: '',
         name: '',
         department: '',
-        avatar?: '',
+        avatar: '',
         identity: '',
     })
     async function getExcelTemplateContent() {
@@ -52,10 +56,12 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
      * 获取用户数据
      */
     async function handleFileChange(e: Event) {
+        console.log('handleFileChange', e)
         if (worker) {
             worker.onmessage = (e) => {
                 if (e.data.type === 'done') {
                     personConfig.resetPerson()
+                    console.log('done', e.data.data)
                     personConfig.addNotPersonList(e.data.data)
                     // 导入成功后清空file input
                     clearFileInput()
@@ -75,7 +81,7 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
             exportInputFileRef.value.value = ''
         }
     }
-    /// 导出数据
+    // 导出数据
     function exportData() {
         let data = JSON.parse(JSON.stringify(allPersonList.value))
         // 排除一些字段
@@ -129,23 +135,12 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
         personConfig.deletePerson(row)
     }
     function addOnePerson(addOnePersonDrawerRef: any, event: any) {
-        console.log('addOnePerson')
         event.preventDefault()
+        const personData = addOtherInfo([toRaw(singlePersonData.value)])
+        personData[0].id = uuidv4()
+        personConfig.addOnePerson(personData)
 
-        console.log('addOnePerson1')
-
-        // 表单验证通过，执行添加人员逻辑
-        // 这里假设 addOnePerson 返回一个 Promise，表示操作完成
-        // Promise.resolve(addOnePerson()).then(() => {
-        //     // 成功后关闭抽屉
         addOnePersonDrawerRef.closeDrawer()
-
-        //     // 可选：重置表单
-        //     form.reset()
-        // }).catch((error) => {
-        //     // 处理可能的错误情况
-        //     console.error('添加人员失败:', error)
-        // })
     }
     return {
         resetData,

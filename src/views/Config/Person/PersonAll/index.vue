@@ -6,6 +6,7 @@ import DaiysuiTable from '@/components/DaiysuiTable/index.vue'
 import CustomDialog from '@/components/Dialog/index.vue'
 import CustomDrawer from '@/components/Drawer/index.vue'
 import PageHeader from '@/components/PageHeader/index.vue'
+import SinglePersonContent from './components/SinglePerson.vue'
 import { useViewModel } from './useViewModel'
 
 const resetDataDialogRef = ref()
@@ -32,37 +33,11 @@ const limitType = '.xlsx,.xls'
   />
   <CustomDrawer ref="addOnePersonDrawerRef">
     <template #content>
-      <form class="fieldset rounded-box w-xs p-4" @submit="(e) => addOnePerson(addOnePersonDrawerRef, e)">
-        <label class="fieldset">
-          <span class="label">编号</span>
-          <input v-model="singlePersonData" type="password" class="input validator" placeholder="编号">
-        </label>
-        <fieldset class="fieldset">
-          <label class="label" required>姓名<span class="text-red-500">*</span></label>
-          <input type="text" class="input validator" placeholder="姓名" required minlength="1">
-          <p class="validator-hint hidden">
-            请填写姓名
-          </p>
-        </fieldset>
-        <label class="fieldset">
-          <span class="label">部门</span>
-          <input type="password" class="input validator" placeholder="部门">
-        </label>
-        <label class="fieldset">
-          <span class="label">头像</span>
-          <input type="password" class="input validator" placeholder="头像">
-        </label>
-        <label class="fieldset">
-          <span class="label">身份</span>
-          <input type="password" class="input validator" placeholder="身份">
-        </label>
-        <button class="btn btn-neutral mt-4" type="submit">
-          确定
-        </button>
-        <button class="btn btn-ghost mt-1" type="reset" @click="addOnePersonDrawerRef.closeDrawer()">
-          取消
-        </button>
-      </form>
+      <SinglePersonContent
+        v-model:single-person-data="singlePersonData"
+        :add-one-person-drawer-ref="addOnePersonDrawerRef"
+        :add-one-person="addOnePerson"
+      />
     </template>
   </CustomDrawer>
 

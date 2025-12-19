@@ -25,7 +25,7 @@ export function filterData(tableData: any[], localRowCount: number) {
 export function addOtherInfo(personList: any[]) {
     const len = personList.length
     for (let i = 0; i < len; i++) {
-        personList[i].id = i
+        personList[i].id = uuidv4()
         personList[i].createTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
         personList[i].updateTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
         personList[i].prizeName = [] as string[]
