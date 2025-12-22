@@ -82,6 +82,7 @@ web_modules/
 .env.local
 
 **/components.d.ts
+**/auto-imports.d.ts
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache

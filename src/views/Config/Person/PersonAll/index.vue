@@ -4,13 +4,17 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import DaiysuiTable from '@/components/DaiysuiTable/index.vue'
 import CustomDialog from '@/components/Dialog/index.vue'
+import CustomDrawer from '@/components/Drawer/index.vue'
 import PageHeader from '@/components/PageHeader/index.vue'
+import SinglePersonContent from './components/SinglePerson.vue'
 import { useViewModel } from './useViewModel'
 
 const resetDataDialogRef = ref()
 const delAllDataDialogRef = ref()
 const exportInputFileRef = ref()
-const { resetData, deleteAll, handleFileChange, exportData, alreadyPersonList, allPersonList, tableColumnList } = useViewModel({ exportInputFileRef })
+const addOnePersonDrawerRef = ref()
+const baseUrl = import.meta.env.BASE_URL
+const { resetData, deleteAll, handleFileChange, exportData, addOnePerson, singlePersonData, alreadyPersonList, allPersonList, tableColumnList } = useViewModel({ exportInputFileRef })
 const { t } = useI18n()
 const limitType = '.xlsx,.xls'
 </script>
@@ -28,6 +32,15 @@ const limitType = '.xlsx,.xls'
     :desc="t('dialog.dialogDelAllPerson')"
     :submit-func="deleteAll"
   />
+  <CustomDrawer ref="addOnePersonDrawerRef">
+    <template #content>
+      <SinglePersonContent
+        v-model:single-person-data="singlePersonData"
+        :add-one-person-drawer-ref="addOnePersonDrawerRef"
+        :add-one-person="addOnePerson"
+      />
+    </template>
+  </CustomDrawer>
 
   <div class="min-w-1000px">
     <PageHeader :title="t('viewTitle.personManagement')">
@@ -39,7 +52,7 @@ const limitType = '.xlsx,.xls'
           <div class="tooltip tooltip-bottom" :data-tip="t('tooltip.downloadTemplateTip')">
             <a
               class="no-underline btn btn-secondary btn-sm" :download="t('data.xlsxName')" target="_blank"
-              :href="`/log-lottery/${t('data.xlsxName')}`"
+              :href="`${baseUrl}${t('data.xlsxName')}`"
             >{{ t('button.downloadTemplate') }}</a>
           </div>
           <div class="">
@@ -59,6 +72,9 @@ const limitType = '.xlsx,.xls'
           </button>
           <button class="btn btn-accent btn-sm" @click="exportData">
             {{ t('button.exportResult') }}
+          </button>
+          <button class="btn btn-neutral btn-sm" @click="addOnePersonDrawerRef.showDrawer()">
+            添加
           </button>
           <div>
             <span>{{ t('table.luckyPeopleNumber') }}:</span>

@@ -2,7 +2,7 @@ import type { IPersonConfig, IPrizeConfig } from '@/types/storeType'
 import dayjs from 'dayjs'
 import { defineStore } from 'pinia'
 import { v4 as uuidv4 } from 'uuid'
-import { computed, ref, toRaw, watch } from 'vue'
+import { computed, ref, toRaw } from 'vue'
 import { IndexDb } from '@/utils/dexie'
 import { defaultPersonList } from './data'
 import { usePrizeConfig } from './prizeConfig'
@@ -10,13 +10,13 @@ import { usePrizeConfig } from './prizeConfig'
 // 获取IPersonConfig的key组成数组
 export const personListKey = Object.keys(defaultPersonList[0])
 export const usePersonConfig = defineStore('person', () => {
-    const personDb = new IndexDb('person', ['allPersonList', 'alreadyPersonList'], 1, personListKey)
+    const personDb = new IndexDb('person', ['allPersonList', 'alreadyPersonList'], 1, ['createTime'])
     // NOTE: state
     const personConfig = ref({
         allPersonList: [] as IPersonConfig[],
         alreadyPersonList: [] as IPersonConfig[],
     })
-    personDb.getAllData('allPersonList').then((data) => {
+    personDb.getDataSortedByDateTime('allPersonList', 'createTime').then((data) => {
         personConfig.value.allPersonList = data
     })
     personDb.getAllData('alreadyPersonList').then((data) => {
@@ -51,7 +51,7 @@ export const usePersonConfig = defineStore('person', () => {
         return item.isWin === false
     }))
     // NOTE: action
-    // 添加未中奖人员
+    // 添加全部未中奖人员
     function addNotPersonList(personList: IPersonConfig[]) {
         if (personList.length <= 0) {
             return
@@ -60,6 +60,20 @@ export const usePersonConfig = defineStore('person', () => {
             personConfig.value.allPersonList.push(item)
         })
         personDb.setAllData('allPersonList', personList)
+    }
+    // 添加数据
+    function addOnePerson(person: IPersonConfig[]) {
+        if (person.length <= 0) {
+            return
+        }
+        if (person.length > 1) {
+            console.warn('只支持添加单个用户')
+            return
+        }
+        person.forEach((item: IPersonConfig) => {
+            personConfig.value.allPersonList.push(item)
+            personDb.setData('allPersonList', item)
+        })
     }
     // 添加已中奖人员
     function addAlreadyPersonList(personList: IPersonConfig[], prize: IPrizeConfig | null) {
@@ -176,6 +190,7 @@ export const usePersonConfig = defineStore('person', () => {
         getAlreadyPersonDetail,
         getNotPersonList,
         addNotPersonList,
+        addOnePerson,
         addAlreadyPersonList,
         moveAlreadyToNot,
         deletePerson,
