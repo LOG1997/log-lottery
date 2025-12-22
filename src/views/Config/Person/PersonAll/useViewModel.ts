@@ -31,12 +31,13 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
     })
     async function getExcelTemplateContent() {
         const locale = i18n.global.locale.value
+        console.log('locale', import.meta.env.BASE_URL)
         if (locale === 'zhCn') {
-            const templateData = await readLocalFileAsArraybuffer('/log-lottery/人口登记表-zhCn.xlsx')
+            const templateData = await readLocalFileAsArraybuffer(`${import.meta.env.BASE_URL}人口登记表-zhCn.xlsx`)
             return templateData
         }
         else {
-            const templateData = await readLocalFileAsArraybuffer('/log-lottery/personListTemplate-en.xlsx')
+            const templateData = await readLocalFileAsArraybuffer(`${import.meta.env.BASE_URL}personListTemplate-en.xlsx`)
             return templateData
         }
     }
