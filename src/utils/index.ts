@@ -26,8 +26,8 @@ export function addOtherInfo(personList: any[]) {
     const len = personList.length
     for (let i = 0; i < len; i++) {
         personList[i].id = uuidv4()
-        personList[i].createTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
-        personList[i].updateTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
+        personList[i].createTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss:ms')
+        personList[i].updateTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss:ms')
         personList[i].prizeName = [] as string[]
         personList[i].prizeTime = [] as string[]
         personList[i].prizeId = []

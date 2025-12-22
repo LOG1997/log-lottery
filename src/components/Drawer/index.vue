@@ -2,13 +2,14 @@
 import { ref } from 'vue'
 
 const drawerTriggerRef = ref <HTMLDialogElement | null> (null)
-
+const visible = ref(false)
 function showDrawer() {
   drawerTriggerRef.value?.click()
+  visible.value = true
 }
 function closeDrawer() {
-  console.log('closeDrawer')
   drawerTriggerRef.value?.click()
+  visible.value = false
 }
 defineExpose({
   showDrawer,
@@ -25,7 +26,7 @@ defineExpose({
     </div>
     <div class="drawer-side">
       <label for="my-drawer-1" aria-label="close sidebar" class="drawer-overlay" />
-      <div class="menu bg-base-200 min-h-full w-80 p-4">
+      <div v-if="visible" class="menu bg-base-200 min-h-full w-80 p-4">
         <slot name="content" />
       </div>
     </div>

@@ -10,13 +10,13 @@ import { usePrizeConfig } from './prizeConfig'
 // 获取IPersonConfig的key组成数组
 export const personListKey = Object.keys(defaultPersonList[0])
 export const usePersonConfig = defineStore('person', () => {
-    const personDb = new IndexDb('person', ['allPersonList', 'alreadyPersonList'], 1, personListKey)
+    const personDb = new IndexDb('person', ['allPersonList', 'alreadyPersonList'], 1, ['createTime'])
     // NOTE: state
     const personConfig = ref({
         allPersonList: [] as IPersonConfig[],
         alreadyPersonList: [] as IPersonConfig[],
     })
-    personDb.getAllData('allPersonList').then((data) => {
+    personDb.getDataSortedByDateTime('allPersonList', 'createTime').then((data) => {
         personConfig.value.allPersonList = data
     })
     personDb.getAllData('alreadyPersonList').then((data) => {

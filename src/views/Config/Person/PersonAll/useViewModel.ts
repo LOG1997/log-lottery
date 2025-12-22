@@ -140,11 +140,14 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
     }
     function addOnePerson(addOnePersonDrawerRef: any, event: any) {
         event.preventDefault()
+        // 表单中的验证信息清除 
+
         const personData = addOtherInfo([toRaw(singlePersonData.value)])
         personData[0].id = uuidv4()
         personConfig.addOnePerson(personData)
-
+        // singlePersonData.value = {} as IBasePersonConfig
         addOnePersonDrawerRef.closeDrawer()
+        singlePersonData.value = {} as IBasePersonConfig
     }
     return {
         resetData,

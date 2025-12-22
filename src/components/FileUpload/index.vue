@@ -27,7 +27,6 @@ async function handleFileChange(e: Event) {
     return
   }
   const { data: blobData, fileName } = await readFileDataAsBlob(file)
-  console.log('datafile', blobData, fileName)
   fileData.value = { data: blobData, fileName, type }
   originFileName.value = fileName
   emits('uploadFile', fileData.value)
