@@ -3,11 +3,12 @@ import localforage from 'localforage'
 import { cloneDeep } from 'lodash-es'
 import { storeToRefs } from 'pinia'
 import { onMounted, ref, watch } from 'vue'
-import { toast } from 'vue-sonner'
+import { useToast } from 'vue-toast-notification'
 import i18n from '@/locales/i18n'
 import useStore from '@/store'
 
 export function usePrizeConfig() {
+    const toast = useToast()
     const imageDbStore = localforage.createInstance({
         name: 'imgStore',
     })

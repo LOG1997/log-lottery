@@ -34,7 +34,6 @@ globalThis.onmessage = async (e: MessageEvent<WorkerMessage>) => {
                 const header = Object.keys(excelData[0])
 
                 if (!headersEqual(templateHeader, header)) {
-                    console.log('headers not equal', templateHeader, header)
                     globalThis.postMessage({
                         type: 'error',
                         data: null,

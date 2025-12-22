@@ -3,7 +3,7 @@ import type { IPersonConfig } from '@/types/storeType'
 import { storeToRefs } from 'pinia'
 import { v4 as uuidv4 } from 'uuid'
 import { inject, ref, toRaw } from 'vue'
-import { toast } from 'vue-sonner'
+import { useToast } from 'vue-toast-notification'
 import * as XLSX from 'xlsx'
 import { loadingKey } from '@/components/Loading'
 import i18n from '@/locales/i18n'
@@ -16,6 +16,7 @@ import ImportExcelWorker from './importExcel.worker?worker'
 type IBasePersonConfig = Pick<IPersonConfig, 'uid' | 'name' | 'department' | 'identity' | 'avatar'>
 
 export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<HTMLInputElement> }) {
+    const toast = useToast()
     const worker: Worker | null = new ImportExcelWorker()
     const loading = inject(loadingKey)
     const personConfig = useStore().personConfig
@@ -31,7 +32,6 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
     })
     async function getExcelTemplateContent() {
         const locale = i18n.global.locale.value
-        console.log('locale', import.meta.env.BASE_URL)
         if (locale === 'zhCn') {
             const templateData = await readLocalFileAsArraybuffer(`${import.meta.env.BASE_URL}人口登记表-zhCn.xlsx`)
             return templateData
@@ -57,18 +57,21 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
      * 获取用户数据
      */
     async function handleFileChange(e: Event) {
-        console.log('handleFileChange', e)
         if (worker) {
             worker.onmessage = (e) => {
                 if (e.data.type === 'done') {
                     personConfig.resetPerson()
-                    console.log('done', e.data.data)
                     personConfig.addNotPersonList(e.data.data)
                     // 导入成功后清空file input
                     clearFileInput()
                 }
                 if (e.data.type === 'error') {
-                    toast.warning(e.data.message || '导入错误')
+                    toast.open({
+                        message: e.data.message || '导入错误',
+                        type: 'error',
+                        position: 'top-right',
+                    })
+                    // toast.warning(e.data.message || '导入错误')
                 }
                 loading?.hide()
             }
