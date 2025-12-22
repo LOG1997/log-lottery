@@ -10,8 +10,8 @@ interface WorkerMessage {
 let allData: any[] = []
 
 function headersEqual(template: string[], actual: string[]): boolean {
-    return template.length === actual.length
-        && template.every((value, index) => value === actual[index])
+    return template.length >= actual.length
+        && actual.some(item => template.includes(item))
 }
 
 // 接收主线程消息
@@ -34,6 +34,7 @@ globalThis.onmessage = async (e: MessageEvent<WorkerMessage>) => {
                 const header = Object.keys(excelData[0])
 
                 if (!headersEqual(templateHeader, header)) {
+                    console.log('headers not equal', templateHeader, header)
                     globalThis.postMessage({
                         type: 'error',
                         data: null,
