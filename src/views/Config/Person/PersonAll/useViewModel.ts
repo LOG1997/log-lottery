@@ -1,30 +1,43 @@
 import type { Ref } from 'vue'
 import type { IPersonConfig } from '@/types/storeType'
 import { storeToRefs } from 'pinia'
-import { inject } from 'vue'
-import { toast } from 'vue-sonner'
+import { v4 as uuidv4 } from 'uuid'
+import { inject, ref, toRaw } from 'vue'
+import { useToast } from 'vue-toast-notification'
 import * as XLSX from 'xlsx'
 import { loadingKey } from '@/components/Loading'
 import i18n from '@/locales/i18n'
 import useStore from '@/store'
+import { addOtherInfo } from '@/utils'
 import { readFileBinary, readLocalFileAsArraybuffer } from '@/utils/file'
 import { tableColumns } from './columns'
 import ImportExcelWorker from './importExcel.worker?worker'
 
+type IBasePersonConfig = Pick<IPersonConfig, 'uid' | 'name' | 'department' | 'identity' | 'avatar'>
+
 export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<HTMLInputElement> }) {
+    const toast = useToast()
     const worker: Worker | null = new ImportExcelWorker()
     const loading = inject(loadingKey)
     const personConfig = useStore().personConfig
     const { getAllPersonList: allPersonList, getAlreadyPersonList: alreadyPersonList } = storeToRefs(personConfig)
     const tableColumnList = tableColumns({ handleDeletePerson: delPersonItem })
+    const addPersonModalVisible = ref(false)
+    const singlePersonData = ref<IBasePersonConfig>({
+        uid: '',
+        name: '',
+        department: '',
+        avatar: '',
+        identity: '',
+    })
     async function getExcelTemplateContent() {
         const locale = i18n.global.locale.value
         if (locale === 'zhCn') {
-            const templateData = await readLocalFileAsArraybuffer('/log-lottery/人口登记表-zhCn.xlsx')
+            const templateData = await readLocalFileAsArraybuffer(`${import.meta.env.BASE_URL}人口登记表-zhCn.xlsx`)
             return templateData
         }
         else {
-            const templateData = await readLocalFileAsArraybuffer('/log-lottery/personListTemplate-en.xlsx')
+            const templateData = await readLocalFileAsArraybuffer(`${import.meta.env.BASE_URL}personListTemplate-en.xlsx`)
             return templateData
         }
     }
@@ -53,7 +66,12 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
                     clearFileInput()
                 }
                 if (e.data.type === 'error') {
-                    toast.warning(e.data.message || '导入错误')
+                    toast.open({
+                        message: e.data.message || '导入错误',
+                        type: 'error',
+                        position: 'top-right',
+                    })
+                    // toast.warning(e.data.message || '导入错误')
                 }
                 loading?.hide()
             }
@@ -67,7 +85,7 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
             exportInputFileRef.value.value = ''
         }
     }
-    /// 导出数据
+    // 导出数据
     function exportData() {
         let data = JSON.parse(JSON.stringify(allPersonList.value))
         // 排除一些字段
@@ -120,6 +138,17 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
     function delPersonItem(row: IPersonConfig) {
         personConfig.deletePerson(row)
     }
+    function addOnePerson(addOnePersonDrawerRef: any, event: any) {
+        event.preventDefault()
+        // 表单中的验证信息清除 
+
+        const personData = addOtherInfo([toRaw(singlePersonData.value)])
+        personData[0].id = uuidv4()
+        personConfig.addOnePerson(personData)
+        // singlePersonData.value = {} as IBasePersonConfig
+        addOnePersonDrawerRef.closeDrawer()
+        singlePersonData.value = {} as IBasePersonConfig
+    }
     return {
         resetData,
         deleteAll,
@@ -128,5 +157,8 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
         alreadyPersonList,
         allPersonList,
         tableColumnList,
+        addOnePerson,
+        addPersonModalVisible,
+        singlePersonData,
     }
 }

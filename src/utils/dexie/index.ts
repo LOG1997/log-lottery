@@ -18,7 +18,7 @@ class IndexDb {
         // 获取存在的key
         const stores: Record<string, string> = {}
         for (const tableName of tableNames) {
-            stores[tableName] = 'id,dateTime,type,uid' // 根据需要调整字段
+            stores[tableName] = `id,dateTime,type,uid,${dbKeys.join(',')}` // 根据需要调整字段
         }
         this.dbStore.version(this.version).stores(stores)
     }
@@ -70,6 +70,12 @@ class IndexDb {
         const allData = await this.dbStore[tableName].toArray()
         // return allData
         return isAsc ? allData : allData.reverse()
+    }
+
+    // 按 dateTime 排序获取所有数据
+    async getDataSortedByDateTime(tableName: string, orderTimeName: string = 'dataTime') {
+        const allData = await this.dbStore[tableName].orderBy(orderTimeName).toArray()
+        return allData
     }
 
     // 分页获取数据
