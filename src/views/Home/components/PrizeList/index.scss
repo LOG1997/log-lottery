@@ -21,7 +21,7 @@
 .current-prize {
     position: relative;
     display: block;
-    overflow: hidden;
+    overflow: clip;
     isolation: isolate;
 
     border-radius: 20px;

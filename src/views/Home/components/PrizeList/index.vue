@@ -25,14 +25,14 @@ const prizeListContainerRef = ref()
 const temporaryPrizeRef = ref()
 const selectedPrize = ref<IPrizeConfig | null>()
 // 获取prizeListRef高度
-function getPrizeListHeight() {
-  let height = 200
-  if (prizeListRef.value) {
-    height = (prizeListRef.value as HTMLElement).offsetHeight
-  }
+// function getPrizeListHeight() {
+//   let height = 200
+//   if (prizeListRef.value) {
+//     height = (prizeListRef.value as HTMLElement).offsetHeight
+//   }
 
-  return height
-}
+//   return height
+// }
 const prizeShow = ref(structuredClone(isShowPrizeList.value))
 
 function addTemporaryPrize() {
@@ -89,13 +89,13 @@ function setCurrentPrize() {
   }
 }
 onMounted(() => {
-  prizeListContainerRef.value.style.height = `${getPrizeListHeight()}px`
+//   prizeListContainerRef.value.style.height = `${getPrizeListHeight()}px`
   setCurrentPrize()
 })
 </script>
 
 <template>
-  <div class="flex items-center">
+  <div class="flex items-center max-h-2/3 overflow-hidden">
     <dialog id="my_modal_1" ref="temporaryPrizeRef" class="border-none modal">
       <div class="modal-box">
         <h3 class="text-lg font-bold">
@@ -197,7 +197,7 @@ onMounted(() => {
       :total-number="selectedPrize?.count" :separated-number="selectedPrize?.separateCount.countList"
       @submit-data="submitData"
     />
-    <div ref="prizeListContainerRef">
+    <div ref="prizeListContainerRef" class="h-full">
       <div v-if="temporaryPrize.isShow" class="h-20 w-72" :class="temporaryPrize.isShow ? 'current-prize' : ''">
         <div class="relative flex flex-row items-center justify-between w-full h-full shadow-xl card bg-base-100">
           <div
@@ -240,8 +240,8 @@ onMounted(() => {
         </div>
       </div>
       <transition name="prize-list" :appear="true">
-        <div v-if="prizeShow && !isMobile && !temporaryPrize.isShow" class="flex items-center">
-          <ul ref="prizeListRef" class="flex flex-col gap-1 p-2 rounded-xl bg-slate-500/50">
+        <div v-if="prizeShow && !isMobile && !temporaryPrize.isShow" class="flex items-center h-full">
+          <ul ref="prizeListRef" class="flex flex-col gap-1 p-2 rounded-xl bg-slate-500/50 h-full overflow-y-auto overflow-x-hidden hide-scrollbar">
             <li
               v-for="item in localPrizeList" :key="item.id"
               :class="currentPrize.id === item.id ? 'current-prize' : ''"
