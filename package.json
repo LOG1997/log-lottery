@@ -27,6 +27,7 @@
         "dayjs": "^1.11.19",
         "dexie": "^4.2.1",
         "github-markdown-css": "^5.8.1",
+        "gsap": "^3.14.2",
         "localforage": "^1.10.0",
         "lodash-es": "^4.17.22",
         "lucide-vue-next": "^0.562.0",

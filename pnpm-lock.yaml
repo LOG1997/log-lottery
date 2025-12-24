@@ -35,6 +35,9 @@ importers:
       github-markdown-css:
         specifier: ^5.8.1
         version: 5.8.1
+      gsap:
+        specifier: ^3.14.2
+        version: 3.14.2
       localforage:
         specifier: ^1.10.0
         version: 1.10.0
@@ -3071,6 +3074,9 @@ packages:
 
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
+
+  gsap@3.14.2:
+    resolution: {integrity: sha512-P8/mMxVLU7o4+55+1TCnQrPmgjPKnwkzkXOK1asnR9Jg2lna4tEY5qBJjMmAaOBDDZWtlRjBXjLa0w53G/uBLA==}
 
   happy-dom@20.0.11:
     resolution: {integrity: sha512-QsCdAUHAmiDeKeaNojb1OHOPF7NjcWPBR7obdu3NwH2a/oyQaLg5d0aaCy/9My6CdPChYF07dvz5chaXBGaD4g==}
@@ -8330,6 +8336,8 @@ snapshots:
   gradient-parser@1.1.1: {}
 
   graphemer@1.4.0: {}
+
+  gsap@3.14.2: {}
 
   happy-dom@20.0.11:
     dependencies:
