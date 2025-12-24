@@ -134,17 +134,31 @@ npm run build
 
 ## Docker支持
 
-构建镜像
+以下任意方式选一种即可
 
-```bash
-docker build -t log-lottery .
-```
+1. 拉取镜像
 
-运行容器
+    ```bash
+    docker pull log1997/log-lottery:latest
+    ```
 
-```bash
-docker run -d -p 9279:80 log-lottery
-```
+    运行容器
+
+    ```bash
+    docker run -d --name log-lottery -p 9279:80 log1997/log-lottery:latest
+    ```
+
+2. 手动构建镜像
+
+    ```bash
+    docker build -t log-lottery .
+    ```
+
+    运行容器
+
+    ```bash
+    docker run -d -p 9279:80 log-lottery
+    ```
 
 容器运行成功后即可在本地通过<http://localhost:9279/log-lottery/>访问
 
