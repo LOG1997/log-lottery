@@ -29,6 +29,9 @@ export function useGsap(scrollContainerRef: any, liRefs: any, isScroll: Ref<bool
     }
 
     function disposeGsapAnimation() {
+        if (!ctx.value) {
+            return
+        }
         ctx.value.revert() // <- Easy Cleanup!
     }
     function scrollHandler() {
@@ -65,8 +68,10 @@ export function useGsap(scrollContainerRef: any, liRefs: any, isScroll: Ref<bool
     }
     watch(isScroll, (val) => {
         if (val) {
-            initGsapAnimation()
-            listenScrollContainer()
+            setTimeout(() => {
+                initGsapAnimation()
+                listenScrollContainer()
+            }, 0)
         }
     })
     onBeforeUnmount(() => {

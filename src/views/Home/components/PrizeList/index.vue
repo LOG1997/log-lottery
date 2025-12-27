@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import type { IPrizeConfig } from '@/types/storeType'
-import { ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 // import { useI18n } from 'vue-i18n'
 import EditSeparateDialog from '@/components/NumberSeparate/EditSeparateDialog.vue'
 import OfficialPrizeList from './parts/OfficialPrizeList/index.vue'
@@ -24,13 +24,11 @@ const {
   localPrizeList,
   isMobile,
 } = usePrizeList(temporaryPrizeRef)
-// const { t } = useI18n()
-
 const selectedPrize = ref<IPrizeConfig | null>()
 </script>
 
 <template>
-  <div class="flex items-center h-2/3 overflow-hidden">
+  <div class="flex h-2/3 items-center overflow-hidden">
     <TemporaryDialog
       ref="temporaryPrizeRef"
       v-model:temporary-prize="temporaryPrize"

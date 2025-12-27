@@ -58,7 +58,7 @@ onMounted (() => {
 
 <template>
   <transition name="prize-list" class="h-full" :appear="true">
-    <div v-if="prizeShow && !isMobile && !temporaryPrize.isShow" class="flex items-center h-full relative ">
+    <div v-show="prizeShow && !isMobile && !temporaryPrize.isShow" class="flex items-center h-full relative ">
       <div v-if="isScroll" class="w-full h-16 flex justify-center scroll-button scroll-button-up absolute top-0 z-50">
         <SvgIcon v-show="showUpButton" name="chevron-up" size="64px" class="text-gray-200/80 cursor-pointer" @click="handleScroll(-150)" />
       </div>
