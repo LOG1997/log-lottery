@@ -51,11 +51,14 @@ function getIsScroll() {
   }
 }
 
-watch ([prizeShow, () => props.temporaryPrizeShow], () => {
+watch ([prizeShow, () => props.temporaryPrizeShow], (val) => {
+  if (!val[0]) {
+    return
+  }
   setTimeout (() => {
     getIsScroll()
   }, 0)
-})
+}, { immediate: true })
 </script>
 
 <template>
