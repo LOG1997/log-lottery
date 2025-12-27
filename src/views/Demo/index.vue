@@ -1,11 +1,11 @@
-<script setup>
+<script setup lang="ts">
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const list = ref([])
+const list = ref<any[]>([])
 
 list.value = [{
   label: 1,
@@ -54,10 +54,12 @@ const liRefs = ref()
 const scrollContainerRef = ref()
 const main = ref()
 const ctx = ref()
+const showUpButton = ref(false)
+const showDownButton = ref(true)
 
-onMounted(() => {
+function initGsapAnimation() {
   ctx.value = gsap.context(() => {
-    liRefs.value.forEach((box) => {
+    liRefs.value.forEach((box: any) => {
       gsap.fromTo(box, { rotationX: -90, rotateZ: -20, opacity: 0 }, {
         rotationX: 0,
         rotateZ: 0,
@@ -84,16 +86,61 @@ onMounted(() => {
       })
     })
   }, main.value) // <- Scope!
-})
+}
 
-onUnmounted(() => {
+function disposeGsapAnimation() {
   ctx.value.revert() // <- Easy Cleanup!
+}
+function scrollHandler() {
+  const scrollHeight = scrollContainerRef.value.scrollHeight
+  const scrollTop = scrollContainerRef.value.scrollTop
+  const containerHeight = scrollContainerRef.value.clientHeight
+  // 滚动滑到底部
+  if (scrollTop + containerHeight >= scrollHeight) {
+    showDownButton.value = false
+    showUpButton.value = true
+  }
+  // 在中间
+  else if (scrollTop && scrollTop + containerHeight < scrollHeight) {
+    showDownButton.value = true
+    showUpButton.value = true
+  }
+  // 滚动滑到顶部
+  else {
+    showDownButton.value = true
+    showUpButton.value = false
+  }
+}
+function listenScrollContainer() {
+  scrollContainerRef.value.addEventListener('scroll', scrollHandler)
+}
+function removeScrollContainer() {
+  if (scrollContainerRef.value) {
+    scrollContainerRef.value.removeEventListener('scroll', scrollHandler)
+  }
+}
+
+function handleScroll(h: number) {
+  scrollContainerRef.value.scrollTop += h
+}
+onMounted(() => {
+  initGsapAnimation()
+  listenScrollContainer()
+})
+onBeforeUnmount(() => {
+  removeScrollContainer()
+})
+onUnmounted(() => {
+  disposeGsapAnimation()
 })
 </script>
 
 <template>
-  <div class="h-full flex flex-col justify-center overflow-hidden relative">
-    <div ref="scrollContainerRef" class="h-150 w-48 overflow-y-auto overflow-x-hidden relative">
+  <div class="h-full w-48 flex flex-col justify-center overflow-hidden relative">
+    <div class="w-full h-16 flex justify-center scroll-button scroll-button-up">
+      <SvgIcon v-show="showUpButton" name="chevron-up" size="64px" class="text-gray-200/80 cursor-pointer" @click="handleScroll(-100)" />
+    </div>
+    <div ref="scrollContainerRef" class="h-150 w-48 overflow-y-auto overflow-x-hidden relative scroll-smooth hide-scrollbar">
       <ul ref="main" class="li-container relative">
         <li
           v-for="item in list" :key="item.value" ref="liRefs" :style="{ backgroundColor: item.color }"
@@ -104,80 +151,68 @@ onUnmounted(() => {
         <li class="h-16" />
       </ul>
     </div>
+    <div class="w-full h-16 flex justify-center scroll-button scroll-button-down">
+      <SvgIcon v-show="showDownButton" name="chevron-down" size="64px" class="text-gray-200/80 cursor-pointer" @click="handleScroll(100)" />
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.li-first {
-    transform-style: preserve-3d;
-    transform: rotate3d(1, 0, 0, 60deg);
-    ;
+.scroll-button::before,
+.scroll-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  transform: translate(12px 12px);
 }
 
-.li-end {
-    transform-style: preserve-3d;
-    transform: rotate3d(1, 0, 0, -60deg);
-    ;
+.scroll-button::before {
+  transform: translate(0, -6px);
+  opacity: 0.6;
 }
 
-.arrow-down-btn {
-    bottom: 20px;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 10px;
-    z-index: 10;
-
-    .arrow-container {
-        position: relative;
-        width: 30px;
-        height: 30px;
-    }
-
-    .arrow {
-        width: 30px;
-        height: 30px;
-        border-right: 3px solid rgba(107, 114, 128, 0.6); // 灰色半透明
-        border-bottom: 3px solid rgba(107, 114, 128, 0.6); // 灰色半透明
-        transform: rotate(45deg);
-        position: absolute;
-        top: 0;
-        left: 0;
-        animation: bounce 1.5s infinite;
-    }
-
-    .arrow-shadow {
-        transform: rotate(45deg) translate(3px, 3px); // 偏移创建阴影效果
-        opacity: 0.4;
-        z-index: -1;
-        animation: none; // 阴影不需要动画
-    }
-
-    .arrow:hover {
-        border-right-color: rgba(75, 85, 99, 0.8);
-        border-bottom-color: rgba(75, 85, 99, 0.8);
-    }
+.scroll-button::after {
+  transform: translate(0, 6px);
+  opacity: 0.4;
 }
 
-@keyframes bounce {
+/* 添加动画效果 */
+.scroll-button-down {
+  animation: bounce-down 2s infinite;
+}
+/* 添加动画效果 */
+.scroll-button-up {
+  animation: bounce-up 2s infinite;
+}
 
-    0%,
-    20%,
-    50%,
-    80%,
-    100% {
-        transform: translateY(0) rotate(45deg);
-    }
+@keyframes bounce-down {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-5px);
+  }
+  60% {
+    transform: translateY(-2px);
+  }
+}
+@keyframes bounce-up {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(5px);
+  }
+  60% {
+    transform: translateY(2px);
+  }
+}
 
-    40% {
-        transform: translateY(-10px) rotate(45deg);
-    }
-
-    60% {
-        transform: translateY(-5px) rotate(45deg);
-    }
+.scroll-button:hover {
+  transform: translateY(-3px);
 }
 </style>
