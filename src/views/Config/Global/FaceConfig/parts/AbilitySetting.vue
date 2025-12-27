@@ -1,5 +1,6 @@
 <script setup lang='ts'>
 const definiteTime = defineModel<number | null>('definiteTime', { required: true })
+const winMusic = defineModel<boolean>('winMusic', { required: true })
 </script>
 
 <template>
@@ -26,6 +27,15 @@ const definiteTime = defineModel<number | null>('definiteTime', { required: true
         </div>
       </div>
     </label>
+    <div class="flex items-center justify-between w-full max-w-xs gap-2 mb-3 form-control">
+      <div class="label">
+        <span class="label-text">播放获奖音乐</span>
+      </div>
+      <input
+        type="checkbox" :checked="winMusic" class="border-solid checkbox checkbox-secondary border"
+        @change="winMusic = !winMusic"
+      >
+    </div>
   </fieldset>
 </template>
 

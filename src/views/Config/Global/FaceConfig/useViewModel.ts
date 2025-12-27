@@ -32,6 +32,7 @@ export function useViewModel() {
         getImageList: imageList,
         getIsShowAvatar: isShowAvatar,
         getDefiniteTime: definiteTime,
+        getWinMusic: isWinMusic,
     } = storeToRefs(globalConfig)
     const { getAlreadyPersonList: alreadyPersonList, getNotPersonList: notPersonList } = storeToRefs(personConfig)
 
@@ -53,6 +54,7 @@ export function useViewModel() {
     const currentTitleFontValue = ref(structuredClone(currentTitleFont.value))
     const titleFontSyncGlobalValue = ref(structuredClone(titleFontSyncGlobal.value))
     const definiteTimeValue = ref(structuredClone(definiteTime.value))
+    const isWinMusicValue = ref(structuredClone(isWinMusic.value))
     const formData = ref({
         rowCount: rowCountValue,
     })
@@ -194,6 +196,9 @@ export function useViewModel() {
     watch(definiteTimeValue, () => {
         globalConfig.setDefiniteTime(definiteTimeValue.value)
     })
+    watch(isWinMusicValue, () => {
+        globalConfig.setIsPlayWinMusic(isWinMusicValue.value)
+    })
     onMounted(() => {
     })
     return {
@@ -228,5 +233,6 @@ export function useViewModel() {
         exportAllConfigData,
         importAllConfigData,
         definiteTimeValue,
+        isWinMusicValue,
     }
 }

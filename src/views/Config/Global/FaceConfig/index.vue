@@ -37,6 +37,7 @@ const {
   exportAllConfigData,
   importAllConfigData,
   definiteTimeValue,
+  isWinMusicValue,
 } = useViewModel()
 </script>
 
@@ -87,7 +88,7 @@ const {
         :reset-pattern="resetPattern"
       />
       <!-- 功能设置 -->
-      <AbilitySetting v-model:definite-time="definiteTimeValue" />
+      <AbilitySetting v-model:definite-time="definiteTimeValue" v-model:win-music="isWinMusicValue" />
     </GridWaterfall>
     <!-- </div> -->
   </div>
