@@ -11,6 +11,22 @@
     max-width: calc(var(--container-xs) - 90px);
 }
 
+@utility hide-scrollbar {
+    /* 隐藏 IE/旧 Edge 滚动条 */
+    -ms-overflow-style: none;
+    /* 隐藏 Firefox 滚动条 */
+    scrollbar-width: none;
+
+    /* 隐藏 WebKit 内核（Chrome/Edge/Safari）滚动条 */
+    &::-webkit-scrollbar {
+        display: none;
+        width: 0;
+        height: 0;
+        /* 兜底，确保完全隐藏 */
+    }
+
+}
+
 /* @plugin "@tailwindcss/typography" */
 
 body,

@@ -8,6 +8,7 @@ import { CSS3DObject, CSS3DRenderer } from 'three-css3d'
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js'
 import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { useToast } from 'vue-toast-notification'
+import enterAudio from '@/assets/audio/enter.wav'
 import { useElementPosition, useElementStyle } from '@/hooks/useElement'
 import i18n from '@/locales/i18n'
 import useStore from '@/store'
@@ -16,6 +17,7 @@ import { rgba } from '@/utils/color'
 import { LotteryStatus } from './type'
 import { confettiFire, createSphereVertices, createTableVertices, getRandomElements, initTableData } from './utils'
 
+const maxAudioLimit = 10
 export function useViewModel() {
     const toast = useToast()
     // store里面存储的值
@@ -26,7 +28,21 @@ export function useViewModel() {
         getNotThisPrizePersonList: notThisPrizePersonList,
     } = storeToRefs(personConfig)
     const { getCurrentPrize: currentPrize } = storeToRefs(prizeConfig)
-    const { getCardColor: cardColor, getPatterColor: patternColor, getPatternList: patternList, getTextColor: textColor, getLuckyColor: luckyColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowAvatar: isShowAvatar, getTitleFont: titleFont, getTitleFontSyncGlobal: titleFontSyncGlobal } = storeToRefs(globalConfig)
+    const {
+        getCardColor: cardColor,
+        getPatterColor: patternColor,
+        getPatternList: patternList,
+        getTextColor: textColor,
+        getLuckyColor: luckyColor,
+        getCardSize: cardSize,
+        getTextSize: textSize,
+        getRowCount: rowCount,
+        getIsShowAvatar: isShowAvatar,
+        getTitleFont: titleFont,
+        getTitleFontSyncGlobal: titleFontSyncGlobal,
+        getDefiniteTime: definiteTime,
+        getWinMusic: isPlayWinMusic,
+    } = storeToRefs(globalConfig)
     // three初始值
     const ballRotationY = ref(0)
     const containerRef = ref<HTMLElement>()
@@ -53,7 +69,7 @@ export function useViewModel() {
     const intervalTimer = ref<any>(null)
     const isInitialDone = ref<boolean>(false)
     const animationFrameId = ref<any>(null)
-
+    const playingAudios = ref<HTMLAudioElement[]>([])
     function initThreeJs() {
         const felidView = 40
         const width = window.innerWidth
@@ -367,14 +383,6 @@ export function useViewModel() {
                 personPool.value.splice(index, 1)
             }
         })
-        // for (let i = 0; i < luckyCount.value; i++) {
-        //     if (personPool.value.length > 0) {
-        //         // 解决随机元素概率过于不均等问题
-        //         const randomIndex = Math.floor(Math.random() * (personPool.value.length - 1))
-        //         luckyTargets.value.push(personPool.value[randomIndex])
-        //         personPool.value.splice(randomIndex, 1)
-        //     }
-        // }
 
         toast.open({
             // message: `现在抽取${currentPrize.value.name} ${leftover}人`,
@@ -385,6 +393,13 @@ export function useViewModel() {
         })
         currentStatus.value = LotteryStatus.running
         rollBall(10, 3000)
+        if (definiteTime.value) {
+            setTimeout(() => {
+                if (currentStatus.value === LotteryStatus.running) {
+                    stopLottery()
+                }
+            }, definiteTime.value * 1000)
+        }
     }
     /**
      * @description: 停止抽奖，抽出幸运人
@@ -429,10 +444,40 @@ export function useViewModel() {
                 .easing(TWEEN.Easing.Exponential.InOut)
                 .start()
                 .onComplete(() => {
+                    if (isPlayWinMusic.value) {
+                        playWinMusic()
+                    }
                     confettiFire()
                     resetCamera()
                 })
         })
+    }
+    // 播放音频，中将卡片越多audio对象越多，声音越大
+    function playWinMusic() {
+        if (playingAudios.value.length > maxAudioLimit) {
+            console.log('音频播放数量已达到上限，请勿重复播放')
+            return
+        }
+        const enterNewAudio = new Audio(enterAudio)
+        playingAudios.value.push(enterNewAudio)
+        enterNewAudio.play()
+            .then(() => {
+                // 当音频播放结束后，从数组中移除
+                enterNewAudio.onended = () => {
+                    const index = playingAudios.value.indexOf(enterNewAudio)
+                    if (index > -1) {
+                        playingAudios.value.splice(index, 1)
+                    }
+                }
+            })
+            .catch((error) => {
+                console.error('播放音频失败:', error)
+                // 如果播放失败，也从数组中移除
+                const index = playingAudios.value.indexOf(enterNewAudio)
+                if (index > -1) {
+                    playingAudios.value.splice(index, 1)
+                }
+            })
     }
     /**
      * @description: 继续,意味着这抽奖作数，计入数据库
@@ -441,7 +486,6 @@ export function useViewModel() {
         if (!canOperate.value) {
             return
         }
-
         const customCount = currentPrize.value.separateCount
         if (customCount && customCount.enable && customCount.countList.length > 0) {
             for (let i = 0; i < customCount.countList.length; i++) {
@@ -627,11 +671,6 @@ export function useViewModel() {
         intervalTimer.value = null
         window.removeEventListener('keydown', listenKeyboard)
     })
-    // watch(() => allPersonList.value, (newVal) => {
-    //     if (newVal.length) {
-    //         init()
-    //     }
-    // })
 
     return {
         setDefaultPersonList,

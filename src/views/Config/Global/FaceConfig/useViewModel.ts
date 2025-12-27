@@ -11,7 +11,28 @@ export function useViewModel() {
     const globalConfig = useStore().globalConfig
     const personConfig = useStore().personConfig
     const prizeConfig = useStore().prizeConfig
-    const { getGlobalConfig: globalConfigData, getTopTitle: topTitle, getTheme: localTheme, getPatterColor: patternColor, getPatternList: patternList, getCardColor: cardColor, getLuckyColor: luckyCardColor, getTextColor: textColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowPrizeList: isShowPrizeList, getLanguage: userLanguage, getBackground: backgroundImage, getFont: currentFont, getTitleFont: currentTitleFont, getTitleFontSyncGlobal: titleFontSyncGlobal, getImageList: imageList, getIsShowAvatar: isShowAvatar,
+    const {
+        getGlobalConfig: globalConfigData,
+        getTopTitle: topTitle,
+        getTheme: localTheme,
+        getPatterColor: patternColor,
+        getPatternList: patternList,
+        getCardColor: cardColor,
+        getLuckyColor: luckyCardColor,
+        getTextColor: textColor,
+        getCardSize: cardSize,
+        getTextSize: textSize,
+        getRowCount: rowCount,
+        getIsShowPrizeList: isShowPrizeList,
+        getLanguage: userLanguage,
+        getBackground: backgroundImage,
+        getFont: currentFont,
+        getTitleFont: currentTitleFont,
+        getTitleFontSyncGlobal: titleFontSyncGlobal,
+        getImageList: imageList,
+        getIsShowAvatar: isShowAvatar,
+        getDefiniteTime: definiteTime,
+        getWinMusic: isWinMusic,
     } = storeToRefs(globalConfig)
     const { getAlreadyPersonList: alreadyPersonList, getNotPersonList: notPersonList } = storeToRefs(personConfig)
 
@@ -32,6 +53,8 @@ export function useViewModel() {
     const currentFontValue = ref(structuredClone(currentFont.value))
     const currentTitleFontValue = ref(structuredClone(currentTitleFont.value))
     const titleFontSyncGlobalValue = ref(structuredClone(titleFontSyncGlobal.value))
+    const definiteTimeValue = ref(structuredClone(definiteTime.value))
+    const isWinMusicValue = ref(structuredClone(isWinMusic.value))
     const formData = ref({
         rowCount: rowCountValue,
     })
@@ -170,6 +193,12 @@ export function useViewModel() {
     watch(isShowAvatarValue, () => {
         globalConfig.setIsShowAvatar(isShowAvatarValue.value)
     })
+    watch(definiteTimeValue, () => {
+        globalConfig.setDefiniteTime(definiteTimeValue.value)
+    })
+    watch(isWinMusicValue, () => {
+        globalConfig.setIsPlayWinMusic(isWinMusicValue.value)
+    })
     onMounted(() => {
     })
     return {
@@ -203,5 +232,7 @@ export function useViewModel() {
         resetPattern,
         exportAllConfigData,
         importAllConfigData,
+        definiteTimeValue,
+        isWinMusicValue,
     }
 }

@@ -12,6 +12,8 @@ export const useGlobalConfig = defineStore('global', {
                 isShowAvatar: false,
                 topTitle: i18n.global.t('data.defaultTitle'),
                 language: browserLanguage,
+                definiteTime: null as number | null,
+                winMusic: false,
                 theme: {
                     name: 'dracula',
                     detail: { primary: '#0f5fd3' },
@@ -124,6 +126,14 @@ export const useGlobalConfig = defineStore('global', {
         // 获取是否显示头像
         getIsShowAvatar(state) {
             return state.globalConfig.isShowAvatar
+        },
+        // 获取定时抽取时间
+        getDefiniteTime(state) {
+            return state.globalConfig.definiteTime
+        },
+        // 是否播放获奖音乐
+        getWinMusic(state) {
+            return state.globalConfig.winMusic
         },
     },
     actions: {
@@ -266,14 +276,24 @@ export const useGlobalConfig = defineStore('global', {
         setIsShowAvatar(isShowAvatar: boolean) {
             this.globalConfig.isShowAvatar = isShowAvatar
         },
+        // 设置定时抽取时间
+        setDefiniteTime(definiteTime: number | null) {
+            this.globalConfig.definiteTime = definiteTime
+        },
+        // 设置是否播放获奖音乐
+        setIsPlayWinMusic(winMusic: boolean) {
+            this.globalConfig.winMusic = winMusic
+        },
         // 重置所有配置
         reset() {
             this.globalConfig = {
                 rowCount: 17,
+                winMusic: false,
                 isSHowPrizeList: true,
                 isShowAvatar: false,
                 topTitle: i18n.global.t('data.defaultTitle'),
                 language: browserLanguage,
+                definiteTime: null,
                 theme: {
                     name: 'dracula',
                     detail: { primary: '#0f5fd3' },

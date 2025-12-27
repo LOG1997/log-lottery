@@ -18,48 +18,7 @@
     -webkit-animation: show-operate 0.6s;
 }
 
-.current-prize {
-    position: relative;
-    display: block;
-    overflow: hidden;
-    isolation: isolate;
 
-    border-radius: 20px;
-    padding: 3px;
-}
-
-.current-prize::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 400%;
-    height: 100%;
-    background: linear-gradient(115deg, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b);
-    background-size: 25% 100%;
-    animation: an-at-keyframe-css-at-rule-that-translates-via-the-transform-property-the-background-by-negative-25-percent-of-its-width-so-that-it-gives-a-nice-border-animation_-We-use-the-translate-property-to-have-a-nice-transition-so-it_s-not-a-jerk-of-a-start-or-stop .75s linear infinite;
-    // animation-play-state: paused;
-    translate: -5% 0%;
-    transition: translate 0.25s ease-out;
-    animation-play-state: running;
-    transition-duration: 0.75s;
-    translate: 0% 0%;
-}
-
-.current-prize::after {
-    content: "";
-    position: absolute;
-    inset: 4px;
-    border-top-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-    z-index: -1;
-}
-
-@keyframes an-at-keyframe-css-at-rule-that-translates-via-the-transform-property-the-background-by-negative-25-percent-of-its-width-so-that-it-gives-a-nice-border-animation_-We-use-the-translate-property-to-have-a-nice-transition-so-it_s-not-a-jerk-of-a-start-or-stop {
-    to {
-        transform: translateX(-25%);
-    }
-}
 
 @-webkit-keyframes slide-right {
     0% {

@@ -69,7 +69,7 @@ export function useElementPosition(element: any, count: number, totalCount: numb
     let yTable = 0
     const centerPosition = {
         x: 0,
-        y: windowSize.height / 2 - cardSize.height / 2,
+        y: windowSize.height / 2 - cardSize.height * 0.9,
     }
     // 有一行为偶数的特殊数量
     const specialPosition = [2, 4, 7, 9]
