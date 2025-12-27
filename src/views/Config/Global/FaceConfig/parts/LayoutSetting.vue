@@ -38,7 +38,7 @@ const isShowAvatarValue = defineModel<boolean>('isShowAvatarValue', { required: 
         class="w-full input input-bordered join-item"
       >
       <div class="tooltip join-item" :data-tip="t('tooltip.resetLayout')">
-        <button class="btn btn-neutral w-[120px] join-item" :disabled="isRowCountChange !== 1" @click="resetPersonLayout">
+        <button class="btn btn-neutral w-30 join-item" :disabled="isRowCountChange !== 1" @click="resetPersonLayout">
           <span>{{ t('button.setLayout') }}</span>
           <span v-show="isRowCountChange === 2" class="loading loading-ring loading-md" />
         </button>
