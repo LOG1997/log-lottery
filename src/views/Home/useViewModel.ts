@@ -392,7 +392,9 @@ export function useViewModel() {
         rollBall(10, 3000)
         if (definiteTime.value) {
             setTimeout(() => {
-                stopLottery()
+                if (currentStatus.value === LotteryStatus.running) {
+                    stopLottery()
+                }
             }, definiteTime.value * 1000)
         }
     }
