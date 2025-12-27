@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import type { IPrizeConfig } from '@/types/storeType'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 // import { useI18n } from 'vue-i18n'
 import defaultPrizeImage from '@/assets/images/龙.png'
 import { useGsap } from './useGsap'
@@ -14,25 +14,56 @@ defineProps<{
   addTemporaryPrize: () => void
 }>()
 
-// const { t } = useI18n()
 const prizeShow = defineModel<boolean>('prizeShow')
-const scrollContainerRef = ref(null)
+const scrollContainerRef = ref<any>(null)
+const ulContainerRef = ref<any>(null)
+const isScroll = ref(false)
 const liRefs = ref([])
 const {
   showUpButton,
   showDownButton,
   handleScroll,
-} = useGsap(scrollContainerRef, liRefs)
+} = useGsap(scrollContainerRef, liRefs, isScroll)
+
+// 获取ulContainerRef的高度
+function getUlContainerHeight() {
+  if (ulContainerRef.value) {
+    return ulContainerRef.value.offsetHeight
+  }
+  return 0
+}
+// 获取scrollContainerRef的高度
+function getScrollContainerHeight() {
+  if (scrollContainerRef.value) {
+    return scrollContainerRef.value.offsetHeight
+  }
+  return 0
+}
+
+function getIsScroll() {
+  const ulHeight = getUlContainerHeight()
+  const scrollHeight = getScrollContainerHeight()
+  if (ulHeight > scrollHeight) {
+    isScroll.value = true
+  }
+  else {
+    isScroll.value = false
+    scrollContainerRef.value.style.height = `${ulHeight}px`
+  }
+}
+onMounted (() => {
+  getIsScroll()
+})
 </script>
 
 <template>
   <transition name="prize-list" class="h-full" :appear="true">
     <div v-if="prizeShow && !isMobile && !temporaryPrize.isShow" class="flex items-center h-full relative ">
-      <div class="w-full h-16 flex justify-center scroll-button scroll-button-up absolute top-0 z-50">
+      <div v-if="isScroll" class="w-full h-16 flex justify-center scroll-button scroll-button-up absolute top-0 z-50">
         <SvgIcon v-show="showUpButton" name="chevron-up" size="64px" class="text-gray-200/80 cursor-pointer" @click="handleScroll(-150)" />
       </div>
-      <div ref="scrollContainerRef" :class="showDownButton ? 'scroll-container' : 'scroll-container-end'" class=" h-full overflow-y-auto overflow-x-hidden scroll-smooth hide-scrollbar before:bg-slate-500/50 z-20  rounded-xl">
-        <ul class="flex flex-col gap-1 p-2 ">
+      <div ref="scrollContainerRef" :class="isScroll ? (showDownButton ? 'scroll-container' : 'scroll-container-end') : 'no-scroll bg-slate-500/50'" class="h-full no-before overflow-y-auto overflow-x-hidden  scroll-smooth hide-scrollbar before:bg-slate-500/50 z-20 rounded-xl">
+        <ul ref="ulContainerRef" class="flex flex-col gap-1 p-2">
           <li
             v-for="item in localPrizeList"
             ref="liRefs" :key="item.id"
@@ -73,30 +104,11 @@ const {
             </div>
           </li>
         </ul>
-
-        <div class="h-24" />
+        <div v-if="isScroll" class="h-24" />
       </div>
-      <div class="w-full h-16 flex justify-center scroll-button scroll-button-down absolute bottom-0 z-50">
+      <div v-if="isScroll" class="w-full h-16 flex justify-center scroll-button scroll-button-down absolute bottom-0 z-50">
         <SvgIcon v-show="showDownButton" name="chevron-down" size="64px" class="text-gray-200/80 cursor-pointer" @click="handleScroll(150)" />
       </div>
-      <!-- <div class="flex flex-col gap-3 z-50">
-        <div class="tooltip tooltip-right" :data-tip="t('tooltip.prizeList')">
-          <div
-            class="flex items-center w-6 h-8 rounded-r-lg cursor-pointer prize-option bg-slate-500/50"
-            @click="prizeShow = !prizeShow"
-          >
-            <svg-icon name="arrow_left" class="w-full h-full" />
-          </div>
-        </div>
-        <div class="tooltip tooltip-right" :data-tip="t('tooltip.addActivity')">
-          <div
-            class="flex items-center w-6 h-8 rounded-r-lg cursor-pointer prize-option bg-slate-500/50"
-            @click="addTemporaryPrize"
-          >
-            <svg-icon name="add" class="w-full h-full" />
-          </div>
-        </div>
-      </div> -->
     </div>
   </transition>
 </template>

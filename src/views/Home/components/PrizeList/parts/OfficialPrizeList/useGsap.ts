@@ -1,8 +1,9 @@
+import type { Ref } from 'vue'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue'
+import { onBeforeUnmount, onUnmounted, ref, watch } from 'vue'
 
-export function useGsap(scrollContainerRef: any, liRefs: any) {
+export function useGsap(scrollContainerRef: any, liRefs: any, isScroll: Ref<boolean>) {
     gsap.registerPlugin(ScrollTrigger)
 
     const ctx = ref()
@@ -62,14 +63,20 @@ export function useGsap(scrollContainerRef: any, liRefs: any) {
     function handleScroll(h: number) {
         scrollContainerRef.value.scrollTop += h
     }
-    onMounted(() => {
-        initGsapAnimation()
-        listenScrollContainer()
+    watch(isScroll, (val) => {
+        if (val) {
+            initGsapAnimation()
+            listenScrollContainer()
+        }
     })
     onBeforeUnmount(() => {
+        if (!isScroll.value)
+            return
         removeScrollContainer()
     })
     onUnmounted(() => {
+        if (!isScroll.value)
+            return
         disposeGsapAnimation()
     })
 

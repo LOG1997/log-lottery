@@ -41,6 +41,8 @@
 }
 
 .scroll-container-end {
+    height: 100%;
+
     &::before {
         content: '';
         position: absolute;
@@ -49,6 +51,8 @@
         border-radius: 12px;
     }
 }
+
+.no-scroll {}
 
 @keyframes bounce-down {
 
