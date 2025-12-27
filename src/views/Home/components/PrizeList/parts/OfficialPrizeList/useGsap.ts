@@ -3,7 +3,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { onBeforeUnmount, onUnmounted, ref, watch } from 'vue'
 
-export function useGsap(scrollContainerRef: any, liRefs: any, isScroll: Ref<boolean>) {
+export function useGsap(scrollContainerRef: any, liRefs: any, isScroll: Ref<boolean>, prizeShow: any, temporaryPrizeShow: boolean) {
     gsap.registerPlugin(ScrollTrigger)
 
     const ctx = ref()
@@ -66,8 +66,8 @@ export function useGsap(scrollContainerRef: any, liRefs: any, isScroll: Ref<bool
     function handleScroll(h: number) {
         scrollContainerRef.value.scrollTop += h
     }
-    watch(isScroll, (val) => {
-        if (val) {
+    watch([isScroll, prizeShow, temporaryPrizeShow], ([val1, val2, val3]) => {
+        if (val1 && val2 && !val3) {
             setTimeout(() => {
                 initGsapAnimation()
                 listenScrollContainer()

@@ -1,16 +1,14 @@
 <script setup lang='ts'>
 import type { IPrizeConfig } from '@/types/storeType'
-import { onMounted, ref } from 'vue'
-// import { useI18n } from 'vue-i18n'
+import { ref, watch } from 'vue'
 import defaultPrizeImage from '@/assets/images/龙.png'
 import { useGsap } from './useGsap'
 
-defineProps<{
-  prizeShow: boolean
+const props = defineProps<{
   isMobile: boolean
   localPrizeList: IPrizeConfig[]
   currentPrize: IPrizeConfig
-  temporaryPrize: IPrizeConfig
+  temporaryPrizeShow: boolean
   addTemporaryPrize: () => void
 }>()
 
@@ -19,11 +17,12 @@ const scrollContainerRef = ref<any>(null)
 const ulContainerRef = ref<any>(null)
 const isScroll = ref(false)
 const liRefs = ref([])
+
 const {
   showUpButton,
   showDownButton,
   handleScroll,
-} = useGsap(scrollContainerRef, liRefs, isScroll)
+} = useGsap(scrollContainerRef, liRefs, isScroll, prizeShow, props.temporaryPrizeShow)
 
 // 获取ulContainerRef的高度
 function getUlContainerHeight() {
@@ -43,7 +42,7 @@ function getScrollContainerHeight() {
 function getIsScroll() {
   const ulHeight = getUlContainerHeight()
   const scrollHeight = getScrollContainerHeight()
-  if (ulHeight > scrollHeight) {
+  if (ulHeight > scrollHeight + 20) {
     isScroll.value = true
   }
   else {
@@ -51,14 +50,17 @@ function getIsScroll() {
     scrollContainerRef.value.style.height = `${ulHeight}px`
   }
 }
-onMounted (() => {
-  getIsScroll()
+
+watch ([prizeShow, () => props.temporaryPrizeShow], () => {
+  setTimeout (() => {
+    getIsScroll()
+  }, 0)
 })
 </script>
 
 <template>
   <transition name="prize-list" class="h-full" :appear="true">
-    <div v-show="prizeShow && !isMobile && !temporaryPrize.isShow" class="flex items-center h-full relative ">
+    <div v-show="prizeShow && !isMobile && !temporaryPrizeShow" class="flex items-center h-full relative ">
       <div v-if="isScroll" class="w-full h-16 flex justify-center scroll-button scroll-button-up absolute top-0 z-50">
         <SvgIcon v-show="showUpButton" name="chevron-up" size="64px" class="text-gray-200/80 cursor-pointer" @click="handleScroll(-150)" />
       </div>

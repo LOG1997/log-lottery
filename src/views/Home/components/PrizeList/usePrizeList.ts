@@ -9,8 +9,16 @@ export function usePrizeList(temporaryPrizeRef: any) {
     const prizeConfig = useStore().prizeConfig
     const globalConfig = useStore().globalConfig
     const system = useStore().system
-    const { getPrizeConfig: localPrizeList, getCurrentPrize: currentPrize, getTemporaryPrize: temporaryPrize } = storeToRefs(prizeConfig)
-    const { getIsShowPrizeList: isShowPrizeList, getImageList: localImageList } = storeToRefs(globalConfig)
+    const {
+        getPrizeConfig: localPrizeList,
+        getCurrentPrize: currentPrize,
+        getTemporaryPrize: temporaryPrize,
+    } = storeToRefs(prizeConfig)
+    const {
+        getIsShowPrizeList: isShowPrizeList,
+        getImageList: localImageList,
+    }
+        = storeToRefs(globalConfig)
     const { getIsMobile: isMobile } = storeToRefs(system)
 
     const selectedPrize = ref<IPrizeConfig | null>()
