@@ -1,9 +1,10 @@
 <script setup lang='ts'>
 import type { IPrizeConfig } from '@/types/storeType'
 import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
+// import { useI18n } from 'vue-i18n'
 import EditSeparateDialog from '@/components/NumberSeparate/EditSeparateDialog.vue'
-import OfficialPrizeList from './parts/OfficialPrizeList.vue'
+import OfficialPrizeList from './parts/OfficialPrizeList/index.vue'
+import OperationButton from './parts/OperationButton.vue'
 import TemporaryDialog from './parts/TemporaryDialog.vue'
 import TemporaryList from './parts/TemporaryList.vue'
 import { usePrizeList } from './usePrizeList'
@@ -23,13 +24,13 @@ const {
   localPrizeList,
   isMobile,
 } = usePrizeList(temporaryPrizeRef)
-const { t } = useI18n()
+// const { t } = useI18n()
 
 const selectedPrize = ref<IPrizeConfig | null>()
 </script>
 
 <template>
-  <div class="flex items-center max-h-2/3 overflow-hidden">
+  <div class="flex items-center h-2/3 overflow-hidden">
     <TemporaryDialog
       ref="temporaryPrizeRef"
       v-model:temporary-prize="temporaryPrize"
@@ -51,26 +52,16 @@ const selectedPrize = ref<IPrizeConfig | null>()
         :delete-temporary-prize="deleteTemporaryPrize"
       />
       <OfficialPrizeList
+        v-else
         v-model:prize-show="prizeShow"
         :local-prize-list="localPrizeList"
         :current-prize="currentPrize"
         :temporary-prize="temporaryPrize"
         :is-mobile="isMobile"
         :add-temporary-prize="addTemporaryPrize"
-        :select-prize="selectPrize"
       />
     </div>
-
-    <transition name="prize-operate" :appear="true">
-      <div v-show="!prizeShow" class="tooltip tooltip-right" :data-tip="t('tooltip.prizeList')">
-        <div
-          class="flex items-center w-6 h-8 rounded-r-lg cursor-pointer prize-option bg-slate-500/50"
-          @click="prizeShow = !prizeShow"
-        >
-          <svg-icon name="arrow_right" class="w-full h-full" />
-        </div>
-      </div>
-    </transition>
+    <OperationButton v-if="!temporaryPrize.isShow" v-model:prize-show="prizeShow" :add-temporary-prize="addTemporaryPrize" />
   </div>
 </template>
 

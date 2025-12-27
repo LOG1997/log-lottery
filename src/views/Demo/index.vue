@@ -88,7 +88,6 @@ list.value = [{
 // 为每个 li 元素创建引用
 const liRefs = ref()
 const scrollContainerRef = ref()
-const main = ref()
 const ctx = ref()
 const showUpButton = ref(false)
 const showDownButton = ref(true)
@@ -108,20 +107,8 @@ function initGsapAnimation() {
           scrub: true,
         },
       })
-    //   gsap.to(box, {
-    //     rotationX: -90,
-    //     rotateZ: -20,
-    //     opacity: 0,
-    //     scrollTrigger: {
-    //       trigger: box,
-    //       scroller: scrollContainerRef.value, // <- Specify the scroller!
-    //       start: 'bottom 10%',
-    //       end: 'top 70%',
-    //       scrub: true,
-    //     },
-    //   })
     })
-  }, main.value) // <- Scope!
+  }, scrollContainerRef.value) // <- Scope!
 }
 
 function disposeGsapAnimation() {
@@ -177,7 +164,7 @@ onUnmounted(() => {
       <SvgIcon v-show="showUpButton" name="chevron-up" size="64px" class="text-gray-200/80 cursor-pointer" @click="handleScroll(-100)" />
     </div>
     <div ref="scrollContainerRef" class="h-150 w-48 overflow-y-auto overflow-x-hidden relative scroll-smooth hide-scrollbar">
-      <ul ref="main" class="li-container relative">
+      <ul class="li-container relative bg-slate-500/50">
         <li
           v-for="item in list" :key="item.value" ref="liRefs" :style="{ backgroundColor: item.color }"
           class="w-full h-28 text-center leading-30 cursor-pointer duration-300"
