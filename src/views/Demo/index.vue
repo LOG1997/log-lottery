@@ -47,6 +47,42 @@ list.value = [{
   label: 10,
   value: 10,
   color: 'cyan',
+}, {
+  label: 11,
+  value: 11,
+  color: 'white',
+}, {
+  label: 12,
+  value: 12,
+  color: 'black',
+}, {
+  label: 13,
+  value: 13,
+  color: 'orange',
+}, {
+  label: 14,
+  value: 14,
+  color: 'yellow',
+}, {
+  label: 15,
+  value: 14,
+  color: 'pink',
+}, {
+  label: 15,
+  value: 15,
+  color: 'orange',
+}, {
+  label: 16,
+  value: 16,
+  color: 'yellow',
+}, {
+  label: 17,
+  value: 17,
+  color: 'green',
+}, {
+  label: 18,
+  value: 18,
+  color: 'purple',
 }]
 
 // 为每个 li 元素创建引用
@@ -72,18 +108,18 @@ function initGsapAnimation() {
           scrub: true,
         },
       })
-      gsap.to(box, {
-        rotationX: -90,
-        rotateZ: -20,
-        opacity: 0,
-        scrollTrigger: {
-          trigger: box,
-          scroller: scrollContainerRef.value, // <- Specify the scroller!
-          start: 'bottom 10%',
-          end: 'top 70%',
-          scrub: true,
-        },
-      })
+    //   gsap.to(box, {
+    //     rotationX: -90,
+    //     rotateZ: -20,
+    //     opacity: 0,
+    //     scrollTrigger: {
+    //       trigger: box,
+    //       scroller: scrollContainerRef.value, // <- Specify the scroller!
+    //       start: 'bottom 10%',
+    //       end: 'top 70%',
+    //       scrub: true,
+    //     },
+    //   })
     })
   }, main.value) // <- Scope!
 }
