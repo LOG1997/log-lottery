@@ -20,7 +20,7 @@ const definiteTime = defineModel<number | null>('definiteTime', { required: true
             </div>
           </label>
           <input
-            v-model="definiteTime" type="number" placeholder="Type here"
+            v-model="definiteTime" type="number" placeholder="开始后定时抽取"
             class="w-full max-w-xs input input-bordered"
           >
         </div>
