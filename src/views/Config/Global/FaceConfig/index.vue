@@ -1,11 +1,43 @@
 <script setup lang='ts'>
 import { useI18n } from 'vue-i18n'
 import GridWaterfall from '@/components/Waterfall/index.vue'
-import { DataSetting, LayoutSetting, PatternSetting, TextSetting, ThemeSetting } from './parts'
+import { AbilitySetting, DataSetting, LayoutSetting, PatternSetting, TextSetting, ThemeSetting } from './parts'
 import { useViewModel } from './useViewModel'
 
 const { t } = useI18n()
-const { resetData, topTitleValue, languageValue, textSizeValue, currentFontValue, currentTitleFontValue, titleFontSyncGlobalValue, languageList, formErr, formData, cardSizeValue, isShowPrizeListValue, isShowAvatarValue, resetPersonLayout, isRowCountChange, themeValue, backgroundImageValue, cardColorValue, luckyCardColorValue, textColorValue, patternColorValue, imageList, rowCount, cardColor, patternColor, patternList, clearPattern, resetPattern, exportAllConfigData, importAllConfigData } = useViewModel()
+const {
+  resetData,
+  topTitleValue,
+  languageValue,
+  textSizeValue,
+  currentFontValue,
+  currentTitleFontValue,
+  titleFontSyncGlobalValue,
+  languageList,
+  formErr,
+  formData,
+  cardSizeValue,
+  isShowPrizeListValue,
+  isShowAvatarValue,
+  resetPersonLayout,
+  isRowCountChange,
+  themeValue,
+  backgroundImageValue,
+  cardColorValue,
+  luckyCardColorValue,
+  textColorValue,
+  patternColorValue,
+  imageList,
+  rowCount,
+  cardColor,
+  patternColor,
+  patternList,
+  clearPattern,
+  resetPattern,
+  exportAllConfigData,
+  importAllConfigData,
+  definiteTimeValue,
+} = useViewModel()
 </script>
 
 <template>
@@ -54,6 +86,8 @@ const { resetData, topTitleValue, languageValue, textSizeValue, currentFontValue
         :clear-pattern="clearPattern"
         :reset-pattern="resetPattern"
       />
+      <!-- 功能设置 -->
+      <AbilitySetting v-model:definite-time="definiteTimeValue" />
     </GridWaterfall>
     <!-- </div> -->
   </div>

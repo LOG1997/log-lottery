@@ -26,7 +26,20 @@ export function useViewModel() {
         getNotThisPrizePersonList: notThisPrizePersonList,
     } = storeToRefs(personConfig)
     const { getCurrentPrize: currentPrize } = storeToRefs(prizeConfig)
-    const { getCardColor: cardColor, getPatterColor: patternColor, getPatternList: patternList, getTextColor: textColor, getLuckyColor: luckyColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount, getIsShowAvatar: isShowAvatar, getTitleFont: titleFont, getTitleFontSyncGlobal: titleFontSyncGlobal } = storeToRefs(globalConfig)
+    const {
+        getCardColor: cardColor,
+        getPatterColor: patternColor,
+        getPatternList: patternList,
+        getTextColor: textColor,
+        getLuckyColor: luckyColor,
+        getCardSize: cardSize,
+        getTextSize: textSize,
+        getRowCount: rowCount,
+        getIsShowAvatar: isShowAvatar,
+        getTitleFont: titleFont,
+        getTitleFontSyncGlobal: titleFontSyncGlobal,
+        getDefiniteTime: definiteTime,
+    } = storeToRefs(globalConfig)
     // three初始值
     const ballRotationY = ref(0)
     const containerRef = ref<HTMLElement>()
@@ -367,14 +380,6 @@ export function useViewModel() {
                 personPool.value.splice(index, 1)
             }
         })
-        // for (let i = 0; i < luckyCount.value; i++) {
-        //     if (personPool.value.length > 0) {
-        //         // 解决随机元素概率过于不均等问题
-        //         const randomIndex = Math.floor(Math.random() * (personPool.value.length - 1))
-        //         luckyTargets.value.push(personPool.value[randomIndex])
-        //         personPool.value.splice(randomIndex, 1)
-        //     }
-        // }
 
         toast.open({
             // message: `现在抽取${currentPrize.value.name} ${leftover}人`,
@@ -385,6 +390,11 @@ export function useViewModel() {
         })
         currentStatus.value = LotteryStatus.running
         rollBall(10, 3000)
+        if (definiteTime.value) {
+            setTimeout(() => {
+                stopLottery()
+            }, definiteTime.value * 1000)
+        }
     }
     /**
      * @description: 停止抽奖，抽出幸运人
@@ -627,11 +637,6 @@ export function useViewModel() {
         intervalTimer.value = null
         window.removeEventListener('keydown', listenKeyboard)
     })
-    // watch(() => allPersonList.value, (newVal) => {
-    //     if (newVal.length) {
-    //         init()
-    //     }
-    // })
 
     return {
         setDefaultPersonList,
