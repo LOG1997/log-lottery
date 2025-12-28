@@ -16,6 +16,7 @@ import ImportExcelWorker from './importExcel.worker?worker'
 type IBasePersonConfig = Pick<IPersonConfig, 'uid' | 'name' | 'department' | 'identity' | 'avatar'>
 
 export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<HTMLInputElement> }) {
+    const baseUrl = import.meta.env.BASE_URL
     const toast = useToast()
     const worker: Worker | null = new ImportExcelWorker()
     const loading = inject(loadingKey)
@@ -62,6 +63,12 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
                 if (e.data.type === 'done') {
                     personConfig.resetPerson()
                     personConfig.addNotPersonList(e.data.data)
+                    // 提示导入成功
+                    toast.open({
+                        message: '导入成功',
+                        type: 'success',
+                        position: 'top-right',
+                    })
                     // 导入成功后清空file input
                     clearFileInput()
                 }
@@ -84,6 +91,25 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
         if (exportInputFileRef.value) {
             exportInputFileRef.value.value = ''
         }
+    }
+    function downloadTemplate() {
+        // 下载
+        const templateFileName = i18n.global.t('data.xlsxName')
+        const fileUrl = `${baseUrl}${templateFileName}`
+        fetch(fileUrl)
+            .then(res => res.blob())
+            .then((blob) => {
+                const url = window.URL.createObjectURL(blob)
+                const a = document.createElement('a')
+                a.href = url
+                a.download = templateFileName
+                a.click()
+                toast.open({
+                    message: '下载成功',
+                    type: 'success',
+                    position: 'top-right',
+                })
+            })
     }
     // 导出数据
     function exportData() {
@@ -140,7 +166,7 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
     }
     function addOnePerson(addOnePersonDrawerRef: any, event: any) {
         event.preventDefault()
-        // 表单中的验证信息清除 
+        // 表单中的验证信息清除
 
         const personData = addOtherInfo([toRaw(singlePersonData.value)])
         personData[0].id = uuidv4()
@@ -160,5 +186,6 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
         addOnePerson,
         addPersonModalVisible,
         singlePersonData,
+        downloadTemplate,
     }
 }

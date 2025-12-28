@@ -13,8 +13,18 @@ const resetDataDialogRef = ref()
 const delAllDataDialogRef = ref()
 const exportInputFileRef = ref()
 const addOnePersonDrawerRef = ref()
-const baseUrl = import.meta.env.BASE_URL
-const { resetData, deleteAll, handleFileChange, exportData, addOnePerson, singlePersonData, alreadyPersonList, allPersonList, tableColumnList } = useViewModel({ exportInputFileRef })
+const {
+  resetData,
+  deleteAll,
+  handleFileChange,
+  exportData,
+  addOnePerson,
+  singlePersonData,
+  alreadyPersonList,
+  allPersonList,
+  tableColumnList,
+  downloadTemplate,
+} = useViewModel({ exportInputFileRef })
 const { t } = useI18n()
 const limitType = '.xlsx,.xls'
 </script>
@@ -50,10 +60,13 @@ const limitType = '.xlsx,.xls'
             {{ t('button.allDelete') }}
           </button>
           <div class="tooltip tooltip-bottom" :data-tip="t('tooltip.downloadTemplateTip')">
-            <a
+            <button class="no-underline btn btn-secondary btn-sm" @click="downloadTemplate">
+              {{ t('button.downloadTemplate') }}
+            </button>
+            <!-- <a
               class="no-underline btn btn-secondary btn-sm" :download="t('data.xlsxName')" target="_blank"
               :href="`${baseUrl}${t('data.xlsxName')}`"
-            >{{ t('button.downloadTemplate') }}</a>
+            >{{ t('button.downloadTemplate') }}</a> -->
           </div>
           <div class="">
             <label for="explore">
