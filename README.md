@@ -69,32 +69,26 @@ or
 ## 预览
 
 首页
-
-![image_home](./static/images/home.png)
-
-![image_home_prize_list](./static//images/home_prizelist.png)
+<div align="center">
+    <img src="./static/images/home.png" alt="img2-1" width="400" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
+    <img src="./static//images/home_prizelist.png" alt="img2-2" width="400" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
+</div>
 
 抽奖
-
-![image_lottery](./static/images/lottery-enter.png)
-
-![image_lottery_done](./static/images/lottery-done.png)
+<div align="center">
+    <img src="./static/images/lottery-enter.png" alt="img2-1" width="400" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
+    <img src="./static/images/lottery-done.png" alt="img2-2" width="400" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
+</div>
 
 配置
-
-![image_config_person_all](./static/images/config_personall.png)
-
-![image_config_prize_list](./static/images/config_prize.png)
-
-![image_config_view](./static/images/config-view.png)
-
-![image_config_pattern](./static/images/config_pattern.png)
+<div align="center">
+    <img src="./static/images/config_personall.png" alt="img2-1" width="400" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
+    <img src="./static/images/config_prize.png" alt="img2-1" width="400" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
+    <img src="./static/images/config-view.png" alt="img2-1" width="400" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
+    <img src="./static/images/config_pattern.png" alt="img2-1" width="400" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
+</div>
 
 图片音乐配置
-
-![image_config_img](./static/images/image_config.png)
-
-![image_music](./static/images/music_music.png)
 
 ## 技术
 
@@ -136,7 +130,7 @@ npm run build
 
 以下任意方式选一种即可
 
-1. 拉取镜像
+1. 拉取镜像，从Docker Hub拉取镜像[log-lottery](https://hub.docker.com/r/log1997/log-lottery)
 
     ```bash
     docker pull log1997/log-lottery:latest
@@ -160,7 +154,24 @@ npm run build
     docker run -d -p 9279:80 log-lottery
     ```
 
-容器运行成功后即可在本地通过<http://localhost:9279/log-lottery/>访问
+    容器运行成功后即可在本地通过<http://localhost:9279/log-lottery/>访问
+
+3. 软件安装包
+
+    可前往[Releases](https://github.com/LOG1997/log-lottery/releases)下载。
+    目前只支持windows平台使用，跨平台安装包暂不支持，如有需要请自行编译，参照[贡献文档](https://github.com/LOG1997/log-lottery/blob/dev/.github/CONTRIBUTING.md)
+
+## 支持项目
+
+<h3>💝 赞助支持</h3>
+
+<p><em>如果您觉得 log-lottery 对您有帮助，欢迎赞助支持，您的支持是我们不断前进的动力！</em></p>
+
+<div>
+ <img src="./static/images/ZanShang.png" height="240" alt="WeChat Code">
+</div>
+
+<br>
 
 ## Star History
 
