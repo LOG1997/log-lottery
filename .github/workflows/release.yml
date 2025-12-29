@@ -52,6 +52,16 @@ jobs:
         with:
           name: web-build
           path: dist.zip
+          
+      - name: Prepare GitHub Pages artifact
+        run: |
+          cp -r dist-prod dist-gh-pages
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-pages
+          path: dist-gh-pages
 
   publish-tauri:
     permissions:
@@ -99,8 +109,37 @@ jobs:
           prerelease: false
           run: pnpm tauri build
 
+  deploy-gh-pages:
+    needs: build-web
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Download GitHub Pages artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+          path: dist-gh-pages
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload to GitHub Pages
+        uses: actions/deploy-pages@v2
+        id: deployment
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist-gh-pages
+
   release:
-    needs: [build-web, publish-tauri]
+    needs: [build-web, publish-tauri, deploy-gh-pages]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
