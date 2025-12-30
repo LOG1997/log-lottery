@@ -19,7 +19,7 @@ const uploadVisible = ref(false)
 <template>
   <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs pb-10">
     <legend class="fieldset-legend">
-      {{ t('table.DataSetting') }}
+      {{ t('table.dataSetting') }}
     </legend>
     <dialog id="my_modal_1" ref="resetDataDialogRef" class="border-none modal">
       <div class="modal-box">

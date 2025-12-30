@@ -46,20 +46,20 @@ const titleFontSyncGlobalValue = defineModel<boolean>('titleFontSyncGlobalValue'
     </label>
     <label class="w-full max-w-xs form-control mt-3">
       <div class="label">
-        <span class="label-text">全局字体</span>
+        <span class="label-text">{{ t('table.globalFont') }}</span>
       </div>
       <SelectFont v-model:selected-font="currentFontValue" />
     </label>
     <label class="flex flex-row w-full max-w-xs mt-5 gap-10 form-control">
       <div class="w-3/4">
         <div class="label">
-          <span class="label-text">标题字体</span>
+          <span class="label-text">{{ t('table.titleFont') }}</span>
         </div>
         <SelectFont v-model:selected-font="currentTitleFontValue" :disabled="titleFontSyncGlobalValue" />
       </div>
       <div class="flex flex-col gap-4">
         <div class="label">
-          <span class="label-text">同全局</span>
+          <span class="label-text">{{ t('table.syncGlobalFont') }}</span>
         </div>
         <input type="checkbox" :checked="titleFontSyncGlobalValue" class="border-solid checkbox checkbox-secondary border" @change="titleFontSyncGlobalValue = !titleFontSyncGlobalValue">
       </div>

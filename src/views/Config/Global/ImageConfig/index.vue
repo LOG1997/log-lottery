@@ -40,7 +40,7 @@ watch(() => imgUploadToast.value, (val) => {
   <UploadDialog v-model:visible="uploadVisible" />
 
   <div>
-    <PageHeader title="图片管理">
+    <PageHeader :title="t('sidebar.imagesManagement')">
       <template #buttons>
         <div class="">
           <label for="explore">
