@@ -1,4 +1,5 @@
 import * as XLSX from 'xlsx'
+import i18n from '@/locales/i18n'
 import { addOtherInfo } from '@/utils'
 // 定义消息类型
 interface WorkerMessage {
