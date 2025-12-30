@@ -26,7 +26,7 @@ const patternColorValue = defineModel<string>('patternColorValue')
 <template>
   <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs pb-10">
     <legend class="fieldset-legend">
-      主题设置
+      {{ t('table.themeSetting') }}
     </legend>
 
     <div class="w-full max-w-xs form-control">
@@ -62,11 +62,12 @@ const patternColorValue = defineModel<string>('patternColorValue')
           <span class="truncate w-option-xs">{{ item.name }}</span>
         </option>
       </select>
-      <span class="label">请先前往
+      <span class="label">
+        {{ t('tooltip.pleaseGoto') }}
         <a class="link link-info" @click="() => { router.push('image') }">
-          图片管理
+          {{ t('sidebar.imagesManagement') }}
         </a>
-        上传图片</span>
+        {{ t('tooltip.uploadImage') }}</span>
     </div>
     <div class="grid w-full grid-cols-2 gap-4">
       <div class="flex flex-col items-center max-w-xs gap-1 form-control">

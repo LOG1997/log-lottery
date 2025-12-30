@@ -2,7 +2,6 @@
 import { useI18n } from 'vue-i18n'
 import DaiysuiTable from '@/components/DaiysuiTable/index.vue'
 import PageHeader from '@/components/PageHeader/index.vue'
-import { Switch } from '@/components/ui/switch'
 import { useViewModel } from './useViewModel'
 
 const { t } = useI18n()

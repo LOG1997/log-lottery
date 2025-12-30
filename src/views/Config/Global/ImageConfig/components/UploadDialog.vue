@@ -96,14 +96,14 @@ watch(visible, (newVal) => {
   <CustomDialog
     ref="uploadDialogRef"
     v-model:visible="visible"
-    title="图片上传"
+    :title="t('dialog.uploadImageTitle')"
     :submit-func="submitUpload"
     class=""
   >
     <template #content>
       <div class="flex flex-col items-center gap-6 w-full px-12">
         <FileUpload v-if="visible" :limit-type="limitType" @upload-file="uploadFile" />
-        <input v-model="fileName" :disabled="imageData === null" type="text" placeholder="图片名称" class="input w-full">
+        <input v-model="fileName" :disabled="imageData === null" type="text" :placeholder="t('placeHolder.imageName')" class="input w-full">
       </div>
     </template>
   </CustomDialog>

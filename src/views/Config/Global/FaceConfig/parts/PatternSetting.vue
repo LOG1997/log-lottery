@@ -17,7 +17,7 @@ const { t } = useI18n()
 <template>
   <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs pb-10">
     <legend class="fieldset-legend">
-      图案设置
+      {{ t('table.patternSetting') }}
     </legend>
     <div class="items-center gap-24 mb-0 form-control">
       <div>
