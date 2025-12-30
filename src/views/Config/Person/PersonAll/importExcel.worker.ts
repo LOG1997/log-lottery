@@ -1,5 +1,4 @@
 import * as XLSX from 'xlsx'
-import i18n from '@/locales/i18n'
 import { addOtherInfo } from '@/utils'
 // 定义消息类型
 interface WorkerMessage {
@@ -37,7 +36,7 @@ globalThis.onmessage = async (e: MessageEvent<WorkerMessage>) => {
         globalThis.postMessage({
           type: 'error',
           data: null,
-          message: i18n.global.t('error.excelFileError'),
+          message: 'not right template',
         })
         return
       }
