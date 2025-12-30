@@ -40,13 +40,13 @@ export default defineConfig(({ mode }) => {
                 algorithm: 'gzip',
                 ext: '.gz',
             }),
-            visualizer({
+            mode === 'prebuild' ? visualizer({
                 emitFile: true, // 是否被触摸
                 filename: 'test.html', // 生成分析网页文件名
                 open: true, // 在默认用户代理中打开生成的文件
                 gzipSize: true, // 从源代码中收集 gzip 大小并将其显示在图表中
                 brotliSize: true, // 从源代码中收集 brotli 大小并将其显示在图表中
-            }),
+            }) : null,
 
             createSvgIconsPlugin({
                 // 指定需要缓存的图标文件夹

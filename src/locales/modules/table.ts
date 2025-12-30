@@ -47,6 +47,9 @@ export const tableEn = {
   timedStop: 'Timed Stop',
   playWinMusic: 'Play Win Music',
   resetAllData: 'Reset All Data',
+  globalFont: 'Global Font',
+  titleFont: 'Title Font',
+  syncGlobalFont: 'Sync Global Font',
 }
 
 export const tableZhCn = {
@@ -95,7 +98,9 @@ export const tableZhCn = {
   timedStop: '定时停止',
   playWinMusic: '播放中奖音乐',
   resetAllData: '重置数据',
-
+  globalFont: '全局字体',
+  titleFont: '标题字体',
+  syncGlobalFont: '同步全局字体',
 }
 
 export const table = {

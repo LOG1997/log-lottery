@@ -37,7 +37,7 @@ globalThis.onmessage = async (e: MessageEvent<WorkerMessage>) => {
         globalThis.postMessage({
           type: 'error',
           data: null,
-          message: i18n.global.t('error.excelFileError'),
+          message: 'not right template',
         })
         return
       }
