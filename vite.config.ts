@@ -2,6 +2,7 @@
 
 import { createRequire } from 'node:module'
 import path from 'node:path'
+import tailwindcss from '@tailwindcss/vite'
 import legacy from '@vitejs/plugin-legacy'
 import vue from '@vitejs/plugin-vue'
 import { visualizer } from 'rollup-plugin-visualizer'
@@ -21,11 +22,11 @@ const process = require('node:process')
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, __dirname)
     const chunkName = mode === 'prebuild' ? '[name]' : 'chunk'
-
     return {
-        base: mode === 'file' ? './' : '/log-lottery/',
+        base: (mode === 'file' || process.env.TAURI_ENV_PLATFORM) ? './' : '/log-lottery/',
         plugins: [
             vue(),
+            tailwindcss(),
             mode === 'file'
                 ? legacy({
                     additionalLegacyPolyfills: ['regenerator-runtime/runtime'],
@@ -39,13 +40,13 @@ export default defineConfig(({ mode }) => {
                 algorithm: 'gzip',
                 ext: '.gz',
             }),
-            visualizer({
+            mode === 'prebuild' ? visualizer({
                 emitFile: true, // 是否被触摸
                 filename: 'test.html', // 生成分析网页文件名
                 open: true, // 在默认用户代理中打开生成的文件
                 gzipSize: true, // 从源代码中收集 gzip 大小并将其显示在图表中
                 brotliSize: true, // 从源代码中收集 brotli 大小并将其显示在图表中
-            }),
+            }) : null,
 
             createSvgIconsPlugin({
                 // 指定需要缓存的图标文件夹
@@ -88,9 +89,15 @@ export default defineConfig(({ mode }) => {
             //     ]
             // }
         },
+        clearScreen: false,
         server: {
             host: 'localhost',
             port: 6719,
+            strictPort: true,
+            watch: {
+                // 告诉 Vite 忽略监听 `src-tauri` 目录
+                ignored: ['**/src-tauri/**'],
+            },
             proxy: {
                 '/api': {
                     target: env.VITE_BASE_URL,
@@ -101,6 +108,8 @@ export default defineConfig(({ mode }) => {
                 },
             },
         },
+        // 添加有关当前构建目标的额外前缀，使这些 CLI 设置的 Tauri 环境变量可以在客户端代码中访问
+        envPrefix: ['VITE_', 'TAURI_ENV_*'],
         resolve: {
             alias: {
                 '@': path.resolve(__dirname, './src'),
@@ -108,7 +117,13 @@ export default defineConfig(({ mode }) => {
         },
         build: {
             outDir: mode === 'file' ? 'dist-file' : 'dist',
-            minify: 'terser',
+            // Tauri 在 Windows 上使用 Chromium，在 macOS 和 Linux 上使用 WebKit
+            // target: (process.env.TAURI_ENV_PLATFORM && mode !== 'file')
+            //     ? (process.env.TAURI_ENV_PLATFORM === 'windows' ? 'chrome105' : 'safari13')
+            //     : 'es2020', // 普通前端可使用更高版本 JS 支持
+            minify: process.env.TAURI_ENV_PLATFORM
+                ? (!process.env.TAURI_ENV_DEBUG ? 'esbuild' : false)
+                : 'terser', // 普通构建推荐使用 terser 提供更强压缩选项
             terserOptions: {
                 compress: {
                     // 生产环境时移除console
@@ -119,7 +134,7 @@ export default defineConfig(({ mode }) => {
             //   关闭文件计算
             reportCompressedSize: false,
             //   关闭生成map文件 可以达到缩小打包体积
-            sourcemap: false, // 这个生产环境一定要关闭，不然打包的产物会很大
+            sourcemap: process.env.NODE_ENV === 'development' || !!process.env.TAURI_ENV_DEBUG, // 这个生产环境一定要关闭，不然打包的产物会很大
             rollupOptions: {
                 output: {
                     chunkFileNames: `js/${chunkName}-[hash].js`, // 引入文件名的名称
@@ -143,6 +158,7 @@ export default defineConfig(({ mode }) => {
             environment: 'jsdom',
             // include: ['**/__tests__/**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
             // passWithNoTests: true,
+            testTimeout: 10000,
             transformMode: {
                 web: [/\.[jt]sx$/],
             },

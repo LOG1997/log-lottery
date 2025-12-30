@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import dayjs from 'dayjs'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
@@ -8,6 +9,7 @@ const { t } = useI18n()
 const router = useRouter()
 const route = useRoute()
 const menuList = ref<any[]>(configRoutes.children)
+const currentYear = dayjs().year()
 
 function cleanMenuList(menu: any) {
   const newList = menu
@@ -67,7 +69,7 @@ function skip(path: string) {
     </ul>
     <router-view class="flex-1 mt-5" />
   </div>
-  <footer class="p-10 rounded footer footer-center bg-base-200 text-base-content">
+  <footer class="p-10 rounded footer footer-center bg-base-200 h-70 flex flex-col gap-4 text-base-content">
     <nav class="grid grid-flow-col gap-4">
       <a class="cursor-pointer link link-hover text-inherit" target="_blank" href="https://1kw20.fun">{{ t('footer.self-reflection') }}</a>
     </nav>
@@ -86,10 +88,10 @@ function skip(path: string) {
       </div>
     </nav>
     <aside>
-      <p class="p-0 m-0">
+      <a class="p-0 m-0 hover:text-primary" href="https://beian.miit.gov.cn/" target="_blank">
         蜀ICP备2021028666号
-      </p>
-      <p>Copyright © 2024 - All right reserved by Log1997</p>
+      </a>
+      <p>Copyright © {{ currentYear }} - All right reserved by <a class="link link-primary" href="https://github.com/LOG1997" target="_blank">log1997</a></p>
     </aside>
   </footer>
 </template>

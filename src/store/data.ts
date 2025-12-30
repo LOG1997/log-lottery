@@ -1,8 +1,8 @@
 import type { IPersonConfig, IPrizeConfig } from '@/types/storeType'
 
 const originUrl = 'https://to2026.xyz'
-
-export const defaultPersonList = <IPersonConfig[]>
+type IPersonConfigWithoutUuid = Omit<IPersonConfig, 'uuid'>
+export const defaultPersonList = <IPersonConfigWithoutUuid[]>
     [
         { uid: 'U100156001', name: '朱厚熜', department: '皇室', identity: '万岁爷', avatar: 'https://img1.baidu.com/it/u=2165937980,813753762&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500', x: 1, y: 1, id: 0, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] },
         { uid: 'U100156002', name: '朱载垕', department: '皇室', identity: '裕王', avatar: 'https://img1.baidu.com/it/u=2165937980,813753762&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500', x: 2, y: 1, id: 1, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] },
@@ -278,4 +278,4 @@ export const defaultImageList = [
         url: `${originUrl}/resource/image/image5.png`,
     },
 ]
-export const defaultPatternList = [21, 38, 55, 54, 53, 70, 87, 88, 89, 23, 40, 57, 74, 91, 92, 93, 76, 59, 42, 25, 24, 27, 28, 29, 46, 63, 62, 61, 78, 95, 96, 97, 20, 19, 31, 48, 65, 66, 67, 84, 101, 100, 99, 32, 33]
+export const defaultPatternList = [21, 38, 55, 54, 53, 70, 87, 88, 89, 23, 40, 57, 74, 91, 92, 76, 59, 42, 25, 24, 27, 28, 29, 46, 63, 62, 61, 78, 95, 96, 97, 20, 19, 31, 48, 66, 67, 84, 101, 100, 32, 33, 93, 65, 82, 99]

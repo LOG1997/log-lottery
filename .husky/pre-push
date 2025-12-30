@@ -1,0 +1,38 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# 读取 stdin 中的所有内容
+while read local_ref local_sha remote_ref remote_sha; do
+  # 检查是否是 tag 推送
+  case "$remote_ref" in
+    refs/tags/*)
+      # 提取 tag 名称
+      TAG="${remote_ref#refs/tags/}"
+      
+      # 只校验以 "v" 开头的 tag
+      if [[ $TAG == v* ]]; then
+        echo "🏷️  检查推送的 tag: $TAG"
+        node .husky/scripts/verifyTagVersion.js "$TAG"
+      else
+        echo "ℹ️  非版本 tag ($TAG)，跳过校验"
+      fi
+      ;;
+    *)
+  esac
+done
+
+# 如果 stdin 为空（没有推送任何引用），也检查最新 tag
+if [ -t 0 ]; then
+  LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null)
+  if [ $? -eq 0 ]; then
+    # 只校验以 "v" 开头的 tag
+    if [[ $LATEST_TAG == v* ]]; then
+      echo "🏷️  检查最新的 tag: $LATEST_TAG"
+      node .husky/scripts/verifyTagVersion.js "$LATEST_TAG"
+    else
+      echo "ℹ️  最新 tag ($LATEST_TAG) 不是版本 tag，跳过校验"
+    fi
+  else
+    echo "⚠️  没有找到任何 tag，跳过版本校验"
+  fi
+fi
