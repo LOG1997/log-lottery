@@ -17,19 +17,20 @@ log-lottery是一个可配置可定制化的抽奖应用，炫酷3D球体，可�
 
 > 如果进入网站遇到图片无法显示或有报错的情况，请先到【全局配置】-【界面配置】菜单中点击【重置所有数据】按钮清除数据后进行更新。
 
-> 该项目将在近期进行**内部代码重构**及**开发新功能**，预计元旦节前三天上线新版本。
-
 ## 要求
 
 使用PC端最新版Chrome或Edge浏览器。
 
 访问地址：
 
-<https://to2026.xyz/log-lottery>
+<https://lottery.to2026.xyz/log-lottery>
 
 or
 
 <https://log1997.github.io/log-lottery/>
+
+开发仓促，若以上网站内容存在bug还请宽容。
+如果想要访问2025年12月31日前的版本，请前往：<https://lottery.to2026.xyz/log-lottery>
 
 ## TODO
 
@@ -70,32 +71,26 @@ or
 ## 预览
 
 首页
-
-![image_home](./static/images/home.png)
-
-![image_home_prize_list](./static//images/home_prizelist.png)
+<div align="center">
+    <img src="./static/images/home.png" alt="img2-1" width="400" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
+    <img src="./static//images/home_prizelist.png" alt="img2-2" width="400" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
+</div>
 
 抽奖
-
-![image_lottery](./static/images/lottery-enter.png)
-
-![image_lottery_done](./static/images/lottery-done.png)
+<div align="center">
+    <img src="./static/images/lottery-enter.png" alt="img2-1" width="400" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
+    <img src="./static/images/lottery-done.png" alt="img2-2" width="400" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
+</div>
 
 配置
-
-![image_config_person_all](./static/images/config_personall.png)
-
-![image_config_prize_list](./static/images/config_prize.png)
-
-![image_config_view](./static/images/config-view.png)
-
-![image_config_pattern](./static/images/config_pattern.png)
+<div align="center">
+    <img src="./static/images/config_personall.png" alt="img2-1" width="400" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
+    <img src="./static/images/config_prize.png" alt="img2-1" width="400" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
+    <img src="./static/images/config-view.png" alt="img2-1" width="400" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
+    <img src="./static/images/config_pattern.png" alt="img2-1" width="400" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
+</div>
 
 图片音乐配置
-
-![image_config_img](./static/images/image_config.png)
-
-![image_music](./static/images/music_music.png)
 
 ## 技术
 
@@ -131,31 +126,54 @@ or
 npm run build
 ```
 
-若想直接以打开html文件的方式运行，请执行以下命令进行打包。打包完成后在dist目录中直接打开index.html即可。
-
-```bash
-pnpm build:file
-or
-npm run build:file
-```
-
 > 项目思路来源于 <https://github.com/moshang-xc/lottery>
 
 ## Docker支持
 
-构建镜像
+以下任意方式选一种即可
 
-```bash
-docker build -t log-lottery .
-```
+1. 拉取镜像，从Docker Hub拉取镜像[log-lottery](https://hub.docker.com/r/log1997/log-lottery)
 
-运行容器
+    ```bash
+    docker pull log1997/log-lottery:latest
+    ```
 
-```bash
-docker run -d -p 9279:80 log-lottery
-```
+    运行容器
 
-容器运行成功后即可在本地通过<http://localhost:9279/log-lottery/>访问
+    ```bash
+    docker run -d --name log-lottery -p 9279:80 log1997/log-lottery:latest
+    ```
+
+2. 手动构建镜像
+
+    ```bash
+    docker build -t log-lottery .
+    ```
+
+    运行容器
+
+    ```bash
+    docker run -d -p 9279:80 log-lottery
+    ```
+
+    容器运行成功后即可在本地通过<http://localhost:9279/log-lottery/>访问
+
+3. 软件安装包
+
+    可前往[Releases](https://github.com/LOG1997/log-lottery/releases)下载。
+    目前只支持windows平台使用，跨平台安装包暂不支持，如有需要请自行编译，参照[贡献文档](https://github.com/LOG1997/log-lottery/blob/dev/.github/CONTRIBUTING.md)
+
+## 支持项目
+
+<h3>💝 赞助支持</h3>
+
+<p><em>如果您觉得 log-lottery 对您有帮助，欢迎赞助支持，您的支持是我们不断前进的动力！</em></p>
+
+<div>
+ <img src="./static/images/ZanShang.png" height="240" alt="WeChat Code">
+</div>
+
+<br>
 
 ## Star History
 
