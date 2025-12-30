@@ -30,7 +30,7 @@ or
 <https://log1997.github.io/log-lottery/>
 
 开发仓促，若以上网站内容存在bug还请宽容。
-如果想要访问2025年12月31日前的版本，请前往：<https://lottery.to2026.xyz/log-lottery>
+如果想要访问2025年12月31日前的版本，请前往：<https://to2026.xyz/log-lottery>
 
 ## TODO
 
