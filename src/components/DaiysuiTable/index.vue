@@ -30,11 +30,10 @@ const actionsColumns = computed<any[]>(() => {
 
 <template>
   <div class="overflow-x-auto">
-    <table class="table min-w-[600px]">
+    <table class="table min-w-150">
       <!-- head -->
       <thead>
         <tr>
-          <th />
           <th v-for="(item, index) in dataColumns" :key="index">
             {{ item.label }}
           </th>
