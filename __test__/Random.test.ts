@@ -8,7 +8,7 @@ describe('getRandomElements', () => {
         const result = getRandomElements(sourceArray, 3)
 
         expect(result).toHaveLength(3)
-        result.forEach((element) => {
+        result.forEach((element: any) => {
             expect(sourceArray).toContain(element)
         })
     })
@@ -65,7 +65,7 @@ describe('getRandomElements', () => {
         const result = getRandomElements(sourceArray, 2)
 
         expect(result).toHaveLength(2)
-        result.forEach((element) => {
+        result.forEach((element: any) => {
             expect(sourceArray).toContain(element)
         })
     })
@@ -80,7 +80,7 @@ describe('getRandomElements', () => {
         const result = getRandomElements(sourceArray, 2)
 
         expect(result).toHaveLength(2)
-        result.forEach((element) => {
+        result.forEach((element: any) => {
             expect(sourceArray).toContain(element)
         })
     })
@@ -110,7 +110,7 @@ describe('getRandomElements', () => {
         // 多次调用并统计元素出现的次数
         for (let i = 0; i < times; i++) {
             const result = getRandomElements(sourceArray, count)
-            result.forEach((element) => {
+            result.forEach((element: any) => {
                 const count = elementCounts.get(element) || 0
                 elementCounts.set(element, count + 1)
             })
