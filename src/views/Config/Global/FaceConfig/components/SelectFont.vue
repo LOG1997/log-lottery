@@ -3,6 +3,7 @@ import { refDebounced } from '@vueuse/core'
 import { ChevronRight, ChevronsUpDownIcon } from 'lucide-vue-next'
 import { PopoverArrow } from 'reka-ui'
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { Button } from '@/components/ui/button'
 import {
   Command,
@@ -31,7 +32,7 @@ const { getFonts, disabled: browserDisabled, fonts } = useLocalFonts()
 const open = ref(false)
 const activeKey = ref('')
 const debouncedActiveKey = refDebounced(activeKey, 20)
-
+const { t } = useI18n()
 function selectFont(selectedValue: any) {
   open.value = false
   activeKey.value = ''
@@ -67,7 +68,7 @@ const disabledStyle = computed(() => {
           @click="getFonts"
         >
           <span class="w-7/8 text-left truncate" :style="{ fontFamily: `${selectedFont}` }">
-            {{ selectedFont || "选择字体..." }}
+            {{ selectedFont || t('placeHolder.selectFont') }}
           </span>
           <ChevronsUpDownIcon class="opacity-50" />
         </Button>

@@ -9,6 +9,7 @@ import CustomDialog from '@/components/Dialog/index.vue'
 import FileUpload from '@/components/FileUpload/index.vue'
 import useStore from '@/store'
 
+const { t } = useI18n()
 const toast = useToast()
 const limitType = ref('audio/*')
 const visible = defineModel('visible', {
@@ -41,7 +42,7 @@ async function uploadFile(fileData: IFileData | null) {
   const isAudio = /audio*/.test(fileData?.type || '')
   if (!isAudio) {
     toast.open({
-      message: '不是音频文件',
+      message: t('error.notAudioFile'),
       type: 'error',
       position: 'top-right',
     })
@@ -71,7 +72,7 @@ function submitUpload() {
     })
       .then(() => {
         toast.open({
-          message: '上传成功',
+          message: t('error.uploadSuccess'),
           type: 'success',
           position: 'top-right',
         })
@@ -79,7 +80,7 @@ function submitUpload() {
       })
       .catch(() => {
         toast.open({
-          message: '上传失败',
+          message: t('error.uploadFail'),
           type: 'error',
           position: 'top-right',
         })
@@ -97,14 +98,14 @@ watch(visible, (newVal) => {
   <CustomDialog
     ref="uploadDialogRef"
     v-model:visible="visible"
-    title="音乐上传"
+    :title="t('dialog.uploadAudioTitle')"
     :submit-func="submitUpload"
     class=""
   >
     <template #content>
       <div class="flex flex-col items-center gap-6 w-full px-12">
         <FileUpload v-if="visible" :limit-type="limitType" @upload-file="uploadFile" />
-        <input v-model="fileName" :disabled="audioData === null" type="text" placeholder="图片名称" class="input w-full">
+        <input v-model="fileName" :disabled="audioData === null" type="text" class="input w-full">
       </div>
     </template>
   </CustomDialog>

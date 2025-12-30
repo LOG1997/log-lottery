@@ -87,7 +87,7 @@ const limitType = '.xlsx,.xls'
             {{ t('button.exportResult') }}
           </button>
           <button class="btn btn-neutral btn-sm" @click="addOnePersonDrawerRef.showDrawer()">
-            添加
+            {{ t('button.add') }}
           </button>
           <div>
             <span>{{ t('table.luckyPeopleNumber') }}:</span>

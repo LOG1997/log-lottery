@@ -15,7 +15,7 @@ const titleFontSyncGlobalValue = defineModel<boolean>('titleFontSyncGlobalValue'
 <template>
   <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs pb-10">
     <legend class="fieldset-legend">
-      文本设置
+      {{ t('table.textSetting') }}
     </legend>
     <label class="label">
       <div class="label">

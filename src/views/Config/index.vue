@@ -69,7 +69,7 @@ function skip(path: string) {
     </ul>
     <router-view class="flex-1 mt-5" />
   </div>
-  <footer class="p-10 rounded footer footer-center bg-base-200 h-[280px] flex flex-col gap-4 text-base-content">
+  <footer class="p-10 rounded footer footer-center bg-base-200 h-70 flex flex-col gap-4 text-base-content">
     <nav class="grid grid-flow-col gap-4">
       <a class="cursor-pointer link link-hover text-inherit" target="_blank" href="https://1kw20.fun">{{ t('footer.self-reflection') }}</a>
     </nav>

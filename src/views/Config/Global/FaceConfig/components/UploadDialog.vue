@@ -1,8 +1,7 @@
 <script setup lang='ts'>
 import type { IFileData } from '@/components/FileUpload/type'
-import localforage from 'localforage'
-import { v4 as uuidv4 } from 'uuid'
-import { computed, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toast-notification'
 import CustomDialog from '@/components/Dialog/index.vue'
 import FileUpload from '@/components/FileUpload/index.vue'
@@ -19,7 +18,7 @@ const visible = defineModel('visible', {
   required: true,
 })
 const jsonFileData = ref<IFileData | null>(null)
-
+const { t } = useI18n()
 const uploadDialogRef = ref()
 
 async function uploadFile(fileData: IFileData | null) {
@@ -30,7 +29,7 @@ async function uploadFile(fileData: IFileData | null) {
   const isJson = /application\/json/.test(fileData?.type || '')
   if (!isJson) {
     toast.open({
-      message: '不是json文件，请检查',
+      message: t('error.notJsonFile'),
       type: 'error',
       position: 'top-right',
     })
@@ -57,7 +56,7 @@ watch(visible, (newVal) => {
   <CustomDialog
     ref="uploadDialogRef"
     v-model:visible="visible"
-    title="设置文件上传"
+    :title="t('dialog.uploadFileTitle')"
     :submit-func="submitUpload"
     class=""
   >

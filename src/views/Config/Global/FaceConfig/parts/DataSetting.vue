@@ -19,7 +19,7 @@ const uploadVisible = ref(false)
 <template>
   <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs pb-10">
     <legend class="fieldset-legend">
-      数据操作
+      {{ t('table.DataSetting') }}
     </legend>
     <dialog id="my_modal_1" ref="resetDataDialogRef" class="border-none modal">
       <div class="modal-box">
@@ -46,7 +46,7 @@ const uploadVisible = ref(false)
     <label class="flex flex-row items-center form-control">
       <div class="">
         <div class="label flex flex-col justify-start items-start">
-          <span class="label-text text-left">重置数据</span>
+          <span class="label-text text-left">{{ t('table.resetAllData') }}</span>
           <div class="help">
             <button class="btn btn-sm btn-primary" @click="resetDataDialogRef.showModal()">
               {{ t('button.resetAllData') }}

@@ -5,6 +5,7 @@ import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import PageHeader from '@/components/PageHeader/index.vue'
+import { sidebar } from '@/locales/modules'
 import useStore from '@/store'
 import UploadDialog from './components/UploadDialog.vue'
 
@@ -41,7 +42,7 @@ function deleteAll() {
 <template>
   <UploadDialog v-model:visible="uploadVisible" />
   <div>
-    <PageHeader title="音乐管理">
+    <PageHeader :title="t('sidebar.musicManagement')">
       <template #buttons>
         <div class="flex gap-3">
           <button class="btn btn-primary btn-sm" @click="resetMusic">
