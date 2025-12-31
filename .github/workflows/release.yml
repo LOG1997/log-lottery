@@ -41,6 +41,7 @@ jobs:
       - name: Prepare directories
         run: |
           mv dist dist-prod
+          cp dist-prod/index.html dist-prod/404.html
 
       - name: Create production build archive
         run: |
