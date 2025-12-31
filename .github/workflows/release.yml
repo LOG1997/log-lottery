@@ -51,16 +51,6 @@ jobs:
         with:
           name: web-build
           path: dist.zip
-          
-      - name: Prepare GitHub Pages artifact
-        run: |
-          cp -r dist-prod dist-gh-pages
-
-      - name: Upload GitHub Pages artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: github-pages
-          path: dist-gh-pages
 
       - name: Prepare GitHub Pages artifact
         run: |
