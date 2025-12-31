@@ -8,6 +8,8 @@ export default antfu(
         rules: {
             'no-console': 'warn',
             'no-debugger': 'warn',
+            'style/indent': ['error', 4],
+            'indent': ['error', 4, { 'SwitchCase': 1 }],
         }
     },
 )
