@@ -46,7 +46,10 @@ export function getRandomElements<T>(sourceArray: T[], count: number): T[] {
         crypto.getRandomValues(randomBuffer)
         const randomIndex = randomBuffer[0] % newArray.length
 
+        // 添加选中的元素到结果数组
         result.push(newArray[randomIndex])
+        // 从原数组中移除已选中的元素，避免重复选择
+        newArray.splice(randomIndex, 1)
     }
 
     return result

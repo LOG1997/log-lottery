@@ -125,15 +125,20 @@ export function useViewModel() {
                 detail.style.display = 'none'
             element.appendChild(detail)
 
-            const avatar = document.createElement('img')
-            avatar.className = 'card-avatar'
-            avatar.src = tableData.value[i].avatar
-            avatar.alt = 'avatar'
-            avatar.style.width = '140px'
-            avatar.style.height = '140px'
-            if (!isShowAvatar.value)
-                avatar.style.display = 'none'
-            element.appendChild(avatar)
+            if (isShowAvatar.value) {
+                const avatar = document.createElement('img')
+                avatar.className = 'card-avatar'
+                avatar.src = tableData.value[i].avatar
+                avatar.alt = 'avatar'
+                avatar.style.width = '140px'
+                avatar.style.height = '140px'
+                element.appendChild(avatar)
+            }
+            else {
+                const avatarEmpty = document.createElement('div')
+                avatarEmpty.style.display = 'none'
+                element.appendChild(avatarEmpty)
+            }
 
             element = useElementStyle(element, tableData.value[i], i, patternList.value, patternColor.value, cardColor.value, cardSize.value, textSize.value)
             const object = new CSS3DObject(element)
@@ -518,7 +523,7 @@ export function useViewModel() {
      * @param {string} mod 模式
      */
     function randomBallData(mod: 'default' | 'lucky' | 'sphere' = 'default') {
-        // 两秒执行一次
+    // 两秒执行一次
         intervalTimer.value = setInterval(() => {
             // 产生随机数数组
             const indexLength = 4
@@ -576,7 +581,7 @@ export function useViewModel() {
      * @description: 清理资源，避免内存溢出
      */
     function cleanup() {
-        // 停止所有Tween动画
+    // 停止所有Tween动画
         TWEEN.removeAll()
 
         // 清理动画循环
