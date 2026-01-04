@@ -1,24 +1,24 @@
 <script setup lang='ts'>
 import type { IImage, IPrizeConfig } from '@/types/storeType'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 defineProps<{
-  changePersonCount: () => void
-  selectPrize: (prize: IPrizeConfig) => void
-  localImageList: IImage[]
-  submitTemporaryPrize: () => void
-  addTemporaryPrize: () => void
+    changePersonCount: () => void
+    selectPrize: (prize: IPrizeConfig) => void
+    localImageList: IImage[]
+    submitTemporaryPrize: () => void
+    addTemporaryPrize: () => void
 }>()
 const { t } = useI18n()
 const dialogRef = ref<HTMLDialogElement | null>(null)
 const temporaryPrize = defineModel<IPrizeConfig>('temporaryPrize', { required: true })
 function showDialog() {
-  dialogRef.value?.showModal()
+    dialogRef.value?.showModal()
 }
 defineExpose({
-  showDialog,
-  closed,
+    showDialog,
+    closed,
 })
 </script>
 

@@ -8,7 +8,7 @@ import { daisyuiThemes } from '@/constant/theme'
 import 'vue3-colorpicker/style.css'
 
 interface Props {
-  imageList: Array<IImage>
+    imageList: Array<IImage>
 }
 defineProps<Props>()
 const themeList = reactive(daisyuiThemes)

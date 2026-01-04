@@ -12,72 +12,72 @@ const { t } = useI18n()
 const limitType = ref('image/*')
 const imgUploadToast = ref(0) // 0是不显示，1是成功，2是失败,3是不是图片
 const visible = defineModel('visible', {
-  type: Boolean,
-  required: true,
+    type: Boolean,
+    required: true,
 })
 const globalConfig = useStore().globalConfig
 const imageDbStore = localforage.createInstance({
-  name: 'imgStore',
+    name: 'imgStore',
 })
 const imageData = ref<IFileData | null>(null)
 
 const fileName = computed({
-  get() {
-    return imageData.value?.fileName || null
-  },
-  set(value) {
-    if (imageData.value && value) {
-      imageData.value.fileName = value
-    }
-  },
+    get() {
+        return imageData.value?.fileName || null
+    },
+    set(value) {
+        if (imageData.value && value) {
+            imageData.value.fileName = value
+        }
+    },
 })
 const uploadDialogRef = ref()
 
 async function uploadFile(fileData: IFileData | null) {
-  if (!fileData) {
-    imageData.value = null
-    return
-  }
-  const isImage = /image*/.test(fileData?.type || '')
-  if (!isImage) {
-    imgUploadToast.value = 3
-    return
-  }
-  imageData.value = fileData
+    if (!fileData) {
+        imageData.value = null
+        return
+    }
+    const isImage = /image*/.test(fileData?.type || '')
+    if (!isImage) {
+        imgUploadToast.value = 3
+        return
+    }
+    imageData.value = fileData
 }
 async function getImageDbStore() {
-  const keys = await imageDbStore.keys()
-  if (keys.length > 0) {
-    imageDbStore.iterate((value: { fileName: string, data: Blob }, key: string) => {
-      globalConfig.addImage({
-        id: key,
-        name: value.fileName,
-        url: 'Storage',
-      })
-    })
-  }
+    const keys = await imageDbStore.keys()
+    if (keys.length > 0) {
+        imageDbStore.iterate((value: { fileName: string, data: Blob }, key: string) => {
+            globalConfig.addImage({
+                id: key,
+                name: value.fileName,
+                url: 'Storage',
+            })
+        })
+    }
 }
 function submitUpload() {
-  if (imageData.value) {
-    const { data, fileName } = imageData.value
-    const uniqueId = uuidv4()
-    imageDbStore.setItem(uniqueId, {
-      data,
-      fileName,
-    })
-      .then(() => {
-        imgUploadToast.value = 1
-        getImageDbStore()
-      })
-      .catch(() => {
-        imgUploadToast.value = 2
-      })
-  }
+    if (imageData.value) {
+        const { data, fileName } = imageData.value
+        const uniqueId = uuidv4()
+        imageDbStore.setItem(uniqueId, {
+            data,
+            fileName,
+        })
+            .then(() => {
+                imgUploadToast.value = 1
+                getImageDbStore()
+            })
+            .catch(() => {
+                imgUploadToast.value = 2
+            })
+    }
 }
 watch(visible, (newVal) => {
-  if (newVal) {
-    uploadDialogRef.value.showDialog()
-  }
+    if (newVal) {
+        uploadDialogRef.value.showDialog()
+    }
 })
 </script>
 

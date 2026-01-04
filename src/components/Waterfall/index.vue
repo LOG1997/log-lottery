@@ -6,16 +6,16 @@ import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 
 // 布局参数 Props
 interface MasonryWaterfallProps {
-  columnWidth?: number | string // 列宽（px/选择器）
-  gutter?: number // 列/行间距
-  fitWidth?: boolean // 容器宽度自适应居中
+    columnWidth?: number | string // 列宽（px/选择器）
+    gutter?: number // 列/行间距
+    fitWidth?: boolean // 容器宽度自适应居中
 }
 
 // 默认参数
 const props = withDefaults(defineProps<MasonryWaterfallProps>(), {
-  columnWidth: 120,
-  gutter: 16,
-  fitWidth: true,
+    columnWidth: 120,
+    gutter: 16,
+    fitWidth: true,
 })
 
 // Vue Ref 管理 DOM 容器和 masonry 实例
@@ -24,52 +24,52 @@ const masonryInstance: Ref<Masonry | null> = ref(null)
 
 // 初始化 masonry（仅执行一次，因卡片固定）
 async function initMasonry() {
-  if (!masonryContainer.value)
-    return
+    if (!masonryContainer.value)
+        return
 
-  // 等待插槽内容（固定卡片）完全渲染
-  await nextTick()
+    // 等待插槽内容（固定卡片）完全渲染
+    await nextTick()
 
-  // 初始化 masonry 实例（固定卡片无需销毁旧实例）
-  masonryInstance.value = new Masonry(masonryContainer.value, {
-    itemSelector: '.masonry-container > *', // 匹配所有固定子项
-    columnWidth: props.columnWidth,
-    gutter: props.gutter,
-    fitWidth: props.fitWidth,
-    initLayout: true, // 固定卡片直接初始化布局
-  })
+    // 初始化 masonry 实例（固定卡片无需销毁旧实例）
+    masonryInstance.value = new Masonry(masonryContainer.value, {
+        itemSelector: '.masonry-container > *', // 匹配所有固定子项
+        columnWidth: props.columnWidth,
+        gutter: props.gutter,
+        fitWidth: props.fitWidth,
+        initLayout: true, // 固定卡片直接初始化布局
+    })
 }
 
 // 刷新布局（仅用于卡片内部内容高度变化）
 async function refreshLayout() {
-  await nextTick()
-  if (masonryInstance.value) {
-    masonryInstance.value.layout?.()
-  }
+    await nextTick()
+    if (masonryInstance.value) {
+        masonryInstance.value.layout?.()
+    }
 }
 
 // 窗口缩放节流重排（优化性能）
 const handleResize = throttle(() => {
-  if (masonryInstance.value) {
-    masonryInstance.value.layout?.()
-  }
+    if (masonryInstance.value) {
+        masonryInstance.value.layout?.()
+    }
 }, 300)
 
 // 生命周期：挂载时初始化，卸载时清理
 onMounted(async () => {
-  await initMasonry()
-  window.addEventListener('resize', handleResize)
+    await initMasonry()
+    window.addEventListener('resize', handleResize)
 })
 
 onUnmounted(() => {
-  // 销毁实例 + 释放内存
-  if (masonryInstance.value) {
-    masonryInstance.value.destroy?.()
-    masonryInstance.value = null
-  }
-  // 移除监听 + 取消节流任务
-  window.removeEventListener('resize', handleResize)
-  handleResize.cancel()
+    // 销毁实例 + 释放内存
+    if (masonryInstance.value) {
+        masonryInstance.value.destroy?.()
+        masonryInstance.value = null
+    }
+    // 移除监听 + 取消节流任务
+    window.removeEventListener('resize', handleResize)
+    handleResize.cancel()
 })
 
 // 仅暴露刷新方法（适配卡片内部内容变化）

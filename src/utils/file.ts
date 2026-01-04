@@ -20,19 +20,19 @@ export function readFileData(file: File): Promise<{ data: string, fileName: stri
 
 export function readFileDataAsBlob(file: File): Promise<{ data: Blob, fileName: string }> {
     return new Promise((resolve, reject) => {
-        const reader = new FileReader();
+        const reader = new FileReader()
 
         reader.onload = () => {
             // 直接使用原始文件作为 Blob
-            resolve({ data: file, fileName: file.name });
-        };
+            resolve({ data: file, fileName: file.name })
+        }
 
         reader.onerror = () => {
-            reject(new Error('文件读取失败'));
-        };
+            reject(new Error('文件读取失败'))
+        }
 
-        reader.readAsArrayBuffer(file);
-    });
+        reader.readAsArrayBuffer(file)
+    })
 }
 
 export async function readLocalFileAsArraybuffer(path: string): Promise<ArrayBuffer> {

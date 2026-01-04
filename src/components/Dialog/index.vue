@@ -3,40 +3,40 @@ import { onMounted, ref, toRefs } from 'vue'
 import i18n from '@/locales/i18n'
 
 interface Props {
-  title: string
-  desc?: string
-  cancelText?: string
-  submitText?: string
-  submitFunc?: () => void
-  cancelFunc?: () => void
+    title: string
+    desc?: string
+    cancelText?: string
+    submitText?: string
+    submitFunc?: () => void
+    cancelFunc?: () => void
 }
 const props = withDefaults(defineProps<Props>(), {
-  cancelText: i18n.global.t('button.cancel'),
-  submitText: i18n.global.t('button.confirm'),
-  cancelFunc: () => {},
+    cancelText: i18n.global.t('button.cancel'),
+    submitText: i18n.global.t('button.confirm'),
+    cancelFunc: () => {},
 })
 const visible = defineModel('visible', {
-  type: Boolean,
-  default: false,
+    type: Boolean,
+    default: false,
 })
 
 const dialogRef = ref <HTMLDialogElement | null> (null)
 function defaultCancelFunc() {
-  dialogRef.value?.close()
+    dialogRef.value?.close()
 }
 
 function showDialog() {
-  dialogRef.value?.showModal()
+    dialogRef.value?.showModal()
 }
 defineExpose({
-  showDialog,
-  closed,
+    showDialog,
+    closed,
 })
 
 onMounted(() => {
-  dialogRef.value?.addEventListener('close', () => {
-    visible.value = false
-  })
+    dialogRef.value?.addEventListener('close', () => {
+        visible.value = false
+    })
 })
 const { title, desc, cancelText, submitText, submitFunc, cancelFunc = defaultCancelFunc } = toRefs(props)
 </script>

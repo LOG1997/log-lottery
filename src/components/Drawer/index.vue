@@ -4,16 +4,16 @@ import { ref } from 'vue'
 const drawerTriggerRef = ref <HTMLDialogElement | null> (null)
 const visible = ref(false)
 function showDrawer() {
-  drawerTriggerRef.value?.click()
-  visible.value = true
+    drawerTriggerRef.value?.click()
+    visible.value = true
 }
 function closeDrawer() {
-  drawerTriggerRef.value?.click()
-  visible.value = false
+    drawerTriggerRef.value?.click()
+    visible.value = false
 }
 defineExpose({
-  showDrawer,
-  closeDrawer,
+    showDrawer,
+    closeDrawer,
 })
 </script>
 

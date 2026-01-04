@@ -2,7 +2,7 @@
 import { navList } from './config'
 
 function skip(url: string) {
-  window.open(url, '_self')
+    window.open(url, '_self')
 }
 </script>
 

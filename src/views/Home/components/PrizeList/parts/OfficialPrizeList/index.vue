@@ -5,11 +5,11 @@ import defaultPrizeImage from '@/assets/images/龙.png'
 import { useGsap } from './useGsap'
 
 const props = defineProps<{
-  isMobile: boolean
-  localPrizeList: IPrizeConfig[]
-  currentPrize: IPrizeConfig
-  temporaryPrizeShow: boolean
-  addTemporaryPrize: () => void
+    isMobile: boolean
+    localPrizeList: IPrizeConfig[]
+    currentPrize: IPrizeConfig
+    temporaryPrizeShow: boolean
+    addTemporaryPrize: () => void
 }>()
 
 const prizeShow = defineModel<boolean>('prizeShow')
@@ -19,45 +19,45 @@ const isScroll = ref(false)
 const liRefs = ref([])
 
 const {
-  showUpButton,
-  showDownButton,
-  handleScroll,
+    showUpButton,
+    showDownButton,
+    handleScroll,
 } = useGsap(scrollContainerRef, liRefs, isScroll, prizeShow, props.temporaryPrizeShow)
 
 // 获取ulContainerRef的高度
 function getUlContainerHeight() {
-  if (ulContainerRef.value) {
-    return ulContainerRef.value.offsetHeight
-  }
-  return 0
+    if (ulContainerRef.value) {
+        return ulContainerRef.value.offsetHeight
+    }
+    return 0
 }
 // 获取scrollContainerRef的高度
 function getScrollContainerHeight() {
-  if (scrollContainerRef.value) {
-    return scrollContainerRef.value.offsetHeight
-  }
-  return 0
+    if (scrollContainerRef.value) {
+        return scrollContainerRef.value.offsetHeight
+    }
+    return 0
 }
 
 function getIsScroll() {
-  const ulHeight = getUlContainerHeight()
-  const scrollHeight = getScrollContainerHeight()
-  if (ulHeight > scrollHeight + 20) {
-    isScroll.value = true
-  }
-  else {
-    isScroll.value = false
-    scrollContainerRef.value.style.height = `${ulHeight}px`
-  }
+    const ulHeight = getUlContainerHeight()
+    const scrollHeight = getScrollContainerHeight()
+    if (ulHeight > scrollHeight + 20) {
+        isScroll.value = true
+    }
+    else {
+        isScroll.value = false
+        scrollContainerRef.value.style.height = `${ulHeight}px`
+    }
 }
 
 watch ([prizeShow, () => props.temporaryPrizeShow], (val) => {
-  if (!val[0]) {
-    return
-  }
-  setTimeout (() => {
-    getIsScroll()
-  }, 0)
+    if (!val[0]) {
+        return
+    }
+    setTimeout (() => {
+        getIsScroll()
+    }, 0)
 }, { immediate: true })
 </script>
 

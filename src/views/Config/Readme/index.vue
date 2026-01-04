@@ -9,30 +9,30 @@ const md = markdownit()
 const readmeHtml = ref('')
 
 function getReadmeContent() {
-  const locale = i18n.global.locale.value
-  if (locale === 'zhCn') {
-    return readmeZh
-  }
-  else {
-    return readmeEn
-  }
+    const locale = i18n.global.locale.value
+    if (locale === 'zhCn') {
+        return readmeZh
+    }
+    else {
+        return readmeEn
+    }
 }
 function readMd() {
-  try {
-    const content = getReadmeContent()
-    readmeHtml.value = md.render(content)
-  }
-  catch (error) {
-    console.error('Failed to load readme:', error)
-    readmeHtml.value = '<p>Failed to load README content.</p>'
-  }
+    try {
+        const content = getReadmeContent()
+        readmeHtml.value = md.render(content)
+    }
+    catch (error) {
+        console.error('Failed to load readme:', error)
+        readmeHtml.value = '<p>Failed to load README content.</p>'
+    }
 }
 // 监听语言变化
 watch(() => i18n.global.locale.value, () => {
-  readMd()
+    readMd()
 })
 onMounted(() => {
-  readMd()
+    readMd()
 })
 </script>
 

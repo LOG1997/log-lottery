@@ -5,13 +5,12 @@ import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import PageHeader from '@/components/PageHeader/index.vue'
-import { sidebar } from '@/locales/modules'
 import useStore from '@/store'
 import UploadDialog from './components/UploadDialog.vue'
 
 const { t } = useI18n()
 const audioDbStore = localforage.createInstance({
-  name: 'audioStore',
+    name: 'audioStore',
 })
 const globalConfig = useStore().globalConfig
 
@@ -19,23 +18,23 @@ const { getMusicList: localMusicList } = storeToRefs(globalConfig)
 const localMusicListValue = ref(localMusicList)
 const uploadVisible = ref(false)
 async function play(item: IMusic) {
-  globalConfig.setCurrentMusic(item, false)
+    globalConfig.setCurrentMusic(item, false)
 }
 
 function deleteMusic(item: IMusic) {
-  globalConfig.removeMusic(item.id)
-  audioDbStore.removeItem(item.name)
-  // setTimeout(()=>{
-  //     localMusicListValue.value=localMusicList
-  // },100)
+    globalConfig.removeMusic(item.id)
+    audioDbStore.removeItem(item.name)
+    // setTimeout(()=>{
+    //     localMusicListValue.value=localMusicList
+    // },100)
 }
 function resetMusic() {
-  globalConfig.resetMusicList()
-  audioDbStore.clear()
+    globalConfig.resetMusicList()
+    audioDbStore.clear()
 }
 function deleteAll() {
-  globalConfig.clearMusicList()
-  audioDbStore.clear()
+    globalConfig.clearMusicList()
+    audioDbStore.clear()
 }
 </script>
 
