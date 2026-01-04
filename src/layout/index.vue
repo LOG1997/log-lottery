@@ -15,10 +15,10 @@ const mainContainer = ref<HTMLElement | null>(null)
 const { y } = useScroll(mainContainer)
 
 function scrollToTop() {
-  mainContainer.value?.scrollTo({
-    top: 0,
-    behavior: 'smooth',
-  })
+    mainContainer.value?.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+    })
 }
 </script>
 

@@ -2,8 +2,8 @@
 import { useI18n } from 'vue-i18n'
 
 defineProps<{
-  addOnePersonDrawerRef: any
-  addOnePerson: (addOnePersonDrawerRef: any, event: any) => void
+    addOnePersonDrawerRef: any
+    addOnePerson: (addOnePersonDrawerRef: any, event: any) => void
 }>()
 
 const { t } = useI18n()

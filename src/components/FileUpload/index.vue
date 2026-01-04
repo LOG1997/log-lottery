@@ -2,38 +2,38 @@
 import type { IFileData } from './type'
 import { ListMusic, Upload, X } from 'lucide-vue-next'
 import { ref } from 'vue'
-import { getBlobObjectUrl, readFileAsJsonData, readFileData, readFileDataAsBlob } from '@/utils/file'
+import { getBlobObjectUrl, readFileAsJsonData, readFileDataAsBlob } from '@/utils/file'
 
 const props = defineProps<{
-  limitType?: string
-  mode?: 'file' | 'json'
+    limitType?: string
+    mode?: 'file' | 'json'
 }>()
 
 const emits = defineEmits<{
-  uploadFile: [fileData: IFileData | null]
+    uploadFile: [fileData: IFileData | null]
 }>()
 const originFileName = ref<string | null>(null)
 const fileData = ref<IFileData | null>(null)
 
 async function handleFileChange(e: Event) {
-  const file = ((e.target as HTMLInputElement).files as FileList)[0]
-  const type = file.type
-  if (props.mode === 'json') {
-    const fileRes = await readFileAsJsonData(file)
-    const jsonData = JSON.parse(fileRes)
-    fileData.value = { data: jsonData, fileName: file.name, type }
-    originFileName.value = file.name
+    const file = ((e.target as HTMLInputElement).files as FileList)[0]
+    const type = file.type
+    if (props.mode === 'json') {
+        const fileRes = await readFileAsJsonData(file)
+        const jsonData = JSON.parse(fileRes)
+        fileData.value = { data: jsonData, fileName: file.name, type }
+        originFileName.value = file.name
+        emits('uploadFile', fileData.value)
+        return
+    }
+    const { data: blobData, fileName } = await readFileDataAsBlob(file)
+    fileData.value = { data: blobData, fileName, type }
+    originFileName.value = fileName
     emits('uploadFile', fileData.value)
-    return
-  }
-  const { data: blobData, fileName } = await readFileDataAsBlob(file)
-  fileData.value = { data: blobData, fileName, type }
-  originFileName.value = fileName
-  emits('uploadFile', fileData.value)
 }
 function removeFile() {
-  fileData.value = null
-  emits('uploadFile', null)
+    fileData.value = null
+    emits('uploadFile', null)
 }
 </script>
 

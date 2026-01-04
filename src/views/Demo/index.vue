@@ -8,81 +8,81 @@ gsap.registerPlugin(ScrollTrigger)
 const list = ref<any[]>([])
 
 list.value = [{
-  label: 1,
-  value: 1,
-  color: 'red',
+    label: 1,
+    value: 1,
+    color: 'red',
 }, {
-  label: 2,
-  value: 2,
-  color: 'blue',
+    label: 2,
+    value: 2,
+    color: 'blue',
 }, {
-  label: 3,
-  value: 3,
-  color: 'yellow',
+    label: 3,
+    value: 3,
+    color: 'yellow',
 }, {
-  label: 4,
-  value: 4,
-  color: 'green',
+    label: 4,
+    value: 4,
+    color: 'green',
 }, {
-  label: 5,
-  value: 5,
-  color: 'pink',
+    label: 5,
+    value: 5,
+    color: 'pink',
 }, {
-  label: 6,
-  value: 6,
-  color: 'orange',
+    label: 6,
+    value: 6,
+    color: 'orange',
 }, {
-  label: 7,
-  value: 7,
-  color: 'purple',
+    label: 7,
+    value: 7,
+    color: 'purple',
 }, {
-  label: 8,
-  value: 8,
-  color: 'brown',
+    label: 8,
+    value: 8,
+    color: 'brown',
 }, {
-  label: 9,
-  value: 9,
-  color: 'gray',
+    label: 9,
+    value: 9,
+    color: 'gray',
 }, {
-  label: 10,
-  value: 10,
-  color: 'cyan',
+    label: 10,
+    value: 10,
+    color: 'cyan',
 }, {
-  label: 11,
-  value: 11,
-  color: 'white',
+    label: 11,
+    value: 11,
+    color: 'white',
 }, {
-  label: 12,
-  value: 12,
-  color: 'black',
+    label: 12,
+    value: 12,
+    color: 'black',
 }, {
-  label: 13,
-  value: 13,
-  color: 'orange',
+    label: 13,
+    value: 13,
+    color: 'orange',
 }, {
-  label: 14,
-  value: 14,
-  color: 'yellow',
+    label: 14,
+    value: 14,
+    color: 'yellow',
 }, {
-  label: 15,
-  value: 14,
-  color: 'pink',
+    label: 15,
+    value: 14,
+    color: 'pink',
 }, {
-  label: 15,
-  value: 15,
-  color: 'orange',
+    label: 15,
+    value: 15,
+    color: 'orange',
 }, {
-  label: 16,
-  value: 16,
-  color: 'yellow',
+    label: 16,
+    value: 16,
+    color: 'yellow',
 }, {
-  label: 17,
-  value: 17,
-  color: 'green',
+    label: 17,
+    value: 17,
+    color: 'green',
 }, {
-  label: 18,
-  value: 18,
-  color: 'purple',
+    label: 18,
+    value: 18,
+    color: 'purple',
 }]
 
 // 为每个 li 元素创建引用
@@ -93,68 +93,68 @@ const showUpButton = ref(false)
 const showDownButton = ref(true)
 
 function initGsapAnimation() {
-  ctx.value = gsap.context(() => {
-    liRefs.value.forEach((box: any) => {
-      gsap.fromTo(box, { rotationX: -90, rotateZ: -20, opacity: 0 }, {
-        rotationX: 0,
-        rotateZ: 0,
-        opacity: 1,
-        scrollTrigger: {
-          trigger: box,
-          scroller: scrollContainerRef.value, // <- Specify the scroller!
-          start: 'bottom 100%',
-          end: 'top 70%',
-          scrub: true,
-        },
-      })
-    })
-  }, scrollContainerRef.value) // <- Scope!
+    ctx.value = gsap.context(() => {
+        liRefs.value.forEach((box: any) => {
+            gsap.fromTo(box, { rotationX: -90, rotateZ: -20, opacity: 0 }, {
+                rotationX: 0,
+                rotateZ: 0,
+                opacity: 1,
+                scrollTrigger: {
+                    trigger: box,
+                    scroller: scrollContainerRef.value, // <- Specify the scroller!
+                    start: 'bottom 100%',
+                    end: 'top 70%',
+                    scrub: true,
+                },
+            })
+        })
+    }, scrollContainerRef.value) // <- Scope!
 }
 
 function disposeGsapAnimation() {
-  ctx.value.revert() // <- Easy Cleanup!
+    ctx.value.revert() // <- Easy Cleanup!
 }
 function scrollHandler() {
-  const scrollHeight = scrollContainerRef.value.scrollHeight
-  const scrollTop = scrollContainerRef.value.scrollTop
-  const containerHeight = scrollContainerRef.value.clientHeight
-  // 滚动滑到底部
-  if (scrollTop + containerHeight >= scrollHeight) {
-    showDownButton.value = false
-    showUpButton.value = true
-  }
-  // 在中间
-  else if (scrollTop && scrollTop + containerHeight < scrollHeight) {
-    showDownButton.value = true
-    showUpButton.value = true
-  }
-  // 滚动滑到顶部
-  else {
-    showDownButton.value = true
-    showUpButton.value = false
-  }
+    const scrollHeight = scrollContainerRef.value.scrollHeight
+    const scrollTop = scrollContainerRef.value.scrollTop
+    const containerHeight = scrollContainerRef.value.clientHeight
+    // 滚动滑到底部
+    if (scrollTop + containerHeight >= scrollHeight) {
+        showDownButton.value = false
+        showUpButton.value = true
+    }
+    // 在中间
+    else if (scrollTop && scrollTop + containerHeight < scrollHeight) {
+        showDownButton.value = true
+        showUpButton.value = true
+    }
+    // 滚动滑到顶部
+    else {
+        showDownButton.value = true
+        showUpButton.value = false
+    }
 }
 function listenScrollContainer() {
-  scrollContainerRef.value.addEventListener('scroll', scrollHandler)
+    scrollContainerRef.value.addEventListener('scroll', scrollHandler)
 }
 function removeScrollContainer() {
-  if (scrollContainerRef.value) {
-    scrollContainerRef.value.removeEventListener('scroll', scrollHandler)
-  }
+    if (scrollContainerRef.value) {
+        scrollContainerRef.value.removeEventListener('scroll', scrollHandler)
+    }
 }
 
 function handleScroll(h: number) {
-  scrollContainerRef.value.scrollTop += h
+    scrollContainerRef.value.scrollTop += h
 }
 onMounted(() => {
-  initGsapAnimation()
-  listenScrollContainer()
+    initGsapAnimation()
+    listenScrollContainer()
 })
 onBeforeUnmount(() => {
-  removeScrollContainer()
+    removeScrollContainer()
 })
 onUnmounted(() => {
-  disposeGsapAnimation()
+    disposeGsapAnimation()
 })
 </script>
 

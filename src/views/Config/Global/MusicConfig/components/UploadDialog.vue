@@ -13,84 +13,84 @@ const { t } = useI18n()
 const toast = useToast()
 const limitType = ref('audio/*')
 const visible = defineModel('visible', {
-  type: Boolean,
-  required: true,
+    type: Boolean,
+    required: true,
 })
 const globalConfig = useStore().globalConfig
 const audioDbStore = localforage.createInstance({
-  name: 'audioStore',
+    name: 'audioStore',
 })
 const audioData = ref<IFileData | null>(null)
 
 const fileName = computed({
-  get() {
-    return audioData.value?.fileName || null
-  },
-  set(value) {
-    if (audioData.value && value) {
-      audioData.value.fileName = value
-    }
-  },
+    get() {
+        return audioData.value?.fileName || null
+    },
+    set(value) {
+        if (audioData.value && value) {
+            audioData.value.fileName = value
+        }
+    },
 })
 const uploadDialogRef = ref()
 
 async function uploadFile(fileData: IFileData | null) {
-  if (!fileData) {
-    audioData.value = null
-    return
-  }
-  const isAudio = /audio*/.test(fileData?.type || '')
-  if (!isAudio) {
-    toast.open({
-      message: t('error.notAudioFile'),
-      type: 'error',
-      position: 'top-right',
-    })
-    return
-  }
-  audioData.value = fileData
+    if (!fileData) {
+        audioData.value = null
+        return
+    }
+    const isAudio = /audio*/.test(fileData?.type || '')
+    if (!isAudio) {
+        toast.open({
+            message: t('error.notAudioFile'),
+            type: 'error',
+            position: 'top-right',
+        })
+        return
+    }
+    audioData.value = fileData
 }
 async function getAudioDbStore() {
-  const keys = await audioDbStore.keys()
-  if (keys.length > 0) {
-    audioDbStore.iterate((value: { fileName: string, data: Blob }, key: string) => {
-      globalConfig.addMusic({
-        id: key,
-        name: value.fileName,
-        url: 'Storage',
-      })
-    })
-  }
+    const keys = await audioDbStore.keys()
+    if (keys.length > 0) {
+        audioDbStore.iterate((value: { fileName: string, data: Blob }, key: string) => {
+            globalConfig.addMusic({
+                id: key,
+                name: value.fileName,
+                url: 'Storage',
+            })
+        })
+    }
 }
 function submitUpload() {
-  if (audioData.value) {
-    const { data, fileName } = audioData.value
-    const uniqueId = uuidv4()
-    audioDbStore.setItem(uniqueId, {
-      data,
-      fileName,
-    })
-      .then(() => {
-        toast.open({
-          message: t('error.uploadSuccess'),
-          type: 'success',
-          position: 'top-right',
+    if (audioData.value) {
+        const { data, fileName } = audioData.value
+        const uniqueId = uuidv4()
+        audioDbStore.setItem(uniqueId, {
+            data,
+            fileName,
         })
-        getAudioDbStore()
-      })
-      .catch(() => {
-        toast.open({
-          message: t('error.uploadFail'),
-          type: 'error',
-          position: 'top-right',
-        })
-      })
-  }
+            .then(() => {
+                toast.open({
+                    message: t('error.uploadSuccess'),
+                    type: 'success',
+                    position: 'top-right',
+                })
+                getAudioDbStore()
+            })
+            .catch(() => {
+                toast.open({
+                    message: t('error.uploadFail'),
+                    type: 'error',
+                    position: 'top-right',
+                })
+            })
+    }
 }
 watch(visible, (newVal) => {
-  if (newVal) {
-    uploadDialogRef.value.showDialog()
-  }
+    if (newVal) {
+        uploadDialogRef.value.showDialog()
+    }
 })
 </script>
 

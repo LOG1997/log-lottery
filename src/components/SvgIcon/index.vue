@@ -2,22 +2,22 @@
 import { computed } from 'vue'
 
 const props = defineProps({
-  prefix: {
-    type: String,
-    default: 'icon',
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-  color: {
-    type: String,
-    default: '#242424',
-  },
-  size: {
-    type: String,
-    default: '24px',
-  },
+    prefix: {
+        type: String,
+        default: 'icon',
+    },
+    name: {
+        type: String,
+        required: true,
+    },
+    color: {
+        type: String,
+        default: '#242424',
+    },
+    size: {
+        type: String,
+        default: '24px',
+    },
 })
 
 const symbolId = computed(() => `#${props.prefix}-${props.name}`)

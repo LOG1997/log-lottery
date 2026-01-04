@@ -42,32 +42,32 @@ export function rgba(color: string, opacity: number) {
 
 export function rgbToHex(color: string) {
     // 去掉字符串中的空格
-    color = color.replace(/\s+/g, '');
+    color = color.replace(/\s+/g, '')
     if (isHex(color)) {
         return color
     }
     // 匹配rgba或rgb格式的字符串
-    const rgbaMatch = color.match(/^rgba?\((\d+),(\d+),(\d+),?(\d*\.?\d+)?\)$/i);
+    const rgbaMatch = color.match(/^rgba?\((\d+),(\d+),(\d+),?(\d+(?:\.\d+)?|\.\d+)?\)$/i)
     if (!rgbaMatch) {
-        throw new Error('Invalid color format');
+        throw new Error('Invalid color format')
     }
 
-    const r = parseInt(rgbaMatch[1], 10);
-    const g = parseInt(rgbaMatch[2], 10);
-    const b = parseInt(rgbaMatch[3], 10);
-    const a = rgbaMatch[4] !== undefined ? parseFloat(rgbaMatch[4]) : undefined;
+    const r = Number.parseInt(rgbaMatch[1], 10)
+    const g = Number.parseInt(rgbaMatch[2], 10)
+    const b = Number.parseInt(rgbaMatch[3], 10)
+    const a = rgbaMatch[4] !== undefined ? Number.parseFloat(rgbaMatch[4]) : undefined
 
     // 将RGB值转换为十六进制
-    let hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+    let hex = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`
 
     // 如果提供了alpha值，则将其转换为十六进制并附加到结果中
     if (a !== undefined) {
-        let alphaHex = Math.round(a * 255).toString(16).toUpperCase();
+        let alphaHex = Math.round(a * 255).toString(16).toUpperCase()
         if (alphaHex.length === 1) {
-            alphaHex = "0" + alphaHex; // 确保alpha值是两位数
+            alphaHex = `0${alphaHex}` // 确保alpha值是两位数
         }
-        hex += alphaHex;
+        hex += alphaHex
     }
 
-    return hex;
+    return hex
 }

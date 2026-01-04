@@ -2,8 +2,8 @@
 import { useI18n } from 'vue-i18n'
 
 interface Props {
-  resetPersonLayout: () => void
-  isRowCountChange: number
+    resetPersonLayout: () => void
+    isRowCountChange: number
 }
 defineProps<Props>()
 

@@ -3,12 +3,12 @@ import { useI18n } from 'vue-i18n'
 import PatternEdit from '../components/PatternEdit.vue'
 
 interface Props {
-  rowCount: number
-  cardColor: string
-  patternColor: string
-  patternList: number[]
-  clearPattern: () => void
-  resetPattern: () => void
+    rowCount: number
+    cardColor: string
+    patternColor: string
+    patternList: number[]
+    clearPattern: () => void
+    resetPattern: () => void
 }
 defineProps<Props>()
 const { t } = useI18n()

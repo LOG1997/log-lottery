@@ -11,18 +11,18 @@ import { usePrizeList } from './usePrizeList'
 
 const temporaryPrizeRef = ref()
 const {
-  temporaryPrize,
-  changePersonCount,
-  selectPrize,
-  localImageList,
-  addTemporaryPrize,
-  submitTemporaryPrize,
-  submitData,
-  deleteTemporaryPrize,
-  prizeShow,
-  currentPrize,
-  localPrizeList,
-  isMobile,
+    temporaryPrize,
+    changePersonCount,
+    selectPrize,
+    localImageList,
+    addTemporaryPrize,
+    submitTemporaryPrize,
+    submitData,
+    deleteTemporaryPrize,
+    prizeShow,
+    currentPrize,
+    localPrizeList,
+    isMobile,
 } = usePrizeList(temporaryPrizeRef)
 const selectedPrize = ref<IPrizeConfig | null>()
 </script>

@@ -6,34 +6,34 @@ import { useRouter } from 'vue-router'
 import { rgbToHex } from '@/utils/color'
 
 interface Props {
-  textSize: number
-  textColor: string
-  topTitle: string
-  tableData: any[]
-  setDefaultPersonList: () => void
-  isInitialDone: boolean
-  titleFont: string
-  titleFontSyncGlobal: boolean
+    textSize: number
+    textColor: string
+    topTitle: string
+    tableData: any[]
+    setDefaultPersonList: () => void
+    isInitialDone: boolean
+    titleFont: string
+    titleFontSyncGlobal: boolean
 }
 
 const props = defineProps<Props>()
 const router = useRouter()
 const { tableData, textSize, textColor, topTitle, setDefaultPersonList, titleFont, titleFontSyncGlobal } = toRefs(props)
 const isTextColor = computed(() => {
-  return rgbToHex(textColor.value) !== '#00000000'
+    return rgbToHex(textColor.value) !== '#00000000'
 })
 const titleStyle = computed(() => {
-  const style: CSSProperties = {
-    fontSize: `${textSize.value * 1.5}px`,
-  }
-  if (!titleFontSyncGlobal.value) {
-    style.fontFamily = titleFont.value
-  }
-  if (isTextColor.value) {
-    style.color = textColor.value
-  }
+    const style: CSSProperties = {
+        fontSize: `${textSize.value * 1.5}px`,
+    }
+    if (!titleFontSyncGlobal.value) {
+        style.fontFamily = titleFont.value
+    }
+    if (isTextColor.value) {
+        style.color = textColor.value
+    }
 
-  return style
+    return style
 })
 const { t } = useI18n()
 </script>

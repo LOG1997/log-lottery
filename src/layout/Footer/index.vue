@@ -2,7 +2,7 @@
 import { footerList } from './config'
 
 function skip(url: string) {
-  window.open(url)
+    window.open(url)
 }
 </script>
 

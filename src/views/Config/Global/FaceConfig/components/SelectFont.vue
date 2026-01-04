@@ -6,27 +6,27 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Button } from '@/components/ui/button'
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
 } from '@/components/ui/command'
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
 } from '@/components/ui/popover'
 import { useLocalFonts } from '@/hooks/useLocalFonts'
 import { cn } from '@/lib/utils'
 
 const props = defineProps<{
-  disabled?: boolean
+    disabled?: boolean
 }>()
 const selectedFont = defineModel('selectedFont', {
-  type: String,
-  required: true,
+    type: String,
+    required: true,
 })
 const { getFonts, disabled: browserDisabled, fonts } = useLocalFonts()
 const open = ref(false)
@@ -34,25 +34,25 @@ const activeKey = ref('')
 const debouncedActiveKey = refDebounced(activeKey, 20)
 const { t } = useI18n()
 function selectFont(selectedValue: any) {
-  open.value = false
-  activeKey.value = ''
-  selectedFont.value = selectedValue
+    open.value = false
+    activeKey.value = ''
+    selectedFont.value = selectedValue
 }
 
 function handelActiveKey(val: string) {
-  activeKey.value = val
+    activeKey.value = val
 }
 
 function handleScroll() {
-  activeKey.value = ''
+    activeKey.value = ''
 }
 const disabledStyle = computed(() => {
-  if (props.disabled || browserDisabled) {
-    return {
-      cursor: 'not-allowed',
+    if (props.disabled || browserDisabled) {
+        return {
+            cursor: 'not-allowed',
+        }
     }
-  }
-  return {}
+    return {}
 })
 </script>
 
