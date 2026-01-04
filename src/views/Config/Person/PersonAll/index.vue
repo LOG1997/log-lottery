@@ -14,16 +14,16 @@ const delAllDataDialogRef = ref()
 const exportInputFileRef = ref()
 const addOnePersonDrawerRef = ref()
 const {
-  resetData,
-  deleteAll,
-  handleFileChange,
-  exportData,
-  addOnePerson,
-  singlePersonData,
-  alreadyPersonList,
-  allPersonList,
-  tableColumnList,
-  downloadTemplate,
+    resetData,
+    deleteAll,
+    handleFileChange,
+    exportData,
+    addOnePerson,
+    singlePersonData,
+    alreadyPersonList,
+    allPersonList,
+    tableColumnList,
+    downloadTemplate,
 } = useViewModel({ exportInputFileRef })
 const { t } = useI18n()
 const limitType = '.xlsx,.xls'

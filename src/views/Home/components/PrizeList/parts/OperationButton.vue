@@ -2,12 +2,12 @@
 import { useI18n } from 'vue-i18n'
 
 defineProps<{
-  addTemporaryPrize: () => void
+    addTemporaryPrize: () => void
 }>()
 const { t } = useI18n()
 const prizeShow = defineModel('prizeShow', {
-  type: Boolean,
-  default: false,
+    type: Boolean,
+    default: false,
 })
 </script>
 

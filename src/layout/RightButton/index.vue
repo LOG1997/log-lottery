@@ -16,18 +16,18 @@ const settingRef = ref()
 const fullScreenRef = ref()
 
 function enterConfig() {
-  router.push('/log-lottery/config')
+    router.push('/log-lottery/config')
 }
 function enterHome() {
-  router.push('/log-lottery')
+    router.push('/log-lottery')
 }
 onMounted(() => {
-  settingRef.value.addEventListener('mouseenter', () => {
-    fullScreenRef.value.style.display = 'block'
-  })
-  settingRef.value.addEventListener('mouseleave', () => {
-    fullScreenRef.value.style.display = 'none'
-  })
+    settingRef.value.addEventListener('mouseenter', () => {
+        fullScreenRef.value.style.display = 'block'
+    })
+    settingRef.value.addEventListener('mouseleave', () => {
+        fullScreenRef.value.style.display = 'none'
+    })
 })
 </script>
 

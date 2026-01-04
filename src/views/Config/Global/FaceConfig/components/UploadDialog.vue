@@ -7,48 +7,48 @@ import CustomDialog from '@/components/Dialog/index.vue'
 import FileUpload from '@/components/FileUpload/index.vue'
 
 interface Props {
-  importAllConfigData: (data: any) => void
+    importAllConfigData: (data: any) => void
 }
 
 const props = defineProps<Props>()
 const toast = useToast()
 const limitType = ref('application/json')
 const visible = defineModel('visible', {
-  type: Boolean,
-  required: true,
+    type: Boolean,
+    required: true,
 })
 const jsonFileData = ref<IFileData | null>(null)
 const { t } = useI18n()
 const uploadDialogRef = ref()
 
 async function uploadFile(fileData: IFileData | null) {
-  if (!fileData) {
-    jsonFileData.value = null
-    return
-  }
-  const isJson = /application\/json/.test(fileData?.type || '')
-  if (!isJson) {
-    toast.open({
-      message: t('error.notJsonFile'),
-      type: 'error',
-      position: 'top-right',
-    })
-    return
-  }
-  jsonFileData.value = fileData
+    if (!fileData) {
+        jsonFileData.value = null
+        return
+    }
+    const isJson = /application\/json/.test(fileData?.type || '')
+    if (!isJson) {
+        toast.open({
+            message: t('error.notJsonFile'),
+            type: 'error',
+            position: 'top-right',
+        })
+        return
+    }
+    jsonFileData.value = fileData
 }
 
 function submitUpload() {
-  if (jsonFileData.value) {
+    if (jsonFileData.value) {
     // 把文件转化为json数据
-    const jsonData = jsonFileData.value.data
-    props.importAllConfigData(jsonData)
-  }
+        const jsonData = jsonFileData.value.data
+        props.importAllConfigData(jsonData)
+    }
 }
 watch(visible, (newVal) => {
-  if (newVal) {
-    uploadDialogRef.value.showDialog()
-  }
+    if (newVal) {
+        uploadDialogRef.value.showDialog()
+    }
 })
 </script>
 

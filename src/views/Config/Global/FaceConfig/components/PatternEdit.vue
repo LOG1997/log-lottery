@@ -2,36 +2,36 @@
 import { computed } from 'vue'
 
 const props = defineProps({
-  rowCount: {
-    type: Number,
-    default: 17,
-  },
-  cardColor: {
-    type: String,
-    default: '#fff',
-  },
-  patternColor: {
-    type: String,
-    default: '#000',
-  },
-  patternList: {
-    type: Array,
-    default: () => [],
-  },
+    rowCount: {
+        type: Number,
+        default: 17,
+    },
+    cardColor: {
+        type: String,
+        default: '#fff',
+    },
+    patternColor: {
+        type: String,
+        default: '#000',
+    },
+    patternList: {
+        type: Array,
+        default: () => [],
+    },
 })
 const data = computed(() => {
-  return props
+    return props
 })
 
 function updatePatternList(event: Event, item: number) {
-  if (data.value.patternList.includes(item)) {
-    const index = data.value.patternList.indexOf(item)
-    data.value.patternList.splice(index, 1)
-  }
-  else {
-    data.value.patternList.push(item)
-  }
-  // emits
+    if (data.value.patternList.includes(item)) {
+        const index = data.value.patternList.indexOf(item)
+        data.value.patternList.splice(index, 1)
+    }
+    else {
+        data.value.patternList.push(item)
+    }
+    // emits
 }
 </script>
 

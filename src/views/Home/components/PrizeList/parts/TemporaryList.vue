@@ -5,9 +5,9 @@ import { useI18n } from 'vue-i18n'
 import defaultPrizeImage from '@/assets/images/龙.png'
 
 defineProps<{
-  temporaryPrize: IPrizeConfig
-  addTemporaryPrize: () => void
-  deleteTemporaryPrize: () => void
+    temporaryPrize: IPrizeConfig
+    addTemporaryPrize: () => void
+    deleteTemporaryPrize: () => void
 }>()
 
 const { t } = useI18n()

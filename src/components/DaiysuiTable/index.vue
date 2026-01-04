@@ -3,28 +3,28 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
-  data: {
-    type: Array as any,
-    default: [] as any[],
-  },
-  tableColumns: {
-    type: Array,
-    default: [] as any[],
-  },
+    data: {
+        type: Array as any,
+        default: [] as any[],
+    },
+    tableColumns: {
+        type: Array,
+        default: [] as any[],
+    },
 })
 const { t } = useI18n()
 const dataColumns = computed<any[]>(() => {
-  // 不带有actions的列
-  const columns = props.tableColumns.filter((item: any) => !item.actions)
+    // 不带有actions的列
+    const columns = props.tableColumns.filter((item: any) => !item.actions)
 
-  return columns
+    return columns
 })
 
 const actionsColumns = computed<any[]>(() => {
-  // 带有actions的列
-  const columns = props.tableColumns.filter((item: any) => item.actions)
+    // 带有actions的列
+    const columns = props.tableColumns.filter((item: any) => item.actions)
 
-  return columns
+    return columns
 })
 </script>
 

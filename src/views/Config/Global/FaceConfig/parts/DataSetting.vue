@@ -4,9 +4,9 @@ import { useI18n } from 'vue-i18n'
 import UploadJsonModal from '../components/UploadDialog.vue'
 
 interface Props {
-  resetData: () => void
-  exportAllConfigData: () => void
-  importAllConfigData: (data: any) => void
+    resetData: () => void
+    exportAllConfigData: () => void
+    importAllConfigData: (data: any) => void
 }
 
 defineProps<Props>()

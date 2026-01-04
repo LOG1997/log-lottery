@@ -14,25 +14,25 @@ const globalConfig = useStore().globalConfig
 const { getImageList: localImageList } = storeToRefs(globalConfig)
 const imgUploadToast = ref(0) // 0是不显示，1是成功，2是失败,3是不是图片
 const imageDbStore = localforage.createInstance({
-  name: 'imgStore',
+    name: 'imgStore',
 })
 
 const uploadVisible = ref(false)
 
 function removeImage(item: IImage) {
-  if (item.url === 'Storage') {
-    imageDbStore.removeItem(item.id).then(() => {
-      globalConfig.removeImage(item.id)
-    })
-  }
-  globalConfig.removeImage(item.id)
+    if (item.url === 'Storage') {
+        imageDbStore.removeItem(item.id).then(() => {
+            globalConfig.removeImage(item.id)
+        })
+    }
+    globalConfig.removeImage(item.id)
 }
 watch(() => imgUploadToast.value, (val) => {
-  if (val !== 0) {
-    setTimeout(() => {
-      imgUploadToast.value = 0
-    }, 2000)
-  }
+    if (val !== 0) {
+        setTimeout(() => {
+            imgUploadToast.value = 0
+        }, 2000)
+    }
 })
 </script>
 

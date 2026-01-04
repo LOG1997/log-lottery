@@ -12,24 +12,24 @@ const menuList = ref<any[]>(configRoutes.children)
 const currentYear = dayjs().year()
 
 function cleanMenuList(menu: any) {
-  const newList = menu
-  for (let i = 0; i < newList.length; i++) {
-    if (newList[i].children) {
-      cleanMenuList(newList[i].children)
+    const newList = menu
+    for (let i = 0; i < newList.length; i++) {
+        if (newList[i].children) {
+            cleanMenuList(newList[i].children)
+        }
+        if (!newList[i].meta) {
+            newList.splice(i, 1)
+            i--
+        }
     }
-    if (!newList[i].meta) {
-      newList.splice(i, 1)
-      i--
-    }
-  }
 
-  return newList
+    return newList
 }
 
 menuList.value = cleanMenuList(menuList.value)
 
 function skip(path: string) {
-  router.push(path)
+    router.push(path)
 }
 </script>
 

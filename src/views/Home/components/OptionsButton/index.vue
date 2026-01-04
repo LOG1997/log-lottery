@@ -4,13 +4,13 @@ import { useI18n } from 'vue-i18n'
 import { LotteryStatus } from '@/views/Home/type'
 
 interface Props {
-  currentStatus: LotteryStatus
-  tableData: any[]
-  enterLottery: () => void
-  startLottery: () => void
-  stopLottery: () => void
-  continueLottery: () => void
-  quitLottery: () => void
+    currentStatus: LotteryStatus
+    tableData: any[]
+    enterLottery: () => void
+    startLottery: () => void
+    stopLottery: () => void
+    continueLottery: () => void
+    quitLottery: () => void
 }
 const props = defineProps<Props>()
 
