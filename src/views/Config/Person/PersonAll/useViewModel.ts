@@ -18,7 +18,7 @@ type IBasePersonConfig = Pick<IPersonConfig, 'uid' | 'name' | 'department' | 'id
 
 export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<HTMLInputElement> }) {
     const { t } = useI18n()
-    const baseUrl = import.meta.env.BASE_URL
+    const baseUrl = import.meta.env.BASE_URL.replace('./', '/')
     const toast = useToast()
     const worker: Worker | null = new ImportExcelWorker()
     const loading = inject(loadingKey)
@@ -36,11 +36,11 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
     async function getExcelTemplateContent() {
         const locale = i18n.global.locale.value
         if (locale === 'zhCn') {
-            const templateData = await readLocalFileAsArraybuffer(`${import.meta.env.BASE_URL}人口登记表-zhCn.xlsx`)
+            const templateData = await readLocalFileAsArraybuffer(`${baseUrl}人口登记表-zhCn.xlsx`)
             return templateData
         }
         else {
-            const templateData = await readLocalFileAsArraybuffer(`${import.meta.env.BASE_URL}personListTemplate-en.xlsx`)
+            const templateData = await readLocalFileAsArraybuffer(`${baseUrl}personListTemplate-en.xlsx`)
             return templateData
         }
     }
