@@ -34,10 +34,9 @@ const { t } = useI18n()
           {{ temporaryPrize.isUsedCount }}/{{ temporaryPrize.count }}
         </p>
         <progress
-          class="w-3/4 h-6 progress progress-primary" :value="temporaryPrize.isUsedCount"
+          class="w-3/4 h-6 progress bg-[#52545b] progress-primary" :value="temporaryPrize.isUsedCount"
           :max="temporaryPrize.count"
         />
-        <!-- <p class="p-0 m-0">{{ item.isUsedCount }}/{{ item.count }}</p> -->
       </div>
       <div class="flex flex-col gap-1 mr-2">
         <div class="tooltip tooltip-left" :data-tip="t('tooltip.edit')">
