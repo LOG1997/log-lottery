@@ -12,12 +12,16 @@ export function useMounted(tipDialog: Ref<any>) {
     const prizeConfig = useStore().prizeConfig
     const system = useStore().system
     const { getTheme: localTheme } = storeToRefs(globalConfig)
-    const { getPrizeConfig: prizeList } = storeToRefs(prizeConfig)
+    const { getPrizeConfig: prizeList, getTemporaryPrize: temporaryPrize } = storeToRefs(prizeConfig)
     const tipDesc = ref('')
     const { t } = useI18n()
     // 设置当前奖列表
     function setCurrentPrize() {
         if (prizeList.value.length <= 0) {
+            return
+        }
+        if (temporaryPrize.value && temporaryPrize.value.isShow) {
+            prizeConfig.setCurrentPrize(temporaryPrize.value)
             return
         }
         for (let i = 0; i < prizeList.value.length; i++) {
