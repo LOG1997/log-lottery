@@ -160,10 +160,11 @@ npm run build
 
     容器运行成功后即可在本地通过<http://localhost:9279/log-lottery/>访问
 
-3. 软件安装包
+## 软件安装包
 
-    可前往[Releases](https://github.com/LOG1997/log-lottery/releases)下载。
-    目前只支持windows平台使用，跨平台安装包暂不支持，如有需要请自行编译，参照[贡献文档](https://github.com/LOG1997/log-lottery/blob/dev/.github/CONTRIBUTING.md)
+可前往[Releases](https://github.com/LOG1997/log-lottery/releases)下载。
+
+目前只支持windows平台使用，跨平台安装包暂不支持，如有需要请自行编译，参照[贡献文档](https://github.com/LOG1997/log-lottery/blob/main/.github/CONTRIBUTING.md)
 
 ## 支持项目
 

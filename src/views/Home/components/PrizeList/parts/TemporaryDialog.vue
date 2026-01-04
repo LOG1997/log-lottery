@@ -9,10 +9,12 @@ defineProps<{
     localImageList: IImage[]
     submitTemporaryPrize: () => void
     addTemporaryPrize: () => void
+    submitData: (separatedNumber: any) => void
 }>()
 const { t } = useI18n()
 const dialogRef = ref<HTMLDialogElement | null>(null)
 const temporaryPrize = defineModel<IPrizeConfig>('temporaryPrize', { required: true })
+const selectedPrize = defineModel<IPrizeConfig | null>('selectedPrize', { required: true })
 function showDialog() {
     dialogRef.value?.showModal()
 }
@@ -23,6 +25,10 @@ defineExpose({
 </script>
 
 <template>
+  <EditSeparateDialog
+    :total-number="selectedPrize?.count" :separated-number="selectedPrize?.separateCount.countList"
+    @submit-data="submitData"
+  />
   <dialog id="my_modal_1" ref="dialogRef" class="border-none modal">
     <div class="modal-box">
       <h3 class="text-lg font-bold">
