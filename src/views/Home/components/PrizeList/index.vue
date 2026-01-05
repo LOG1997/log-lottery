@@ -1,8 +1,5 @@
 <script setup lang='ts'>
-import type { IPrizeConfig } from '@/types/storeType'
 import { ref } from 'vue'
-// import { useI18n } from 'vue-i18n'
-import EditSeparateDialog from '@/components/NumberSeparate/EditSeparateDialog.vue'
 import OfficialPrizeList from './parts/OfficialPrizeList/index.vue'
 import OperationButton from './parts/OperationButton.vue'
 import TemporaryDialog from './parts/TemporaryDialog.vue'
@@ -23,8 +20,8 @@ const {
     currentPrize,
     localPrizeList,
     isMobile,
+    selectedPrize,
 } = usePrizeList(temporaryPrizeRef)
-const selectedPrize = ref<IPrizeConfig | null>()
 </script>
 
 <template>
@@ -32,15 +29,13 @@ const selectedPrize = ref<IPrizeConfig | null>()
     <TemporaryDialog
       ref="temporaryPrizeRef"
       v-model:temporary-prize="temporaryPrize"
+      v-model:selected-prize="selectedPrize"
       :change-person-count="changePersonCount"
       :select-prize="selectPrize"
       :local-image-list="localImageList"
       :add-temporary-prize="addTemporaryPrize"
       :submit-temporary-prize="submitTemporaryPrize"
-    />
-    <EditSeparateDialog
-      :total-number="selectedPrize?.count" :separated-number="selectedPrize?.separateCount.countList"
-      @submit-data="submitData"
+      :submit-data="submitData"
     />
     <div class="h-full">
       <TemporaryList
