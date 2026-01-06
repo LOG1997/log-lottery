@@ -52,3 +52,5 @@ export interface IImage {
     name: string
     url: string | Blob | ArrayBuffer
 }
+
+export interface WsMsgData { data: string, id: string, dateTime: string }

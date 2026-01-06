@@ -100,11 +100,11 @@ export default defineConfig(({ mode }) => {
             },
             proxy: {
                 '/api': {
-                    target: env.VITE_BASE_URL,
+                    target: 'http://localhost:8080',
                     // 是否跨域
                     changeOrigin: true,
                     // 路径重写
-                    rewrite: path => path.replace(/^\/api/, ''),
+                    rewrite: path => path.replace(/^\/api/, '/api'),
                 },
             },
         },

@@ -1,50 +1,68 @@
 <script setup lang="ts">
-import axios from 'axios'
-import { onMounted, onUnmounted, ref } from 'vue'
+import type { WsMsgData } from '@/types/storeType'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { api_sendMsg } from '@/api/msg'
+import { useWebsocket } from '@/hooks/useWebsocket'
+import { getUniqueSignature } from '@/utils/auth'
 
-const webscoket = ref<WebSocket | null>(null)
-
+const wsUrl = ref<string>('ws://localhost:8080/echo')
+const wsQuery = ref<{ userSignature: string }>({
+    userSignature: '',
+})
+const msgData = ref<WsMsgData[]>([])
+const { open, close, send, status, data, wsRef } = useWebsocket(wsUrl, wsQuery, 5 * 1000)
 function startWs() {
-    webscoket.value = new WebSocket('ws://localhost:8080/echo')
-    webscoket.value.onopen = () => {
-        console.log('WebSocket连接已打开')
-    }
-    webscoket.value.onmessage = (event) => {
-        console.log('收到消息:', event.data)
-    }
-    webscoket.value.onclose = () => {
-        console.log('WebSocket连接已关闭')
-    }
-    webscoket.value.onerror = (error) => {
-        console.error('WebSocket发生错误:', error)
-    }
+    open()
 }
 function sendMsg() {
-    webscoket.value?.send('hello')
+    if (status.value === WebSocket.OPEN) {
+        send(`hello world${wsQuery.value.userSignature}`)
+    }
 }
 function connectUserMsg() {
-    console.log('sendMsg')
-    axios.post('http://localhost:8080/user-msg', { user: 'one' }).then((res) => {
-        console.log(res.data)
+    console.log('post msg')
+    api_sendMsg(wsQuery.value.userSignature, `hello world ${wsQuery.value.userSignature}`).then(() => {
+        console.log('post msg success')
+    }).catch((e) => {
+        console.log('post msg error', e)
     })
 }
+
+async function getFinger() {
+    wsQuery.value.userSignature = await getUniqueSignature()
+}
+watch(data, (newData) => {
+    if (!newData) {
+        return
+    }
+    msgData.value.push(newData)
+})
 onMounted(() => {
+    getFinger()
 })
 onUnmounted(() => {
 })
 </script>
 
 <template>
-  <div>
-    <button class="btn btn-secondary" @click="startWs">
+  <div class="flex flex-col gap-3">
+    <button class="btn btn-secondary btn-sm w-24" @click="startWs">
       Start WS
     </button>
-    <button class="btn btn-primary" @click="connectUserMsg">
+    <button class="btn btn-primary btn-sm w-32" @click="connectUserMsg">
       connectUserMsg
     </button>
-    <button class="btn btn-primary" @click="sendMsg">
+    <button class="btn btn-accent btn-sm w-24" @click="sendMsg">
       sendMsg
     </button>
+    <button class="btn btn-neutral btn-sm w-24" @click="getFinger">
+      getFinger
+    </button>
+    <div class="flex flex-col gap-1">
+      <div v-for="(item, index) in msgData" :key="index">
+        {{ item.data }}
+      </div>
+    </div>
   </div>
 </template>
 
