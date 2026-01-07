@@ -2,7 +2,7 @@
 import { useFullscreen } from '@vueuse/core'
 import { useQRCode } from '@vueuse/integrations/useQRCode'
 import { Maximize, Minimize, TabletSmartphone } from 'lucide-vue-next'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, shallowRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import CustomDialog from '@/components/Dialog/index.vue'
@@ -15,9 +15,11 @@ const { t } = useI18n()
 const router = useRouter()
 const route = useRoute()
 
+const customDialogRef = ref()
 const settingRef = ref()
 const fullScreenRef = ref()
-const qrCodeImg = ref('')
+const mobileUrl = shallowRef<string>('')
+const qrCodeImg = useQRCode(mobileUrl)
 
 function enterConfig() {
     router.push('/log-lottery/config')
@@ -28,8 +30,12 @@ function enterHome() {
 async function openMobileQrCode() {
     const originUrl = getOriginUrl()
     const userSignature = await getUniqueSignature()
-    const mobileUrl = `${originUrl}/mobile?userSignature=${userSignature}`
-    qrCodeImg.value = await useQRCode(mobileUrl)
+    console.log(userSignature)
+    mobileUrl.value = `${originUrl}/log-lottery/mobile?userSignature=${userSignature}`
+    customDialogRef.value.showDialog()
+}
+function handleSubmit() {
+
 }
 onMounted(() => {
     settingRef.value.addEventListener('mouseenter', () => {
@@ -43,6 +49,19 @@ onMounted(() => {
 
 <template>
   <div ref="settingRef" class="flex flex-col gap-3">
+    <CustomDialog
+      ref="customDialogRef"
+      title=""
+      :submit-func="handleSubmit"
+      footer="center"
+      dialog-class="h-120 p-6"
+    >
+      <template #content>
+        <div class="flex w-full justify-center h-90">
+          <img :src="qrCodeImg" alt="qr code">
+        </div>
+      </template>
+    </CustomDialog>
     <div ref="fullScreenRef" class="tooltip tooltip-left hidden" @click="toggleScreen">
       <div
         v-if="isFullscreen"

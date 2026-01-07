@@ -73,7 +73,6 @@ onUnmounted(() => {
     <button class="btn btn-neutral btn-sm w-24" @click="getFinger">
       getFinger
     </button>
-    <img :src="qrCodeImg" alt="QR CODE">
     <div class="flex flex-col gap-1">
       <div v-for="(item, index) in msgData" :key="index">
         {{ item.data }}
