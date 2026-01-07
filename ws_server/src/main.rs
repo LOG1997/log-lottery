@@ -86,20 +86,18 @@ async fn user_msg(req: HttpRequest, req_body: String, data: web::Data<AppState>)
     if let Some(tx) = tx_map.get(target_user_signature) {
         match tx.send(req_body.clone()) {
             Ok(_) => HttpResponse::Ok().json(ApiResponse::<()>::success_without_data(
-                "Message sent to target WebSocket client!".to_string(),
+                "发送成功".to_string(),
             )),
             Err(e) => {
                 eprintln!("Failed to send message: {}", e);
-                HttpResponse::InternalServerError().json(ApiResponse::<()>::error(
-                    500,
-                    "Failed to send message".to_string(),
-                ))
+                HttpResponse::InternalServerError()
+                    .json(ApiResponse::<()>::error(500, "系统服务异常".to_string()))
             }
         }
     } else {
         HttpResponse::NotFound().json(ApiResponse::<()>::error(
             404,
-            "Target user not connected".to_string(),
+            "后台服务未启动，请联系管理员".to_string(),
         ))
     }
 }

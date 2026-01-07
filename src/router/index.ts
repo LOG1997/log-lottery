@@ -132,6 +132,11 @@ const routes = [
                 name: 'Demo',
                 component: () => import('@/views/Demo/index.vue'),
             },
+            {
+                path: '/log-lottery/mobile',
+                name: 'Mobile',
+                component: () => import('@/views/Mobile/index.vue'),
+            },
             configRoutes,
         ],
     },

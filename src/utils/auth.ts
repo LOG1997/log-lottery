@@ -13,3 +13,8 @@ export async function getUniqueSignature() {
     const result = await fp.get()
     return result.visitorId
 }
+
+// 获取origin url
+export function getOriginUrl() {
+    return window.location.origin
+}

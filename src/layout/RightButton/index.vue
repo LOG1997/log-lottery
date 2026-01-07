@@ -1,9 +1,12 @@
 <script setup lang='ts'>
 import { useFullscreen } from '@vueuse/core'
-import { Maximize, Minimize } from 'lucide-vue-next'
+import { useQRCode } from '@vueuse/integrations/useQRCode'
+import { Maximize, Minimize, TabletSmartphone } from 'lucide-vue-next'
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
+import CustomDialog from '@/components/Dialog/index.vue'
+import { getOriginUrl, getUniqueSignature } from '@/utils/auth'
 import { usePlayMusic } from './usePlayMusic'
 
 const { playMusic, currentMusic, nextPlay } = usePlayMusic()
@@ -14,12 +17,19 @@ const route = useRoute()
 
 const settingRef = ref()
 const fullScreenRef = ref()
+const qrCodeImg = ref('')
 
 function enterConfig() {
     router.push('/log-lottery/config')
 }
 function enterHome() {
     router.push('/log-lottery')
+}
+async function openMobileQrCode() {
+    const originUrl = getOriginUrl()
+    const userSignature = await getUniqueSignature()
+    const mobileUrl = `${originUrl}/mobile?userSignature=${userSignature}`
+    qrCodeImg.value = await useQRCode(mobileUrl)
 }
 onMounted(() => {
     settingRef.value.addEventListener('mouseenter', () => {
@@ -69,6 +79,11 @@ onMounted(() => {
         @click="playMusic(currentMusic.item)" @click.right.prevent="nextPlay"
       >
         <svg-icon :name="currentMusic.paused ? 'play' : 'pause'" />
+      </div>
+    </div>
+    <div class="tooltip tooltip-left" data-tip="访问手机端">
+      <div class="flex items-center justify-center w-10 h-10 p-0 m-0 cursor-pointer setting-container bg-slate-500/50 rounded-l-xl hover:bg-slate-500/80 hover:text-blue-400/90" @click="openMobileQrCode">
+        <TabletSmartphone />
       </div>
     </div>
   </div>

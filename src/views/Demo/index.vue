@@ -1,14 +1,20 @@
 <script setup lang="ts">
 import type { WsMsgData } from '@/types/storeType'
-import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { useQRCode } from '@vueuse/integrations/useQRCode'
+import { onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
+import { useToast } from 'vue-toast-notification'
 import { api_sendMsg } from '@/api/msg'
 import { useWebsocket } from '@/hooks/useWebsocket'
-import { getUniqueSignature } from '@/utils/auth'
+import { getOriginUrl, getUniqueSignature } from '@/utils/auth'
 
+const toast = useToast()
+const mobileUrl = shallowRef<string>('')
 const wsUrl = ref<string>('ws://localhost:8080/echo')
 const wsQuery = ref<{ userSignature: string }>({
     userSignature: '',
 })
+const qrCodeImg = useQRCode(mobileUrl)
+
 const msgData = ref<WsMsgData[]>([])
 const { open, close, send, status, data, wsRef } = useWebsocket(wsUrl, wsQuery, 5 * 1000)
 function startWs() {
@@ -20,16 +26,24 @@ function sendMsg() {
     }
 }
 function connectUserMsg() {
-    console.log('post msg')
-    api_sendMsg(wsQuery.value.userSignature, `hello world ${wsQuery.value.userSignature}`).then(() => {
-        console.log('post msg success')
-    }).catch((e) => {
-        console.log('post msg error', e)
+    api_sendMsg(wsQuery.value.userSignature, `hello world ${wsQuery.value.userSignature}`).then((res: any) => {
+        toast.open({
+            message: res.msg || '发送成功',
+            type: 'success',
+            position: 'top-right',
+        })
     })
 }
 
 async function getFinger() {
-    wsQuery.value.userSignature = await getUniqueSignature()
+    const userSignature = await getUniqueSignature()
+    wsQuery.value.userSignature = userSignature
+    return userSignature
+}
+async function setMobileUrl() {
+    const originUrl = getOriginUrl()
+    const userSignature = await getFinger()
+    mobileUrl.value = `${originUrl}/log-lottery/mobile?userSignature=${userSignature}`
 }
 watch(data, (newData) => {
     if (!newData) {
@@ -39,6 +53,7 @@ watch(data, (newData) => {
 })
 onMounted(() => {
     getFinger()
+    setMobileUrl()
 })
 onUnmounted(() => {
 })
@@ -58,6 +73,7 @@ onUnmounted(() => {
     <button class="btn btn-neutral btn-sm w-24" @click="getFinger">
       getFinger
     </button>
+    <img :src="qrCodeImg" alt="QR CODE">
     <div class="flex flex-col gap-1">
       <div v-for="(item, index) in msgData" :key="index">
         {{ item.data }}

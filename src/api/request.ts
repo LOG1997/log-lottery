@@ -1,5 +1,6 @@
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import axios from 'axios'
+import openModal from '@/components/ErrorModal'
 
 class Request {
     private instance: AxiosInstance
@@ -27,15 +28,14 @@ class Request {
         this.instance.interceptors.response.use(
             (response: AxiosResponse) => {
                 // 对响应数据做些什么
-                const responseData = response.data
-
-                return responseData
+                return response
             },
             (error: any) => {
                 // 对响应错误做些什么
                 console.error('请求错误:', error)
-                openErrorModal({ title: '请求错误', content: '错乱了', visible: true })
                 if (error.response && error.response.data) {
+                    const { code, msg } = error.response.data
+                    openModal({ title: code, desc: msg })
                     return Promise.reject(error.response.data)
                 }
                 return Promise.reject(error)

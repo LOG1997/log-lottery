@@ -1,53 +1,57 @@
-// e:\t\log-lottery\src\components\ErrorModal\index.ts
-import { defineComponent, h, ref, Teleport } from 'vue'
+import { createVNode, render } from 'vue'
+import ErrorModalVue from './index.vue'
 
-const ErrorModal = defineComponent({
-    name: 'ErrorModal',
-    props: {
-        visible: {
-            type: Boolean,
-            default: false,
+// 定义弹窗调用函数
+function openModal(options = {}) {
+    // 默认配置
+    const defaultOptions = {
+        title: '提示',
+        desc: '',
+        // 确认按钮回调
+        onConfirm: () => {},
+        // 关闭按钮回调
+        onClose: () => {},
+    }
+
+    // 合并配置
+    const finalOptions = { ...defaultOptions, ...options }
+
+    // 创建容器
+    const container = document.createElement('div')
+
+    // 创建虚拟节点
+    const vnode = createVNode(ErrorModalVue, {
+        'title': finalOptions.title,
+        'desc': finalOptions.desc,
+        'modelValue': true, // 默认打开
+        'onUpdate:modelValue': (val: any) => {
+            if (!val) {
+                // 关闭时销毁组件
+                render(null, container)
+                document.body.removeChild(container)
+            }
         },
-        title: {
-            type: String,
-            default: '错误提示',
+        'onConfirm': () => {
+            finalOptions.onConfirm()
         },
-    },
-    emits: ['update:visible', 'close'],
-    setup(props, { emit, slots }) {
-        const closeModal = () => {
-            emit('update:visible', false)
-            emit('close')
-        }
+        'onClose': () => {
+            finalOptions.onClose()
+        },
+    })
 
-        return () => {
-            if (!props.visible)
-                return null
+    // 渲染组件到容器
+    render(vnode, container)
 
-            return h(Teleport, { to: 'body' }, [
-                h('div', {
-                    class: 'modal-overlay',
-                    onClick: closeModal,
-                }, [
-                    h('div', {
-                        class: 'modal-content',
-                        onClick: (e: Event) => e.stopPropagation(),
-                    }, [
-                        h('div', { class: 'modal-header' }, [
-                            h('h3', {}, props.title),
-                            h('button', {
-                                class: 'close-btn',
-                                onClick: closeModal,
-                            }, '×'),
-                        ]),
-                        h('div', { class: 'modal-body' }, [
-                            slots.default?.() || [],
-                        ]),
-                    ]),
-                ]),
-            ])
-        }
-    },
-})
+    // 将容器添加到body
+    document.body.appendChild(container)
 
-export default ErrorModal
+    // 返回关闭方法（可选）
+    return {
+        close: () => {
+            render(null, container)
+            document.body.removeChild(container)
+        },
+    }
+}
+
+export default openModal
