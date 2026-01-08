@@ -5,6 +5,9 @@ import { ref, watch } from 'vue'
 
 interface Props {
     serverList: ServerType[]
+    wsStatus: number
+    openWs: () => void
+    closeWs: () => void
 }
 defineProps<Props>()
 
@@ -32,7 +35,7 @@ hostValue.value = currentServer.value?.host || ''
 <template>
   <fieldset class="p-4 border text-setting fieldset bg-base-200 border-base-300 rounded-box w-xs pb-10">
     <legend class="fieldset-legend">
-      {{ currentServer?.name }}
+      弹幕服务
     </legend>
 
     <label class="flex flex-row items-center form-control">
@@ -64,6 +67,10 @@ hostValue.value = currentServer.value?.host || ''
           >
         </div>
       </div>
+    </label>
+    <label class="flex flex-row items-center form-control">
+      <button class="btn btn-circle btn-active btn-success" @click="openWs" />
+      {{ wsStatus === 1 ? '已连接' : '未连接' }}
     </label>
   </fieldset>
 </template>

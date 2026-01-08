@@ -5,7 +5,7 @@ import ServerSetting from './parts/ServerSetting.vue'
 import { useViewModel } from './useViewModel'
 
 const { t } = useI18n()
-const { serverList, currentServerValue } = useViewModel()
+const { serverList, currentServerValue, wsStatus, openWs, closeWs } = useViewModel()
 </script>
 
 <template>
@@ -15,6 +15,9 @@ const { serverList, currentServerValue } = useViewModel()
       <ServerSetting
         v-model:current-server="currentServerValue"
         :server-list="serverList"
+        :ws-status="wsStatus"
+        :open-ws="openWs"
+        :close-ws="closeWs"
       />
     </div>
   </div>

@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { ref, watch } from 'vue'
 import { useTimerWorker } from './useTimerWorker'
 
-export function useWebsocket(url: Ref<string>, query: Ref<Record<string, string> | string>, heartbeatInterval: number = 30 * 1000) {
+export function useWebsocket(url: Ref<string> = ref(''), query: Ref<Record<string, string> | string> = ref(''), heartbeatInterval: number = 30 * 1000) {
     const { init: initWorker, close: closeWorker } = useTimerWorker(heartbeatInterval)
     const wsUrl = ref('')
     const wsRef = ref<WebSocket | null>(null)
