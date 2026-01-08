@@ -102,6 +102,15 @@ export const configRoutes = {
             ],
         },
         {
+            path: '/log-lottery/config/server',
+            name: 'Server',
+            component: () => import('@/views/Config/Server/index.vue'),
+            meta: {
+                title: i18n.global.t('sidebar.server'),
+                icon: 'server',
+            },
+        },
+        {
             path: '/log-lottery/config/readme',
             name: 'Readme',
             component: () => import('@/views/Config/Readme/index.vue'),

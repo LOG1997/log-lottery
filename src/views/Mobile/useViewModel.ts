@@ -1,3 +1,4 @@
+import type { IMsgType } from '@/types/msgType'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useToast } from 'vue-toast-notification'
@@ -22,7 +23,11 @@ export function useViewModel() {
     }
 
     function sendMsg(msg: string) {
-        api_sendMsg(routeSignature.value, msg).then((res: any) => {
+        const msgData: IMsgType = {
+            msg,
+            dateTime: new Date().toLocaleString(),
+        }
+        api_sendMsg(routeSignature.value, msgData).then((res: any) => {
             toast.open({
                 message: res.msg || '发送成功',
                 type: 'success',
