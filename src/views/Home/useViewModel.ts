@@ -8,9 +8,9 @@ import { CSS3DObject, CSS3DRenderer } from 'three-css3d'
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js'
 import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { useToast } from 'vue-toast-notification'
+import dongSound from '@/assets/audio/end.mp3'
 import enterAudio from '@/assets/audio/enter.wav'
 import worldCupAudio from '@/assets/audio/worldcup.mp3'
-import dongSound from '@/assets/audio/end.mp3'
 import { useElementPosition, useElementStyle } from '@/hooks/useElement'
 import i18n from '@/locales/i18n'
 import useStore from '@/store'
@@ -72,10 +72,10 @@ export function useViewModel() {
     const isInitialDone = ref<boolean>(false)
     const animationFrameId = ref<any>(null)
     const playingAudios = ref<HTMLAudioElement[]>([])
-    
+
     // 抽奖音乐相关
     const lotteryMusic = ref<HTMLAudioElement | null>(null)
-    
+
     function initThreeJs() {
         const felidView = 40
         const width = window.innerWidth
@@ -322,86 +322,100 @@ export function useViewModel() {
      * @description: 开始抽奖音乐
      */
     function startLotteryMusic() {
+        if (!isPlayWinMusic.value) {
+            return
+        }
         if (lotteryMusic.value) {
             lotteryMusic.value.pause()
             lotteryMusic.value = null
         }
-        
+
         lotteryMusic.value = new Audio(worldCupAudio)
         lotteryMusic.value.loop = true
         lotteryMusic.value.volume = 0.7
-        
+
         lotteryMusic.value.play().catch((error) => {
             console.error('播放抽奖音乐失败:', error)
         })
     }
-    
+
     /**
      * @description: 停止抽奖音乐
      */
     function stopLotteryMusic() {
+        if (!isPlayWinMusic.value) {
+            return
+        }
         if (lotteryMusic.value) {
             lotteryMusic.value.pause()
             lotteryMusic.value = null
         }
     }
-    
+
     /**
      * @description: 播放结束音效
      */
     function playEndSound() {
+        if (!isPlayWinMusic.value) {
+            return
+        }
         console.log('准备播放结束音效', dongSound)
-        
+
         // 清理已结束的音频
         playingAudios.value = playingAudios.value.filter(audio => !audio.ended)
-        
+
         try {
-          const endSound = new Audio(dongSound)
-          endSound.volume = 1.0
-          
-          // 简化播放逻辑
-          const playPromise = endSound.play()
-          
-          if (playPromise) {
-            playPromise
-              .then(() => {
-                console.log('结束音效播放成功')
-                playingAudios.value.push(endSound)
-              })
-              .catch(err => {
-                console.error('播放失败:', err.name, err.message)
-                if (err.name === 'NotAllowedError') {
-                  console.warn('自动播放被阻止，需用户交互后播放')
-                }
-              })
-          }
-          
-          endSound.onended = () => {
-            console.log('结束音效播放完成')
-            const index = playingAudios.value.indexOf(endSound)
-            if (index > -1) playingAudios.value.splice(index, 1)
-          }
-        } catch (error) {
-          console.error('创建音频对象失败:', error)
+            const endSound = new Audio(dongSound)
+            endSound.volume = 1.0
+
+            // 简化播放逻辑
+            const playPromise = endSound.play()
+
+            if (playPromise) {
+                playPromise
+                    .then(() => {
+                        console.log('结束音效播放成功')
+                        playingAudios.value.push(endSound)
+                    })
+                    .catch((err) => {
+                        console.error('播放失败:', err.name, err.message)
+                        if (err.name === 'NotAllowedError') {
+                            console.warn('自动播放被阻止，需用户交互后播放')
+                        }
+                    })
+            }
+
+            endSound.onended = () => {
+                console.log('结束音效播放完成')
+                const index = playingAudios.value.indexOf(endSound)
+                if (index > -1)
+                    playingAudios.value.splice(index, 1)
+            }
         }
-      }
+        catch (error) {
+            console.error('创建音频对象失败:', error)
+        }
+    }
 
     /**
      * @description: 重置音频状态
      */
     function resetAudioState() {
+        if (!isPlayWinMusic.value) {
+            return
+        }
         // 停止抽奖音乐
         stopLotteryMusic()
-        
+
         // 清理所有正在播放的音频
-        playingAudios.value.forEach(audio => {
+        playingAudios.value.forEach((audio) => {
             if (!audio.ended && !audio.paused) {
                 audio.pause()
             }
         })
         playingAudios.value = []
     }
-    
+
     /**
      * @description: 开始抽奖，由横铺变换为球体（或其他图形）
      * @returns 随机抽取球数据
@@ -411,20 +425,21 @@ export function useViewModel() {
         if (!canOperate.value) {
             return
         }
-        
+
         // 重置音频状态
         resetAudioState()
-        
+
         // 预加载音频资源以解决浏览器自动播放策略
         try {
             const audioContext = window.AudioContext || (window as any).webkitAudioContext
             if (audioContext) {
                 console.log('音频上下文可用')
             }
-        } catch (e) {
+        }
+        catch (e) {
             console.warn('音频上下文不可用:', e)
         }
-        
+
         if (!intervalTimer.value) {
             randomBallData()
         }
@@ -500,10 +515,10 @@ export function useViewModel() {
             position: 'top-right',
             duration: 8000,
         })
-        
+
         // 开始播放抽奖音乐
         startLotteryMusic()
-        
+
         currentStatus.value = LotteryStatus.running
         rollBall(10, 3000)
         if (definiteTime.value) {
@@ -523,10 +538,10 @@ export function useViewModel() {
         }
         // 停止抽奖音乐
         stopLotteryMusic()
-        
+
         // 播放结束音效
         playEndSound()
-        
+
         //   clearInterval(intervalTimer.value)
         //   intervalTimer.value = null
         canOperate.value = false
@@ -563,9 +578,8 @@ export function useViewModel() {
                 .easing(TWEEN.Easing.Exponential.InOut)
                 .start()
                 .onComplete(() => {
-                    if (isPlayWinMusic.value) {
-                        playWinMusic()
-                    }
+                    playWinMusic()
+
                     confettiFire()
                     resetCamera()
                 })
@@ -573,17 +587,20 @@ export function useViewModel() {
     }
     // 播放音频，中将卡片越多audio对象越多，声音越大
     function playWinMusic() {
+        if (!isPlayWinMusic.value) {
+            return
+        }
         // 清理已结束的音频
         playingAudios.value = playingAudios.value.filter(audio => !audio.ended && !audio.paused)
-        
+
         if (playingAudios.value.length > maxAudioLimit) {
             console.log('音频播放数量已达到上限，请勿重复播放')
             return
         }
-        
+
         const enterNewAudio = new Audio(enterAudio)
         enterNewAudio.volume = 0.8
-        
+
         playingAudios.value.push(enterNewAudio)
         enterNewAudio.play()
             .then(() => {
@@ -603,7 +620,7 @@ export function useViewModel() {
                     playingAudios.value.splice(index, 1)
                 }
             })
-            
+
         // 播放错误时从数组中移除
         enterNewAudio.onerror = () => {
             const index = playingAudios.value.indexOf(enterNewAudio)
@@ -644,7 +661,7 @@ export function useViewModel() {
     function quitLottery() {
         // 停止抽奖音乐
         stopLotteryMusic()
-        
+
         enterLottery()
         currentStatus.value = LotteryStatus.init
     }
@@ -654,7 +671,7 @@ export function useViewModel() {
      * @param {string} mod 模式
      */
     function randomBallData(mod: 'default' | 'lucky' | 'sphere' = 'default') {
-    // 两秒执行一次
+        // 两秒执行一次
         intervalTimer.value = setInterval(() => {
             // 产生随机数数组
             const indexLength = 4
@@ -721,12 +738,12 @@ export function useViewModel() {
         }
         clearInterval(intervalTimer.value)
         intervalTimer.value = null
-        
+
         // 停止抽奖音乐
         stopLotteryMusic()
-        
+
         // 清理所有音频资源
-        playingAudios.value.forEach(audio => {
+        playingAudios.value.forEach((audio) => {
             if (!audio.ended && !audio.paused) {
                 audio.pause()
             }
@@ -735,7 +752,7 @@ export function useViewModel() {
             audio.load()
         })
         playingAudios.value = []
-        
+
         if (scene.value) {
             scene.value.traverse((object: Object3D) => {
                 if ((object as any).material) {
