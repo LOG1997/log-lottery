@@ -135,6 +135,9 @@ const routes = [
             {
                 path: '/log-lottery/mobile',
                 name: 'Mobile',
+                meta: {
+                    isMobile: true,
+                },
                 component: () => import('@/views/Mobile/index.vue'),
             },
             configRoutes,

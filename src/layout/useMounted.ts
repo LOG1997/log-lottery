@@ -2,6 +2,7 @@ import type { Ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { onMounted, provide, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 import { loadingKey, loadingState } from '@/components/Loading'
 import useStore from '@/store'
 import { themeChange } from '@/utils'
@@ -15,6 +16,7 @@ export function useMounted(tipDialog: Ref<any>) {
     const { getPrizeConfig: prizeList, getTemporaryPrize: temporaryPrize } = storeToRefs(prizeConfig)
     const tipDesc = ref('')
     const { t } = useI18n()
+    const route = useRoute()
     // 设置当前奖列表
     function setCurrentPrize() {
         if (prizeList.value.length <= 0) {
@@ -52,10 +54,19 @@ export function useMounted(tipDialog: Ref<any>) {
 
         return isChrome || isEdge
     }
+    const isShowMobileWarn = () => {
+        const isMobilePage = judgeMobile()
+        const { meta } = route
+        let allowMobile = false
+        if (meta && meta.isMobile) {
+            allowMobile = true
+        }
+        return !allowMobile && isMobilePage
+    }
     onMounted(() => {
         themeChange(localTheme.value.name)
         setCurrentPrize()
-        if (judgeMobile()) {
+        if (isShowMobileWarn()) {
             tipDialog.value.showDialog()
             tipDesc.value = t('dialog.dialogPCWeb')
         }

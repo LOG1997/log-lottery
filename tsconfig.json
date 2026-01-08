@@ -3,7 +3,7 @@
         "target": "ESNext",
         "useDefineForClassFields": true,
         "module": "ESNext",
-        "moduleResolution": "bundler",
+        "moduleResolution": "node",
         "strict": true,
         "jsx": "preserve",
         "jsxImportSource": "vue",

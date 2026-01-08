@@ -32,12 +32,12 @@ class Request {
             },
             (error: any) => {
                 // 对响应错误做些什么
-                console.error('请求错误:', error)
                 if (error.response && error.response.data) {
                     const { code, msg } = error.response.data
                     openModal({ title: code, desc: msg })
                     return Promise.reject(error.response.data)
                 }
+                openModal({ title: '请求错误', desc: error.message })
                 return Promise.reject(error)
             },
         )

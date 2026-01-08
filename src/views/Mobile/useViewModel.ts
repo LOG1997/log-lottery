@@ -18,7 +18,6 @@ export function useViewModel() {
     const getAllMsg = async () => {
         userMsgDb.getDataSortedByDateTime('userMsg', 'dateTime').then((data) => {
             userMsgArray.value = data
-            console.log('userMsgArray.value', userMsgArray.value)
         })
     }
 

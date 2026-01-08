@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useViewModel } from './useViewModel'
 
 dayjs.extend(relativeTime)
@@ -9,6 +9,10 @@ dayjs.locale('zh-cn') // 设置为中文
 
 const textareaRef = ref()
 const messageArrayRef = ref()
+// 存储定时器ID
+const timer = ref()
+// 创建一个响应式的时间戳，用于触发更新
+const nowTimestamp = ref(Date.now())
 const { sendMsg, userInputMsg, userMsgArray } = useViewModel()
 async function handleEnterSend() {
     sendMsg(userInputMsg.value)
@@ -25,9 +29,28 @@ function scrollToBottom() {
     }, 0)
 }
 
+// 带有实时更新的时间显示
+const formattedMessages = computed(() => {
+    const _ = nowTimestamp.value
+    return userMsgArray.value.map(item => ({
+        ...item,
+        formattedTime: dayjs(item.dateTime).fromNow(),
+    }))
+})
 watch(() => userMsgArray.value.length, () => {
     scrollToBottom()
 }, { immediate: true })
+
+onMounted(() => {
+    timer.value = setInterval(() => {
+        nowTimestamp.value = Date.now()
+    }, 60000) // 每分钟更新一次
+})
+onUnmounted(() => {
+    if (timer.value) {
+        clearInterval(timer.value)
+    }
+})
 </script>
 
 <template>
@@ -39,10 +62,10 @@ watch(() => userMsgArray.value.length, () => {
     </div>
     <div ref="messageArrayRef" class="overflow-y-auto h-[calc(100vh-15rem)]">
       <ul>
-        <li v-for="item in userMsgArray" :key="item.id" class="mb-3">
+        <li v-for="item in formattedMessages" :key="item.id" class="mb-3">
           <div class="chat chat-end">
             <div class="chat-header">
-              <time class="text-xs opacity-50">{{ dayjs(item.dateTime).fromNow() }}</time>
+              <time class="text-xs opacity-50">{{ item.formattedTime }}</time>
             </div>
             <div class="chat-bubble break-all whitespace-normal">
               {{ item.msg }}

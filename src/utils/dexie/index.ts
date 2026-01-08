@@ -11,7 +11,6 @@ class IndexDb {
     dbKeys: string[]
     tableNames: string[]
     constructor(name: string, tableNames: string[], version = 1, dbKeys: string[] = []) {
-        console.log('name', name, 'tableNames', tableNames, 'version', version, 'dbKeys', dbKeys)
         this.name = name // 数据库名称
         this.version = version // 数据库版本号
         this.dbKeys = dbKeys // 数据库key
@@ -43,7 +42,6 @@ class IndexDb {
         if (!data.id) {
             data.id = uuidv4()
         }
-        console.log('data', data, tableName)
         this.dbStore[tableName].add(data)
     }
 

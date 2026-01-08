@@ -35,11 +35,6 @@ function handleClose() {
     visible.value = false
     emit('update:modelValue', false)
     emit('close')
-    setIsOpen(false)
-}
-
-function setIsOpen(value) {
-    isOpen.value = value
 }
 </script>
 
