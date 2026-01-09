@@ -24,7 +24,7 @@ export function useViewModel() {
 
     function sendMsg(msg: string) {
         const msgData: IMsgType = {
-            msg,
+            data: msg,
             dateTime: new Date().toLocaleString(),
         }
         api_sendMsg(routeSignature.value, msgData).then((res: any) => {

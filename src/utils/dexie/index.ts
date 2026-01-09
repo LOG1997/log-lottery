@@ -42,6 +42,7 @@ class IndexDb {
         if (!data.id) {
             data.id = uuidv4()
         }
+
         this.dbStore[tableName].add(data)
     }
 

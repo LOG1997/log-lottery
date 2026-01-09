@@ -5,7 +5,7 @@ import { ref, watch } from 'vue'
 
 interface Props {
     serverList: ServerType[]
-    wsStatus: number
+    wsStatus: { status: WebSocket['readyState'], connected: boolean } | undefined
     openWs: () => void
     closeWs: () => void
 }
@@ -69,8 +69,35 @@ hostValue.value = currentServer.value?.host || ''
       </div>
     </label>
     <label class="flex flex-row items-center form-control">
-      <button class="btn btn-circle btn-active btn-success" @click="openWs" />
-      {{ wsStatus === 1 ? '已连接' : '未连接' }}
+      <div class="flex flex-col gap-3">
+        <div class="label">
+          <span class="label-text">弹幕服务器连接状态</span>
+        </div>
+        <div class="flex gap-2 items-center">
+          <div class="ws-status">
+            <div v-if="wsStatus && wsStatus.connected">
+              <div aria-label="success" class="status status-success" />
+              <span>已连接</span>
+            </div>
+            <div v-else-if="wsStatus && wsStatus.connected === false">
+              <div aria-label="error" class="status status-error" />
+              <span>已断开</span>
+            </div>
+            <div v-else-if="wsStatus && wsStatus.status">
+              <div aria-label="error" class="status status-error" />
+              <span>操作中</span>
+            </div>
+            <div v-else>
+              <div aria-label="warning" class="status status-warning" />
+              <span>未连接</span>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <button v-if="wsStatus?.connected === true" class="btn btn-error btn-sm" @click="closeWs">断开</button>
+            <button v-else class="btn btn-primary btn-sm" @click="openWs">连接</button>
+          </div>
+        </div>
+      </div>
     </label>
   </fieldset>
 </template>

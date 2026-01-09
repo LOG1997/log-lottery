@@ -1,5 +1,5 @@
 export interface IMsgType {
-    msg: string
+    data: string
     image?: string | Blob | ArrayBuffer // TODO
     dateTime: string
     user?: string // TODO

@@ -1,102 +1,114 @@
-import type { Ref } from 'vue'
+import type { IMsgType } from '@/types/msgType'
 import type { WsMsgData } from '@/types/storeType'
 import { v4 as uuidv4 } from 'uuid'
-import { ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useTimerWorker } from './useTimerWorker'
 
-export function useWebsocket(url: Ref<string> = ref(''), query: Ref<Record<string, string> | string> = ref(''), heartbeatInterval: number = 30 * 1000) {
-    const { init: initWorker, close: closeWorker } = useTimerWorker(heartbeatInterval)
-    const wsUrl = ref('')
-    const wsRef = ref<WebSocket | null>(null)
-    // websocket readyState
-    const status = ref<WebSocket['readyState']>()
+export function useWebsocket() {
+    const { init: initWorker, close: closeWorker } = useTimerWorker(30 * 1000)
+    const status = ref<{ status: WebSocket['readyState'], connected: boolean }>()
     const data = ref<WsMsgData>()
-
-    let heartbeatTimer: number | null = null
-    function open() {
-        wsRef.value = new WebSocket(wsUrl.value)
-        wsRef.value.onopen = () => {
-            console.log('连接成功')
-            getStatus()
-            initWorker(startHeartbeat)
-        }
-        wsRef.value.onmessage = (event) => {
-            console.log('收到消息:', event.data)
-            data.value = {
-                data: event.data,
-                id: uuidv4(),
-                dateTime: new Date().toLocaleString(),
+    const registration = ref<ServiceWorkerRegistration | null>(null)
+    async function registerSW() {
+        if ('serviceWorker' in navigator) {
+            try {
+                registration.value = await navigator.serviceWorker.register('/log-lottery/sw.js')
+                console.log('Service Worker 注册成功:', registration)
+                listenSWMessage()
             }
-            resetHeartbeat()
-        }
-        wsRef.value.onclose = () => {
-            console.log('连接关闭')
-            getStatus()
-            stopHeartbeat()
-            closeWorker()
-        }
-        wsRef.value.onerror = (error) => {
-            console.error('WebSocket 错误:', error)
-            getStatus()
-            stopHeartbeat()
-        }
-    }
-    function close() {
-        stopHeartbeat()
-        if (wsRef.value) {
-            wsRef.value.close()
-            getStatus()
-            wsRef.value = null
-        }
-    }
-    function send(message: string) {
-        if (wsRef.value && wsRef.value.readyState === WebSocket.OPEN) {
-            wsRef.value.send(message)
+            catch (error) {
+                console.error('Service Worker 注册失败:', error)
+            }
         }
         else {
-            console.error('WebSocket 未连接，无法发送消息')
+            console.error('浏览器不支持 Service Worker')
         }
+    }
+
+    function open(url: string) {
+        navigator.serviceWorker.ready.then((registration) => {
+            registration.active?.postMessage({
+                type: 'CONNECT_WS',
+                payload: { url },
+            })
+        })
+    }
+
+    function close() {
+        closeWorker()
+        navigator.serviceWorker.ready.then((registration) => {
+            registration.active?.postMessage({
+                type: 'DISCONNECT_WS',
+            })
+        })
+    }
+    function send(message: string) {
+        navigator.serviceWorker.ready.then((registration) => {
+            registration.active?.postMessage({
+                type: 'SEND_WS_MESSAGE',
+                payload: { message, id: uuidv4() },
+            })
+        })
     }
     function getStatus() {
-        if (wsRef.value) {
-            status.value = wsRef.value.readyState
-        }
-    }
-    // 开始心跳
-    function startHeartbeat() {
-        if (!wsRef.value) {
-            return
-        }
-        wsRef.value.send('ping')
+        navigator.serviceWorker.ready.then((registration) => {
+            registration.active?.postMessage({
+                type: 'GET_WS_STATUS',
+            })
+        })
     }
 
-    // 停止心跳
-    function stopHeartbeat() {
-        if (heartbeatTimer) {
-            clearInterval(heartbeatTimer)
-            heartbeatTimer = null
-        }
+    // 监听service worker消息
+    function listenSWMessage() {
+        navigator.serviceWorker.addEventListener('message', (event) => {
+            const msgType = event.data.type
+            switch (msgType) {
+                case 'WS_STATUS':
+                    status.value = event.data.payload
+                    break
+                case 'WS_MESSAGE':{
+                    const receivedMsg: IMsgType = event.data.payload as IMsgType
+                    data.value = {
+                        ...receivedMsg,
+                        id: uuidv4(),
+                    }
+                    break
+                }
+                case 'WS_ERROR':
+                    console.error('ws error:', event.data.payload)
+                    status.value = {
+                        status: WebSocket.CLOSED,
+                        connected: false,
+                    }
+                    closeWorker()
+                    break
+                case 'WS_CLOSE':
+                    status.value = {
+                        status: WebSocket.CLOSED,
+                        connected: false,
+                    }
+                    closeWorker()
+                    break
+                case 'WS_OPEN':
+                    status.value = {
+                        status: WebSocket.OPEN,
+                        connected: true,
+                    }
+                    initWorker(getStatus)
+                    break
+            }
+        })
     }
 
-    // 重置心跳（收到服务器响应后调用）
-    function resetHeartbeat() {
-        if (heartbeatTimer) {
-            clearInterval(heartbeatTimer)
-            initWorker(startHeartbeat) // 重新开始心跳
-        }
-    }
-    watch([url, query], ([newUrl, newQuery]) => {
-        // 结构query
-        const newQueryString = Object.entries(newQuery).map(([key, value]) => `${key}=${value}`).join('&')
-        wsUrl.value = newQuery ? `${newUrl}?${newQueryString}` : newUrl
-    }, { immediate: true, deep: true })
-
+    onMounted(() => {
+        registerSW()
+        getStatus()
+    })
     return {
         open,
         close,
         send,
         status,
         data,
-        wsRef,
     }
 }

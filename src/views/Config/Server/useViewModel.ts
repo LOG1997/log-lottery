@@ -1,25 +1,31 @@
-import type { ServerType } from '@/types/storeType'
+import type { ServerType, WsMsgData } from '@/types/storeType'
 import { cloneDeep } from 'lodash-es'
 import { storeToRefs } from 'pinia'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, toRaw, watch } from 'vue'
 import { useWebsocket } from '@/hooks/useWebsocket'
 import useStore from '@/store'
-import { getOriginUrl, getUniqueSignature } from '@/utils/auth'
+import { getUniqueSignature } from '@/utils/auth'
+import { IndexDb } from '@/utils/dexie'
 
 export function useViewModel() {
     const serverConfig = useStore().serverConfig
     const { getServerList: serverList, getCurrentServer: currentServer } = storeToRefs(serverConfig)
     const currentServerValue = ref<ServerType>(cloneDeep(currentServer.value))
     const wsUrl = ref<string>('ws://localhost:8080/echo')
-    const wsQuery = ref<{ userSignature: string }>({
-        userSignature: '',
-    })
-    const { open: openWs, close: closeWs, send, status: wsStatus, data, wsRef } = useWebsocket(wsUrl, wsQuery, 5 * 1000)
-    async function getFinger() {
+    const msgList = ref<WsMsgData[]>([])
+    const { open: openWs, close: closeWs, status: wsStatus, data } = useWebsocket()
+    const msgListDb = new IndexDb('msgList', ['msgList'], 1, ['createTime'])
+    const handleConnectWs = async () => {
         const userSignature = await getUniqueSignature()
-        wsQuery.value.userSignature = userSignature
-        return userSignature
+        wsUrl.value = `ws://localhost:8080/echo?userSignature=${userSignature}`
+        openWs(wsUrl.value)
     }
+    const getAllMsg = async () => {
+        msgListDb.getDataSortedByDateTime('msgList', 'dateTime').then((data) => {
+            msgList.value = data
+        })
+    }
+
     watch(
         () => currentServerValue.value.id,
         (newValue) => {
@@ -35,17 +41,22 @@ export function useViewModel() {
         currentServerValue.value.host = newValue
         serverConfig.updateServerList(currentServerValue.value)
     })
-    watch(() => wsStatus.value, (newValue) => {
-        console.log('status:', newValue)
-    })
+    watch(() => data.value, (newValue) => {
+        if (!newValue) {
+            return
+        }
+        msgListDb.setData('msgList', toRaw(newValue))
+        getAllMsg()
+    }, { immediate: true, deep: true })
     onMounted(() => {
-        getFinger()
+        getAllMsg()
     })
     return {
         serverList,
         currentServerValue,
         wsStatus,
-        openWs,
+        handleConnectWs,
         closeWs,
+        msgList,
     }
 }

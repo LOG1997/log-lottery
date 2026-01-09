@@ -10,7 +10,6 @@ export function useTimerWorker(interval: number) {
         if (timerWorker.onmessage)
             return
         timerWorker.addEventListener('message', () => callback())
-        console.log('timerWorker init')
     }
 
     function close() {
