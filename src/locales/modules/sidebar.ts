@@ -8,6 +8,7 @@ export const sidebarEn = {
     imagesManagement: 'Images Management',
     musicManagement: 'Music Management',
     operatingInstructions: 'Operating Instructions',
+    server: 'Server',
 }
 
 export const sidebarZhCn = {
@@ -20,6 +21,7 @@ export const sidebarZhCn = {
     imagesManagement: '图片管理',
     musicManagement: '音乐管理',
     operatingInstructions: '操作说明',
+    server: '服务器',
 }
 
 export const sidebar = {

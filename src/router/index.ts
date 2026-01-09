@@ -102,6 +102,15 @@ export const configRoutes = {
             ],
         },
         {
+            path: '/log-lottery/config/server',
+            name: 'Server',
+            component: () => import('@/views/Config/Server/index.vue'),
+            meta: {
+                title: i18n.global.t('sidebar.server'),
+                icon: 'server',
+            },
+        },
+        {
             path: '/log-lottery/config/readme',
             name: 'Readme',
             component: () => import('@/views/Config/Readme/index.vue'),
@@ -131,6 +140,14 @@ const routes = [
                 path: '/log-lottery/demo',
                 name: 'Demo',
                 component: () => import('@/views/Demo/index.vue'),
+            },
+            {
+                path: '/log-lottery/mobile',
+                name: 'Mobile',
+                meta: {
+                    isMobile: true,
+                },
+                component: () => import('@/views/Mobile/index.vue'),
             },
             configRoutes,
         ],

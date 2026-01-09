@@ -9,11 +9,15 @@ interface Props {
     submitText?: string
     submitFunc?: () => void
     cancelFunc?: () => void
+    footer?: null | 'center' | 'left' | 'right'
+    dialogClass?: string // 添加动态class属性
 }
 const props = withDefaults(defineProps<Props>(), {
     cancelText: i18n.global.t('button.cancel'),
     submitText: i18n.global.t('button.confirm'),
     cancelFunc: () => {},
+    footer: 'right',
+    dialogClass: '',
 })
 const visible = defineModel('visible', {
     type: Boolean,
@@ -43,7 +47,7 @@ const { title, desc, cancelText, submitText, submitFunc, cancelFunc = defaultCan
 
 <template>
   <dialog id="my_modal" ref="dialogRef" class="border-none modal">
-    <div class="modal-box">
+    <div class="modal-box" :class="[dialogClass]">
       <h3 v-if="title" class="text-lg font-bold">
         {{ title }}
       </h3>
@@ -53,7 +57,7 @@ const { title, desc, cancelText, submitText, submitFunc, cancelFunc = defaultCan
       <div>
         <slot name="content" />
       </div>
-      <div class="modal-action">
+      <div class="modal-action" :class="{ 'flex justify-center': footer === 'center' }">
         <form method="dialog" class="flex gap-3">
           <!-- if there is a button in form, it will close the modal -->
           <button class="btn" @click="cancelFunc">

@@ -51,4 +51,8 @@ pinia.use(piniaPluginPersist)
 
 app.config.globalProperties.$THREE = THREE // 挂载到原型
 app.component('svg-icon', svgIcon)
-app.use(router).use(VueDOMPurifyHTML).use(pinia).use(i18n).mount('#app')
+app.use(router)
+app.use(VueDOMPurifyHTML)
+app.use(pinia)
+app.use(i18n)
+app.mount('#app')
