@@ -8,6 +8,7 @@ export const useServerConfig = defineStore('server', {
             serverConfig: {
                 serverList: defaultServerHostList,
                 currentServer: defaultServerHostList[0],
+                serverStatus: false,
             },
         }
     },
@@ -19,6 +20,10 @@ export const useServerConfig = defineStore('server', {
         // 获取当前服务器
         getCurrentServer(state) {
             return state.serverConfig.currentServer
+        },
+        // 获取服务器状态
+        getServerStatus(state) {
+            return state.serverConfig.serverStatus
         },
 
     },
@@ -36,11 +41,16 @@ export const useServerConfig = defineStore('server', {
         setCurrentServer(userServer: ServerType) {
             this.serverConfig.currentServer = userServer
         },
+        // 设置服务器状态
+        setServerStatus(status: boolean) {
+            this.serverConfig.serverStatus = status
+        },
         // 重置所有配置
         resetDefault() {
             this.serverConfig = {
                 serverList: defaultServerHostList,
                 currentServer: defaultServerHostList[0],
+                serverStatus: false,
             }
         },
     },
