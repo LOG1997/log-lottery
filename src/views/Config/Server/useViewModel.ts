@@ -1,7 +1,7 @@
 import type { ServerType, WsMsgData } from '@/types/storeType'
 import { cloneDeep } from 'lodash-es'
 import { storeToRefs } from 'pinia'
-import { onMounted, ref, toRaw, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useWebsocket } from '@/hooks/useWebsocket'
 import useStore from '@/store'
 import { getUniqueSignature } from '@/utils/auth'
@@ -13,7 +13,7 @@ export function useViewModel() {
     const currentServerValue = ref<ServerType>(cloneDeep(currentServer.value))
     const wsUrl = ref<string>('ws://localhost:8080/echo')
     const msgList = ref<WsMsgData[]>([])
-    const { open: openWs, close: closeWs, status: wsStatus, data } = useWebsocket()
+    const { open: openWs, close: closeWs, status: wsStatus } = useWebsocket()
     const msgListDb = new IndexDb('msgList', ['msgList'], 1, ['createTime'])
     const handleConnectWs = async () => {
         const userSignature = await getUniqueSignature()
@@ -41,13 +41,6 @@ export function useViewModel() {
         currentServerValue.value.host = newValue
         serverConfig.updateServerList(currentServerValue.value)
     })
-    watch(() => data.value, (newValue) => {
-        if (!newValue) {
-            return
-        }
-        msgListDb.setData('msgList', toRaw(newValue))
-        getAllMsg()
-    }, { immediate: true, deep: true })
     onMounted(() => {
         getAllMsg()
     })

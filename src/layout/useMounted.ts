@@ -1,11 +1,13 @@
 import type { Ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { onMounted, provide, ref } from 'vue'
+import { onMounted, provide, ref, toRaw, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { loadingKey, loadingState } from '@/components/Loading'
+import { useWebsocket } from '@/hooks/useWebsocket'
 import useStore from '@/store'
 import { themeChange } from '@/utils'
+import { IndexDb } from '@/utils/dexie'
 
 export function useMounted(tipDialog: Ref<any>) {
     provide(loadingKey, loadingState)
@@ -17,6 +19,8 @@ export function useMounted(tipDialog: Ref<any>) {
     const tipDesc = ref('')
     const { t } = useI18n()
     const route = useRoute()
+    const { data } = useWebsocket()
+    const msgListDb = new IndexDb('msgList', ['msgList'], 1, ['createTime'])
     // 设置当前奖列表
     function setCurrentPrize() {
         if (prizeList.value.length <= 0) {
@@ -63,6 +67,13 @@ export function useMounted(tipDialog: Ref<any>) {
         }
         return !allowMobile && isMobilePage
     }
+
+    watch(() => data.value, (newValue) => {
+        if (!newValue) {
+            return
+        }
+        msgListDb.setData('msgList', toRaw(newValue))
+    }, { immediate: true, deep: true })
     onMounted(() => {
         themeChange(localTheme.value.name)
         setCurrentPrize()
