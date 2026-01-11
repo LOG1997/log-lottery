@@ -485,7 +485,7 @@ export function useViewModel() {
 
             return
         }
-        luckyCount.value = 10
+        // luckyCount.value = 10
         // 自定义抽奖个数
 
         let leftover = currentPrize.value.count - currentPrize.value.isUsedCount
@@ -498,9 +498,11 @@ export function useViewModel() {
                 }
             }
         }
-        luckyCount.value = leftover < luckyCount.value ? leftover : luckyCount.value
+        luckyCount.value = leftover
+        console.log('抽取的幸运人数量', luckyCount.value, leftover)
         // 重构抽奖函数
         luckyTargets.value = getRandomElements(personPool.value, luckyCount.value)
+        console.log('抽取的幸运人', luckyTargets.value.length, luckyTargets.value)
         luckyTargets.value.forEach((item) => {
             const index = personPool.value.findIndex(person => person.id === item.id)
             if (index > -1) {
