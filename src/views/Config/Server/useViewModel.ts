@@ -9,7 +9,10 @@ import { IndexDb } from '@/utils/dexie'
 
 export function useViewModel() {
     const serverConfig = useStore().serverConfig
-    const { getServerList: serverList, getCurrentServer: currentServer } = storeToRefs(serverConfig)
+    const {
+        getServerList: serverList,
+        getCurrentServer: currentServer,
+    } = storeToRefs(serverConfig)
     const currentServerValue = ref<ServerType>(cloneDeep(currentServer.value))
     const wsUrl = ref<string>('ws://localhost:8080/echo')
     const msgList = ref<WsMsgData[]>([])
@@ -41,6 +44,16 @@ export function useViewModel() {
         currentServerValue.value.host = newValue
         serverConfig.updateServerList(currentServerValue.value)
     })
+
+    watch(
+        () => wsStatus.value,
+        (newValue) => {
+            if (newValue && (newValue.connected === true || newValue.connected === false)) {
+                serverConfig.setServerStatus(newValue.connected)
+            }
+        },
+    )
+
     onMounted(() => {
         getAllMsg()
     })

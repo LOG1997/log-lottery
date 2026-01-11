@@ -2,13 +2,19 @@
 import { useFullscreen } from '@vueuse/core'
 import { useQRCode } from '@vueuse/integrations/useQRCode'
 import { Maximize, Minimize, TabletSmartphone } from 'lucide-vue-next'
+import { storeToRefs } from 'pinia'
 import { onMounted, ref, shallowRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import CustomDialog from '@/components/Dialog/index.vue'
+import useStore from '@/store'
 import { getOriginUrl, getUniqueSignature } from '@/utils/auth'
 import { usePlayMusic } from './usePlayMusic'
 
+const serverConfig = useStore().serverConfig
+const {
+    getServerStatus: serverStatus,
+} = storeToRefs(serverConfig)
 const { playMusic, currentMusic, nextPlay } = usePlayMusic()
 const { isFullscreen, toggle: toggleScreen } = useFullscreen()
 const { t } = useI18n()
@@ -110,7 +116,7 @@ onMounted(() => {
         <svg-icon :name="currentMusic.paused ? 'play' : 'pause'" />
       </div>
     </div>
-    <div class="tooltip tooltip-left" data-tip="访问手机端">
+    <div v-if="serverStatus" class="tooltip tooltip-left" data-tip="访问手机端">
       <div class="flex items-center justify-center w-10 h-10 p-0 m-0 cursor-pointer setting-container bg-slate-500/50 rounded-l-xl hover:bg-slate-500/80 hover:text-blue-400/90" @click="openMobileQrCode">
         <TabletSmartphone />
       </div>
