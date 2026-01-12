@@ -2,6 +2,7 @@
     cursor: default;
     text-align: center;
     user-select: none;
+
     .card-id {
         position: absolute;
         top: 10px;
@@ -21,7 +22,7 @@
         z-index: 2;
     }
 
-    .card-avatar-name{
+    .card-avatar-name {
         top: auto;
         bottom: 0;
         left: 0px;
@@ -37,7 +38,7 @@
         z-index: 2;
     }
 
-    .card-avatar{
+    .card-avatar {
         position: absolute;
         top: 0;
         left: 0;
@@ -52,6 +53,8 @@
 
 .lucky-element-card {
     cursor: default;
+    user-select: none;
+
     &::before {
         background-color: linear-gradient(-45deg, #e81cff 0%, #40c9ff 100%);
         border: 1px solid linear-gradient(-45deg, #e81cff 0%, #40c9ff 100%);
@@ -79,7 +82,8 @@
         // animation: tracking-in-expand-fwd 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both;
         // animation-delay: 0.6s;
     }
-    .card-avatar-name{
+
+    .card-avatar-name {
         top: auto;
         bottom: 0;
         left: 0px;
@@ -96,7 +100,7 @@
         bottom: 15px;
     }
 
-    .card-avatar{
+    .card-avatar {
         position: absolute;
         top: 0;
         left: 0;
