@@ -103,7 +103,7 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
         }
     }
     function downloadTemplate() {
-    // 下载
+        // 下载
         const templateFileName = i18n.global.t('data.xlsxName')
         const fileUrl = `${baseUrl}${templateFileName}`
         fetch(fileUrl)
@@ -160,6 +160,11 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
             const dataBinaryBinary = XLSX.utils.book_new()
             XLSX.utils.book_append_sheet(dataBinaryBinary, dataBinary, 'Sheet1')
             XLSX.writeFile(dataBinaryBinary, 'data.xlsx')
+            toast.open({
+                message: t('error.exportSuccess'),
+                type: 'success',
+                position: 'top-right',
+            })
         }
     }
 
