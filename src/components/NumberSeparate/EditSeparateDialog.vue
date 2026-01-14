@@ -1,6 +1,7 @@
 <script setup lang='ts'>
 import type { Separate } from '@/types/storeType'
-import { onMounted, ref, toRefs, watch } from 'vue'
+import { useVirtualList } from '@vueuse/core'
+import { computed, onMounted, ref, toRefs, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
@@ -18,6 +19,27 @@ const { t } = useI18n()
 const separatedNumberRef = ref()
 const { separatedNumber, totalNumber } = toRefs(props)
 const scaleList = ref<number[]>([])
+
+const ITEMS_PER_ROW = 10
+const ROW_HEIGHT = 52
+
+// Group numbers into rows for virtual list
+const rows = computed(() => {
+    const result: number[][] = []
+    for (let i = 0; i < props.totalNumber; i += ITEMS_PER_ROW) {
+        const row: number[] = []
+        for (let j = i; j < Math.min(i + ITEMS_PER_ROW, props.totalNumber); j++) {
+            row.push(j + 1)
+        }
+        result.push(row)
+    }
+    return result
+})
+
+const { list, containerProps, wrapperProps } = useVirtualList(rows, {
+    itemHeight: ROW_HEIGHT,
+})
+
 function editScale(item: number) {
     if (item === totalNumber.value) {
         return
@@ -73,30 +95,40 @@ onMounted(() => {
 
 <template>
   <dialog id="my_modal_1" ref="separatedNumberRef" class="z-50 overflow-hidden border-none modal">
-    <div class="overflow-hidden modal-box">
-      <h3 class="pb-6 text-lg font-bold">
+    <div class="overflow-hidden modal-box max-h-[70vh] flex flex-col">
+      <h3 class="pb-4 text-lg font-bold shrink-0">
         {{ t('dialog.titleTip') }}
       </h3>
-      <p class="pb-8">
+      <p class="pb-4 shrink-0">
         {{ t('dialog.dialogSingleDrawLimit') }}
       </p>
-      <div class="flex justify-between px-3 text-center separated-number">
-        <div
-          v-for="item in props.totalNumber" :key="item"
-          class="relative flex flex-col items-center cursor-pointer"
-        >
+      <!-- Virtual scrolling container -->
+      <div
+        v-bind="containerProps"
+        class="flex-1 min-h-0 px-3 overflow-y-auto"
+        style="max-height: calc(70vh - 180px);"
+      >
+        <div v-bind="wrapperProps">
           <div
-            class="absolute mb-12 text-center tooltip -top-5 hover:text-lg" :data-tip="t('tooltip.leftClick')"
-            @click.left="editScale(item)"
+            v-for="{ data: row, index } in list"
+            :key="index"
+            class="grid grid-cols-10 gap-1 text-center pb-2"
+            :style="{ height: `${ROW_HEIGHT}px` }"
           >
-            <span> {{ item }}</span>
-          </div>
-          <div class="text-center" :class="scaleList.includes(item) ? 'text-red-500 font-extrabold' : ''">
-            |
+            <div
+              v-for="item in row"
+              :key="item"
+              class="flex flex-col items-center justify-start cursor-pointer rounded hover:bg-base-200 transition-colors pt-1"
+              :data-tip="t('tooltip.leftClick')"
+              @click.left="editScale(item)"
+            >
+              <span>{{ item }}</span>
+              <span :class="scaleList.includes(item) ? 'text-red-500 font-extrabold' : ''" class="leading-none">|</span>
+            </div>
           </div>
         </div>
       </div>
-      <div class="modal-action">
+      <div class="modal-action shrink-0">
         <form method="dialog">
           <!-- if there is a button in form, it will close the modal -->
           <button class="btn" @click="clearData">
