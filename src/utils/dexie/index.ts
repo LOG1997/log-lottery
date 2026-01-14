@@ -2,6 +2,7 @@ import type { EntityTable } from 'dexie'
 import type { DbData } from './type'
 import dayjs from 'dayjs'
 import Dexie from 'dexie'
+import { v4 as uuidv4 } from 'uuid'
 
 class IndexDb {
     name: string
@@ -38,6 +39,10 @@ class IndexDb {
         if (!data.type) {
             data.type = 'info'
         }
+        if (!data.id) {
+            data.id = uuidv4()
+        }
+
         this.dbStore[tableName].add(data)
     }
 

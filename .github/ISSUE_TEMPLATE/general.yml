@@ -1,0 +1,19 @@
+name: General Issue
+description: 新开空白issue模板
+body:
+  - type: input
+    id: log-lottery-version
+    attributes:
+      label: log-lottery版本
+      description: |
+        你所使用的 log-lottery 的准确版本。
+      placeholder: eg. v0.5.0
+    validations:
+      required: false
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述
+      placeholder: 请尽可能详细地告诉我你所遇到的问题
+    validations:
+      required: false

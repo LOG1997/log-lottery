@@ -1,4 +1,5 @@
 import type { IPersonConfig, IPrizeConfig } from '@/types/storeType'
+import { id } from 'zod/v4/locales'
 
 const originUrl = 'https://to2026.xyz'
 type IPersonConfigWithoutUuid = Omit<IPersonConfig, 'uuid'>
@@ -279,3 +280,24 @@ export const defaultImageList = [
     },
 ]
 export const defaultPatternList = [21, 38, 55, 54, 53, 70, 87, 88, 89, 23, 40, 57, 74, 91, 92, 76, 59, 42, 25, 24, 27, 28, 29, 46, 63, 62, 61, 78, 95, 96, 97, 20, 19, 31, 48, 66, 67, 84, 101, 100, 32, 33, 93, 65, 82, 99]
+
+export const defaultServerHostList = [
+    {
+        id: 'default',
+        name: '默认服务器',
+        value: 'default',
+        host: 'https://to2026.xyz:8080',
+    },
+    {
+        id: 'local',
+        name: '本地服务器',
+        value: 'local',
+        host: 'http://127.0.0.1:8080',
+    },
+    {
+        id: 'custom',
+        name: '自定义服务器',
+        value: 'custom',
+        host: '',
+    },
+]

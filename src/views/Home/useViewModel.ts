@@ -146,7 +146,19 @@ export function useViewModel() {
                 element.appendChild(avatarEmpty)
             }
 
-            element = useElementStyle(element, tableData.value[i], i, patternList.value, patternColor.value, cardColor.value, cardSize.value, textSize.value)
+            element = useElementStyle({
+                element,
+                person: tableData.value[i],
+                index: i,
+                patternList: patternList.value,
+                patternColor: patternColor.value,
+                cardColor: cardColor.value,
+                cardSize: cardSize.value,
+                scale: 1,
+                textSize: textSize.value,
+                mod: 'default',
+            },
+            )
             const object = new CSS3DObject(element)
             object.position.x = Math.random() * 4000 - 2000
             object.position.y = Math.random() * 4000 - 2000
@@ -201,7 +213,18 @@ export function useViewModel() {
                         if (luckyCardList.value.length) {
                             luckyCardList.value.forEach((cardIndex: any) => {
                                 const item = objects.value[cardIndex]
-                                useElementStyle(item.element, {} as any, i, patternList.value, patternColor.value, cardColor.value, cardSize.value, textSize.value, 'sphere')
+                                useElementStyle({
+                                    element: item.element,
+                                    person: {} as any,
+                                    index: i,
+                                    patternList: patternList.value,
+                                    patternColor: patternColor.value,
+                                    cardColor: cardColor.value,
+                                    cardSize: cardSize.value,
+                                    scale: 1,
+                                    textSize: textSize.value,
+                                    mod: 'sphere',
+                                })
                             })
                         }
                         luckyTargets.value = []
@@ -485,7 +508,7 @@ export function useViewModel() {
 
             return
         }
-        luckyCount.value = 10
+        // luckyCount.value = 10
         // 自定义抽奖个数
 
         let leftover = currentPrize.value.count - currentPrize.value.isUsedCount
@@ -498,7 +521,7 @@ export function useViewModel() {
                 }
             }
         }
-        luckyCount.value = leftover < luckyCount.value ? leftover : luckyCount.value
+        luckyCount.value = leftover
         // 重构抽奖函数
         luckyTargets.value = getRandomElements(personPool.value, luckyCount.value)
         luckyTargets.value.forEach((item) => {
@@ -553,7 +576,14 @@ export function useViewModel() {
             luckyCardList.value.push(cardIndex)
             const totalLuckyCount = luckyTargets.value.length
             const item = objects.value[cardIndex]
-            const { xTable, yTable } = useElementPosition(item, rowCount.value, totalLuckyCount, { width: cardSize.value.width * 2, height: cardSize.value.height * 2 }, windowSize, index)
+            const { xTable, yTable, scale } = useElementPosition(
+                item,
+                rowCount.value,
+                totalLuckyCount,
+                { width: cardSize.value.width, height: cardSize.value.height },
+                windowSize,
+                index,
+            )
             new TWEEN.Tween(item.position)
                 .to({
                     x: xTable,
@@ -562,7 +592,18 @@ export function useViewModel() {
                 }, 1200)
                 .easing(TWEEN.Easing.Exponential.InOut)
                 .onStart(() => {
-                    item.element = useElementStyle(item.element, person, cardIndex, patternList.value, patternColor.value, luckyColor.value, { width: cardSize.value.width * 2, height: cardSize.value.height * 2 }, textSize.value * 2, 'lucky')
+                    item.element = useElementStyle({
+                        element: item.element,
+                        person,
+                        index: cardIndex,
+                        patternList: patternList.value,
+                        patternColor: patternColor.value,
+                        cardColor: luckyColor.value,
+                        cardSize: { width: cardSize.value.width, height: cardSize.value.height },
+                        scale,
+                        textSize: textSize.value,
+                        mod: 'lucky',
+                    })
                 })
                 .start()
                 .onComplete(() => {
@@ -691,7 +732,19 @@ export function useViewModel() {
                 if (!objects.value[cardRandomIndexArr[i]]) {
                     continue
                 }
-                objects.value[cardRandomIndexArr[i]].element = useElementStyle(objects.value[cardRandomIndexArr[i]].element, allPersonList.value[personRandomIndexArr[i]], cardRandomIndexArr[i], patternList.value, patternColor.value, cardColor.value, { width: cardSize.value.width, height: cardSize.value.height }, textSize.value, mod, 'change')
+                objects.value[cardRandomIndexArr[i]].element = useElementStyle({
+                    element: objects.value[cardRandomIndexArr[i]].element,
+                    person: allPersonList.value[personRandomIndexArr[i]],
+                    index: cardRandomIndexArr[i],
+                    patternList: patternList.value,
+                    patternColor: patternColor.value,
+                    cardColor: cardColor.value,
+                    cardSize: { width: cardSize.value.width, height: cardSize.value.height },
+                    textSize: textSize.value,
+                    scale: 1,
+                    mod,
+                    type: 'change',
+                })
             }
         }, 200)
     }
