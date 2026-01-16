@@ -106,6 +106,7 @@ export const configRoutes = {
             name: 'Server',
             component: () => import('@/views/Config/Server/index.vue'),
             meta: {
+                hidden: import.meta.env.VITE_ENABLE_WEBSOCKET !== 'true',
                 title: i18n.global.t('sidebar.server'),
                 icon: 'server',
             },

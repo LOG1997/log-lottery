@@ -19,8 +19,10 @@ export function useMounted(tipDialog: Ref<any>) {
     const tipDesc = ref('')
     const { t } = useI18n()
     const route = useRoute()
-    const { data } = useWebsocket()
     const msgListDb = new IndexDb('msgList', ['msgList'], 1, ['createTime'])
+    const enableWebsocket = import.meta.env.VITE_ENABLE_WEBSOCKET
+    const websocketData = enableWebsocket === 'true' ? useWebsocket() : { data: ref(null) }
+    const { data } = websocketData
     // 设置当前奖列表
     function setCurrentPrize() {
         if (prizeList.value.length <= 0) {
