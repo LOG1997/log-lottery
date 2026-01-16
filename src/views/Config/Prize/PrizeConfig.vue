@@ -2,6 +2,7 @@
 import { Grip } from 'lucide-vue-next'
 import { VueDraggable } from 'vue-draggable-plus'
 import { useI18n } from 'vue-i18n'
+import { HoverTip } from '@/components/index'
 import EditSeparateDialog from '@/components/NumberSeparate/EditSeparateDialog.vue'
 import PageHeader from '@/components/PageHeader/index.vue'
 import { usePrizeConfig } from './usePrizeConfig'
@@ -69,7 +70,7 @@ const { t } = useI18n()
             @change="item.isAll = !item.isAll"
           >
         </label>
-        <label class="w-1/2 max-w-xs form-control">
+        <label class="w-1/2 max-w-2xl form-control">
           <div class="label">
             <span class="label-text">{{ t('table.numberParticipants') }}</span>
           </div>
@@ -77,8 +78,8 @@ const { t } = useI18n()
             v-model="item.count" type="number" :placeholder="t('placeHolder.winnerCount')" class="w-full max-w-xs p-0 m-0 input-sm input input-bordered"
             @change="changePrizePerson(item)"
           >
-          <div class="tooltip tooltip-bottom" :data-tip="`${t('table.isDone') + item.isUsedCount}/${item.count}`">
-            <progress class="w-full progress" :value="item.isUsedCount" :max="item.count" />
+          <div class="tooltip tooltip-bottom w-full" :data-tip="`${t('table.isDone') + item.isUsedCount}/${item.count}`">
+            <progress class="progress w-full" :value="item.isUsedCount" :max="item.count" />
           </div>
         </label>
         <label class="flex items-center w-1/2 max-w-xs gap-2 form-control">
@@ -105,7 +106,11 @@ const { t } = useI18n()
         <label v-if="item.separateCount" class="w-full max-w-xs form-control">
           <div class="label">
             <span class="label-text">{{ t('table.onceNumber') }}</span>
+            <HoverTip
+              :tip="t('tooltip.onceNumberMax')"
+            />
           </div>
+
           <div class="flex justify-start w-full h-full" @click="selectPrize(item)">
             <ul
               v-if="item.separateCount.countList.length"
