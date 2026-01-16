@@ -11,6 +11,7 @@ import { useToast } from 'vue-toast-notification'
 import dongSound from '@/assets/audio/end.mp3'
 import enterAudio from '@/assets/audio/enter.wav'
 import worldCupAudio from '@/assets/audio/worldcup.mp3'
+import { SINGLE_TIME_MAX_PERSON_COUNT } from '@/constant/config'
 import { useElementPosition, useElementStyle } from '@/hooks/useElement'
 import i18n from '@/locales/i18n'
 import useStore from '@/store'
@@ -508,20 +509,21 @@ export function useViewModel() {
 
             return
         }
-        // luckyCount.value = 10
-        // 自定义抽奖个数
-
+        // 默认置为单次抽奖最大个数
+        luckyCount.value = SINGLE_TIME_MAX_PERSON_COUNT
+        // 还剩多少人未抽
         let leftover = currentPrize.value.count - currentPrize.value.isUsedCount
         const customCount = currentPrize.value.separateCount
         if (customCount && customCount.enable && customCount.countList.length > 0) {
             for (let i = 0; i < customCount.countList.length; i++) {
                 if (customCount.countList[i].isUsedCount < customCount.countList[i].count) {
+                    // 根据自定义人数来抽取
                     leftover = customCount.countList[i].count - customCount.countList[i].isUsedCount
                     break
                 }
             }
         }
-        luckyCount.value = leftover
+        luckyCount.value = leftover < luckyCount.value ? leftover : luckyCount.value
         // 重构抽奖函数
         luckyTargets.value = getRandomElements(personPool.value, luckyCount.value)
         luckyTargets.value.forEach((item) => {
