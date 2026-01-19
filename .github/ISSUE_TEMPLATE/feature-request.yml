@@ -1,0 +1,24 @@
+name: Feature Request
+description: 建议添加新功能
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢你抽时间提出优化建议，请填写下方的表单完成本次问题的反馈
+  - type: input
+    id: log-lottery-version
+    attributes:
+      label: log-lottery版本
+      description: |
+        你所使用的 log-lottery 的准确版本。
+      placeholder: eg. v0.5.0
+    validations:
+      required: false
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: 你的想法是什么?
+      placeholder: 请尽可能详细地告诉我你期望实现一个什么样的功能或者哪里需要进行优化
+    validations:
+      required: false

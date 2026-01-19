@@ -37,7 +37,7 @@ function skip(path: string) {
   <div class="flex min-h-[calc(100%-280px)]">
     <ul class="w-56 m-0 mr-3 min-w-56 menu bg-base-200 pt-14">
       <li v-for="item in menuList" :key="item.name">
-        <details v-if="item.children" open>
+        <details v-if="item.children && !item.meta.hidden" open>
           <summary>{{ item.meta.title }}</summary>
           <ul>
             <li v-for="subItem in item.children" :key="subItem.name">
@@ -62,9 +62,10 @@ function skip(path: string) {
           </ul>
         </details>
         <a
-          v-else :style="item.name === route.name ? 'background-color:rgba(12,12,12,0.2)' : ''"
+          v-else-if="!item.meta.hidden" :style="item.name === route.name ? 'background-color:rgba(12,12,12,0.2)' : ''"
           @click="skip(item.path)"
         >{{ item.meta!.title }}</a>
+        <div v-else />
       </li>
     </ul>
     <router-view class="flex-1 mt-5" />
