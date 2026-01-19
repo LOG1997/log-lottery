@@ -32,9 +32,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Install dependency fast-glob
-        run: pnpm add fast-glob -D
-
       - name: Build for production
         run: pnpm build
 

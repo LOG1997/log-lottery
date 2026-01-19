@@ -1,5 +1,5 @@
 import { onUnmounted } from 'vue'
-import TimerWorker from './timerWorker.ts?worker'
+import TimerWorker from './timerWorker.worker?worker'
 
 export function useTimerWorker(interval: number) {
     let timerWorker: Worker | null = null
