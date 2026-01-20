@@ -1,15 +1,21 @@
 <script setup lang='ts'>
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import ImageSync from '@/components/ImageSync/index.vue'
+import PageHeader from '@/components/PageHeader/index.vue'
+import UploadDialog from './components/UploadDialog.vue'
 import { useViewModel } from './useViewModel'
 
 const { t } = useI18n()
 const {
+    tabsList,
     localImageList,
-    uploadVisible,
+    // uploadVisible,
     handleChangeTab,
     activeTabKey,
     removeImage,
 } = useViewModel()
+const uploadVisible = ref(false)
 </script>
 
 <template>
@@ -19,12 +25,15 @@ const {
     <PageHeader :title="t('sidebar.imagesManagement')">
       <template #buttons>
         <div role="tablist" class="tabs tabs-lift">
-          <a role="tab" class="tab" :class="{ 'tab-active': activeTabKey === 'prize' }" @click="handleChangeTab('prize')">奖品</a>
-          <a role="tab" class="tab" :class="{ 'tab-active': activeTabKey === 'avatar' }" @click="handleChangeTab('avatar')">头像</a>
+          <a v-for="item in tabsList" :key="item.key" role="tab" class="tab" :class="{ 'tab-active': activeTabKey === item.key }" @click="handleChangeTab(item.key)">{{ item.label }}</a>
         </div>
       </template>
     </PageHeader>
-
+    <div class="">
+      <label for="explore">
+        <span class="btn btn-primary btn-sm" @click="uploadVisible = true">{{ t('button.upload') }}</span>
+      </label>
+    </div>
     <ul class="p-0">
       <li v-for="item in localImageList" :key="item.id" class="mb-3">
         <div class="flex items-center gap-8">

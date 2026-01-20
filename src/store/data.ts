@@ -1,7 +1,6 @@
-import type { IPersonConfig, IPrizeConfig } from '@/types/storeType'
-import { id } from 'zod/v4/locales'
+import type { IImage, IMusic, IPersonConfig, IPrizeConfig } from '@/types/storeType'
 
-const originUrl = 'https://to2026.xyz'
+const originUrl = import.meta.env.VITE_APP_ORIGIN_URL || 'https://to2026.xyz'
 type IPersonConfigWithoutUuid = Omit<IPersonConfig, 'uuid'>
 export const defaultPersonList = <IPersonConfigWithoutUuid[]>
     [
@@ -43,7 +42,7 @@ export const defaultPersonList = <IPersonConfigWithoutUuid[]>
         { uid: 'U100156036', name: '芸娘', department: '江湖', avatar: 'https://img1.baidu.com/it/u=2165937980,813753762&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500', x: 2, y: 3, id: 35, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] },
     ]
 
-export const defaultMusicList = [
+export const defaultBackMusicList: IMusic[] = [
     {
         id: `Geoff Knorr - China (The Industrial Era).ogg${new Date().getTime().toString()}`,
         name: 'Geoff Knorr - China (The Industrial Era).ogg',
@@ -252,7 +251,7 @@ export const defaultTemporaryPrize = <IPrizeConfig>{
     frequency: 1,
 }
 
-export const defaultImageList = [
+export const defaultPrizeImageList: IImage[] = [
     {
         id: '0',
         name: '一等奖',

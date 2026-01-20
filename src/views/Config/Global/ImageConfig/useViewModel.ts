@@ -1,42 +1,56 @@
-import type { IpageImageTab } from '@/types/pageType'
-import type { IImage } from '@/types/storeType'
-import localforage from 'localforage'
+import type { IImage, IImageType } from '@/types/storeType'
 import { storeToRefs } from 'pinia'
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import useStore from '@/store'
 
 export function useViewModel() {
-    const globalConfig = useStore().globalConfig
-    const { getImageList: localImageList } = storeToRefs(globalConfig)
-    const imgUploadToast = ref(0) // 0是不显示，1是成功，2是失败,3是不是图片
-    const imageDbStore = localforage.createInstance({
-        name: 'imgStore',
-    })
-    const activeTabKey = ref<IpageImageTab>('prize')
+    const sourceConfig = useStore().sourceConfig
+    const {
+        getPrizeImageSource: prizeImageList,
+        getAvatarImageSource: avatarImageList,
+        getOtherImageSource: otherImageList,
+    } = storeToRefs(sourceConfig)
+    const tabsList: { key: IImageType, label: string }[] = [{
+        key: 'prize',
+        label: '奖品',
+    }, {
+        key: 'avatar',
+        label: '头像',
+    }, {
+        key: 'other',
+        label: '其他',
+    }]
 
-    const uploadVisible = ref(false)
+    const localImageList = ref<IImage[]>([])
+
+    const activeTabKey = ref<IImageType>('prize')
+
+    const uploadVisible = ref(true)
 
     function removeImage(item: IImage) {
-        if (item.url === 'Storage') {
-            imageDbStore.removeItem(item.id).then(() => {
-                globalConfig.removeImage(item.id)
-            })
-        }
-        globalConfig.removeImage(item.id)
+        sourceConfig.removeImageSource(item, activeTabKey.value)
     }
 
-    function handleChangeTab(key: IpageImageTab) {
+    function handleUpload() {
+
+    }
+
+    function handleChangeTab(key: IImageType) {
         activeTabKey.value = key
     }
-    watch(() => imgUploadToast.value, (val) => {
-        if (val !== 0) {
-            setTimeout(() => {
-                imgUploadToast.value = 0
-            }, 2000)
+    watch(() => activeTabKey.value, (val) => {
+        if (val === 'prize') {
+            localImageList.value = prizeImageList.value
         }
-    })
-
+        else if (val === 'avatar') {
+            localImageList.value = avatarImageList.value
+        }
+        else {
+            localImageList.value = otherImageList.value
+        }
+    }, { immediate: true })
     return {
+        tabsList,
         localImageList,
         uploadVisible,
         removeImage,

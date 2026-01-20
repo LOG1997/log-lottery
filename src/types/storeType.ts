@@ -41,16 +41,22 @@ export interface IPrizeConfig {
     isUsed: boolean
     frequency: number
 }
+
+export type IMusicType = 'background' | 'process' | 'other'
 export interface IMusic {
     id: string
     name: string
     url: string | Blob | ArrayBuffer
+    createTime?: string
 }
+
+export type IImageType = 'prize' | 'avatar' | 'other'
 
 export interface IImage {
     id: string
     name: string
     url: string | Blob | ArrayBuffer
+    createTime?: string
 }
 
 export interface WsMsgData { data: string, id: string, dateTime: string }

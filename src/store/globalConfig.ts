@@ -1,7 +1,7 @@
 import type { IImage, IMusic } from '@/types/storeType'
 import { defineStore } from 'pinia'
 import i18n, { browserLanguage } from '@/locales/i18n'
-import { defaultImageList, defaultMusicList, defaultPatternList } from './data'
+import { defaultBackMusicList, defaultPatternList, defaultPrizeImageList } from './data'
 // import { IPrizeConfig } from '@/types/storeType';
 export const useGlobalConfig = defineStore('global', {
     state() {
@@ -30,11 +30,11 @@ export const useGlobalConfig = defineStore('global', {
                     titleFont: '微软雅黑',
                     titleFontSyncGlobal: true,
                 },
-                musicList: defaultMusicList as IMusic[],
-                imageList: defaultImageList as IImage[],
+                musicList: defaultBackMusicList as IMusic[],
+                imageList: defaultPrizeImageList as IImage[],
             },
             currentMusic: {
-                item: defaultMusicList[0] as IMusic,
+                item: defaultBackMusicList[0] as IMusic,
                 paused: true,
             },
         }
@@ -215,7 +215,7 @@ export const useGlobalConfig = defineStore('global', {
         },
         // 重置音乐列表
         resetMusicList() {
-            this.globalConfig.musicList = JSON.parse(JSON.stringify(defaultMusicList)) as IMusic[]
+            this.globalConfig.musicList = JSON.parse(JSON.stringify(defaultBackMusicList)) as IMusic[]
         },
         // 清空音乐列表
         clearMusicList() {
@@ -241,7 +241,7 @@ export const useGlobalConfig = defineStore('global', {
         },
         // 重置图片列表
         resetImageList() {
-            this.globalConfig.imageList = defaultImageList as IImage[]
+            this.globalConfig.imageList = defaultPrizeImageList as IImage[]
         },
         // 清空图片列表
         clearImageList() {
@@ -310,11 +310,11 @@ export const useGlobalConfig = defineStore('global', {
                     titleFont: '微软雅黑',
                     titleFontSyncGlobal: true,
                 },
-                musicList: defaultMusicList as IMusic[],
-                imageList: defaultImageList as IImage[],
+                musicList: defaultBackMusicList as IMusic[],
+                imageList: defaultPrizeImageList as IImage[],
             }
             this.currentMusic = {
-                item: defaultMusicList[0],
+                item: defaultBackMusicList[0],
                 paused: true,
             }
         },

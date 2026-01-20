@@ -67,6 +67,11 @@ function submitUpload() {
         })
             .then(() => {
                 imgUploadToast.value = 1
+                toast.open({
+                    message: t('error.uploadSuccess'),
+                    type: 'success',
+                    position: 'top-right',
+                })
                 getImageDbStore()
             })
             .catch(() => {
@@ -82,7 +87,7 @@ watch(visible, (newVal) => {
 </script>
 
 <template>
-  <div class="toast toast-top toast-end">
+  <!-- <div class="toast toast-top toast-end">
     <div v-if="imgUploadToast === 2" class="alert alert-error">
       <span>{{ t('error.uploadFail') }}</span>
     </div>
@@ -92,7 +97,7 @@ watch(visible, (newVal) => {
     <div v-if="imgUploadToast === 3" class="alert alert-error">
       <span>{{ t('error.notImage') }}</span>
     </div>
-  </div>
+  </div> -->
   <CustomDialog
     ref="uploadDialogRef"
     v-model:visible="visible"

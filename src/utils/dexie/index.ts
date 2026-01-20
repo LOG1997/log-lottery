@@ -3,6 +3,7 @@ import type { DbData } from './type'
 import dayjs from 'dayjs'
 import Dexie from 'dexie'
 import { v4 as uuidv4 } from 'uuid'
+import { da } from 'zod/v4/locales'
 
 class IndexDb {
     name: string
@@ -25,6 +26,18 @@ class IndexDb {
     }
 
     setAllData(tableName: string, data: DbData[]) {
+        // 添加默认数据
+        data.forEach((item) => {
+            if (!item.dateTime) {
+                item.dateTime = dayjs().format('YYYY-MM-DD HH:mm:ss:SSS')
+            }
+            if (!item.type) {
+                item.type = 'info'
+            }
+            if (!item.id) {
+                item.id = uuidv4()
+            }
+        })
         this.dbStore[tableName].bulkAdd(data)
     }
 
@@ -42,7 +55,6 @@ class IndexDb {
         if (!data.id) {
             data.id = uuidv4()
         }
-
         this.dbStore[tableName].add(data)
     }
 
