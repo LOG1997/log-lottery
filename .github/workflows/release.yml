@@ -32,9 +32,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Install dependency fast-glob
-        run: pnpm add fast-glob -D
-
       - name: Build for production
         run: pnpm build
 
@@ -113,6 +110,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Download web build artifact
         uses: actions/download-artifact@v4

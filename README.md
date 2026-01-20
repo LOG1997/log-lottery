@@ -13,11 +13,14 @@
 [![docker](https://img.shields.io/docker/pulls/log1997/log-lottery)](<https://hub.docker.com/r/log1997/log-lottery>)
 [![github downloads](https://img.shields.io/github/downloads/log1997/log-lottery/total)](https://github.com/LOG1997/log-lottery/releases)
 [![release data](https://img.shields.io/github/release-date/log1997/log-lottery)](https://github.com/LOG1997/log-lottery/releases)
+[![last commit](https://img.shields.io/github/last-commit/log1997/log-lottery/dev)](https://github.com/LOG1997/log-lottery/commits/dev/)
 </div>
 
 log-lottery是一个可配置可定制化的抽奖应用，炫酷3D球体，可用于年会抽奖等活动，支持奖品、人员、界面、图片音乐配置。
 
 > 如果进入网站遇到图片无法显示或有报错的情况，请先到【全局配置】-【界面配置】菜单中点击【重置所有数据】按钮清除数据后进行更新。
+
+> 不支持内定功能
 
 ## 要求
 

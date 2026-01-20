@@ -11,6 +11,7 @@ import { useToast } from 'vue-toast-notification'
 import dongSound from '@/assets/audio/end.mp3'
 import enterAudio from '@/assets/audio/enter.wav'
 import worldCupAudio from '@/assets/audio/worldcup.mp3'
+import { SINGLE_TIME_MAX_PERSON_COUNT } from '@/constant/config'
 import { useElementPosition, useElementStyle } from '@/hooks/useElement'
 import i18n from '@/locales/i18n'
 import useStore from '@/store'
@@ -146,7 +147,19 @@ export function useViewModel() {
                 element.appendChild(avatarEmpty)
             }
 
-            element = useElementStyle(element, tableData.value[i], i, patternList.value, patternColor.value, cardColor.value, cardSize.value, textSize.value)
+            element = useElementStyle({
+                element,
+                person: tableData.value[i],
+                index: i,
+                patternList: patternList.value,
+                patternColor: patternColor.value,
+                cardColor: cardColor.value,
+                cardSize: cardSize.value,
+                scale: 1,
+                textSize: textSize.value,
+                mod: 'default',
+            },
+            )
             const object = new CSS3DObject(element)
             object.position.x = Math.random() * 4000 - 2000
             object.position.y = Math.random() * 4000 - 2000
@@ -201,7 +214,18 @@ export function useViewModel() {
                         if (luckyCardList.value.length) {
                             luckyCardList.value.forEach((cardIndex: any) => {
                                 const item = objects.value[cardIndex]
-                                useElementStyle(item.element, {} as any, i, patternList.value, patternColor.value, cardColor.value, cardSize.value, textSize.value, 'sphere')
+                                useElementStyle({
+                                    element: item.element,
+                                    person: {} as any,
+                                    index: i,
+                                    patternList: patternList.value,
+                                    patternColor: patternColor.value,
+                                    cardColor: cardColor.value,
+                                    cardSize: cardSize.value,
+                                    scale: 1,
+                                    textSize: textSize.value,
+                                    mod: 'sphere',
+                                })
                             })
                         }
                         luckyTargets.value = []
@@ -473,7 +497,8 @@ export function useViewModel() {
 
             return
         }
-        personPool.value = currentPrize.value.isAll ? notThisPrizePersonList.value : notPersonList.value
+        // personPool.value = currentPrize.value.isAll ? notThisPrizePersonList.value : notPersonList.value
+        personPool.value = currentPrize.value.isAll ? [...notThisPrizePersonList.value] : [...notPersonList.value]
         // 验证抽奖人数是否还够
         if (personPool.value.length < currentPrize.value.count - currentPrize.value.isUsedCount) {
             toast.open({
@@ -485,14 +510,15 @@ export function useViewModel() {
 
             return
         }
-        luckyCount.value = 10
-        // 自定义抽奖个数
-
+        // 默认置为单次抽奖最大个数
+        luckyCount.value = SINGLE_TIME_MAX_PERSON_COUNT
+        // 还剩多少人未抽
         let leftover = currentPrize.value.count - currentPrize.value.isUsedCount
         const customCount = currentPrize.value.separateCount
         if (customCount && customCount.enable && customCount.countList.length > 0) {
             for (let i = 0; i < customCount.countList.length; i++) {
                 if (customCount.countList[i].isUsedCount < customCount.countList[i].count) {
+                    // 根据自定义人数来抽取
                     leftover = customCount.countList[i].count - customCount.countList[i].isUsedCount
                     break
                 }
@@ -553,7 +579,14 @@ export function useViewModel() {
             luckyCardList.value.push(cardIndex)
             const totalLuckyCount = luckyTargets.value.length
             const item = objects.value[cardIndex]
-            const { xTable, yTable } = useElementPosition(item, rowCount.value, totalLuckyCount, { width: cardSize.value.width * 2, height: cardSize.value.height * 2 }, windowSize, index)
+            const { xTable, yTable, scale } = useElementPosition(
+                item,
+                rowCount.value,
+                totalLuckyCount,
+                { width: cardSize.value.width, height: cardSize.value.height },
+                windowSize,
+                index,
+            )
             new TWEEN.Tween(item.position)
                 .to({
                     x: xTable,
@@ -562,7 +595,18 @@ export function useViewModel() {
                 }, 1200)
                 .easing(TWEEN.Easing.Exponential.InOut)
                 .onStart(() => {
-                    item.element = useElementStyle(item.element, person, cardIndex, patternList.value, patternColor.value, luckyColor.value, { width: cardSize.value.width * 2, height: cardSize.value.height * 2 }, textSize.value * 2, 'lucky')
+                    item.element = useElementStyle({
+                        element: item.element,
+                        person,
+                        index: cardIndex,
+                        patternList: patternList.value,
+                        patternColor: patternColor.value,
+                        cardColor: luckyColor.value,
+                        cardSize: { width: cardSize.value.width, height: cardSize.value.height },
+                        scale,
+                        textSize: textSize.value,
+                        mod: 'lucky',
+                    })
                 })
                 .start()
                 .onComplete(() => {
@@ -691,7 +735,19 @@ export function useViewModel() {
                 if (!objects.value[cardRandomIndexArr[i]]) {
                     continue
                 }
-                objects.value[cardRandomIndexArr[i]].element = useElementStyle(objects.value[cardRandomIndexArr[i]].element, allPersonList.value[personRandomIndexArr[i]], cardRandomIndexArr[i], patternList.value, patternColor.value, cardColor.value, { width: cardSize.value.width, height: cardSize.value.height }, textSize.value, mod, 'change')
+                objects.value[cardRandomIndexArr[i]].element = useElementStyle({
+                    element: objects.value[cardRandomIndexArr[i]].element,
+                    person: allPersonList.value[personRandomIndexArr[i]],
+                    index: cardRandomIndexArr[i],
+                    patternList: patternList.value,
+                    patternColor: patternColor.value,
+                    cardColor: cardColor.value,
+                    cardSize: { width: cardSize.value.width, height: cardSize.value.height },
+                    textSize: textSize.value,
+                    scale: 1,
+                    mod,
+                    type: 'change',
+                })
             }
         }, 200)
     }
