@@ -497,7 +497,8 @@ export function useViewModel() {
 
             return
         }
-        personPool.value = currentPrize.value.isAll ? notThisPrizePersonList.value : notPersonList.value
+        // personPool.value = currentPrize.value.isAll ? notThisPrizePersonList.value : notPersonList.value
+        personPool.value = currentPrize.value.isAll ? [...notThisPrizePersonList.value] : [...notPersonList.value]
         // 验证抽奖人数是否还够
         if (personPool.value.length < currentPrize.value.count - currentPrize.value.isUsedCount) {
             toast.open({
