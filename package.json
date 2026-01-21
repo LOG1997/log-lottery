@@ -63,6 +63,8 @@
     "@eslint/js": "^9.39.2",
     "@iconify-json/ep": "^1.2.3",
     "@iconify-json/fluent": "^1.2.36",
+    "@iconify-json/streamline-color": "^1.2.2",
+    "@iconify-json/streamline-ultimate-color": "^1.2.2",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.18",
     "@tauri-apps/cli": "^2.9.6",

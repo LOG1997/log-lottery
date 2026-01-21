@@ -1,40 +1,20 @@
 <script setup lang='ts'>
-import type { IFileData } from './type'
+import type { IFileData, IFileProps } from './type'
 import { ListMusic, Upload, X } from 'lucide-vue-next'
-import { ref } from 'vue'
-import { getBlobObjectUrl, readFileAsJsonData, readFileDataAsBlob } from '@/utils/file'
+import StreamlineColorMusicFolderSong from '~icons/streamline-color/music-folder-song'
+import StreamlineColorUploadFileFlat from '~icons/streamline-color/upload-file-flat'
+import StreamlineUltimateColorCommonFileUpload from '~icons/streamline-ultimate-color/common-file-upload'
+import { getBlobObjectUrl } from '@/utils/file'
+import { useUploadFile } from './useUploadFile'
 
-const props = defineProps<{
-    limitType?: string
-    mode?: 'file' | 'json'
-}>()
-
+const props = withDefaults(defineProps<IFileProps>(), {
+    mode: 'file',
+    limitType: '',
+})
 const emits = defineEmits<{
     uploadFile: [fileData: IFileData | null]
 }>()
-const originFileName = ref<string | null>(null)
-const fileData = ref<IFileData | null>(null)
-
-async function handleFileChange(e: Event) {
-    const file = ((e.target as HTMLInputElement).files as FileList)[0]
-    const type = file.type
-    if (props.mode === 'json') {
-        const fileRes = await readFileAsJsonData(file)
-        const jsonData = JSON.parse(fileRes)
-        fileData.value = { data: jsonData, fileName: file.name, type }
-        originFileName.value = file.name
-        emits('uploadFile', fileData.value)
-        return
-    }
-    const { data: blobData, fileName } = await readFileDataAsBlob(file)
-    fileData.value = { data: blobData, fileName, type }
-    originFileName.value = fileName
-    emits('uploadFile', fileData.value)
-}
-function removeFile() {
-    fileData.value = null
-    emits('uploadFile', null)
-}
+const { originFileName, fileData, handleFileChange, removeFile } = useUploadFile(props, emits)
 </script>
 
 <template>
@@ -49,7 +29,7 @@ function removeFile() {
       <img v-if="fileData && fileData.type.includes('image')" class="w-full object-cover stroke-0" :src="getBlobObjectUrl(fileData.data as Blob)" alt="">
       <ListMusic v-else-if="fileData && fileData.type.includes('audio')" class="w-2/3 h-2/3 stroke-1 text-gray-500/50" />
       <div v-else class="w-full h-full flex justify-center items-center flex-col gap-4">
-        <Upload class="w-2/3 h-2/3 stroke-1 text-gray-500/50" />
+        <StreamlineUltimateColorCommonFileUpload class="w-2/3 h-2/3 stroke-1 text-gray-500/50" />
         <span class="btn btn-neutral">点击上传</span>
       </div>
     </label>

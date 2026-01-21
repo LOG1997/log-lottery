@@ -4,13 +4,14 @@ import localforage from 'localforage'
 import { v4 as uuidv4 } from 'uuid'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useToast } from 'vue-toast-notification'
 import CustomDialog from '@/components/Dialog/index.vue'
 import FileUpload from '@/components/FileUpload/index.vue'
 import useStore from '@/store'
 
+const toast = useToast()
 const { t } = useI18n()
 const limitType = ref('image/*')
-const imgUploadToast = ref(0) // 0是不显示，1是成功，2是失败,3是不是图片
 const visible = defineModel('visible', {
     type: Boolean,
     required: true,
@@ -40,7 +41,11 @@ async function uploadFile(fileData: IFileData | null) {
     }
     const isImage = /image*/.test(fileData?.type || '')
     if (!isImage) {
-        imgUploadToast.value = 3
+        toast.open({
+            message: t('error.notImage'),
+            type: 'error',
+            position: 'top-right',
+        })
         return
     }
     imageData.value = fileData
@@ -66,7 +71,6 @@ function submitUpload() {
             fileName,
         })
             .then(() => {
-                imgUploadToast.value = 1
                 toast.open({
                     message: t('error.uploadSuccess'),
                     type: 'success',
@@ -75,7 +79,11 @@ function submitUpload() {
                 getImageDbStore()
             })
             .catch(() => {
-                imgUploadToast.value = 2
+                toast.open({
+                    message: t('error.uploadFail'),
+                    type: 'error',
+                    position: 'top-right',
+                })
             })
     }
 }
@@ -87,17 +95,6 @@ watch(visible, (newVal) => {
 </script>
 
 <template>
-  <!-- <div class="toast toast-top toast-end">
-    <div v-if="imgUploadToast === 2" class="alert alert-error">
-      <span>{{ t('error.uploadFail') }}</span>
-    </div>
-    <div v-if="imgUploadToast === 1" class="alert alert-success">
-      <span>{{ t('error.uploadSuccess') }}</span>
-    </div>
-    <div v-if="imgUploadToast === 3" class="alert alert-error">
-      <span>{{ t('error.notImage') }}</span>
-    </div>
-  </div> -->
   <CustomDialog
     ref="uploadDialogRef"
     v-model:visible="visible"
