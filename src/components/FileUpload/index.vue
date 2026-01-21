@@ -5,6 +5,7 @@ import StreamlineColorMusicFolderSong from '~icons/streamline-color/music-folder
 import StreamlineColorUploadFileFlat from '~icons/streamline-color/upload-file-flat'
 import StreamlineUltimateColorCommonFileUpload from '~icons/streamline-ultimate-color/common-file-upload'
 import { getBlobObjectUrl } from '@/utils/file'
+import FilePreview from './parts/FilePreview.vue'
 import { useUploadFile } from './useUploadFile'
 
 const props = withDefaults(defineProps<IFileProps>(), {
@@ -26,7 +27,8 @@ const { originFileName, fileData, handleFileChange, removeFile } = useUploadFile
       @change="handleFileChange"
     >
     <label for="file-upload" :class="fileData ? 'cursor-not-allowed' : null" class="w-full h-52 cursor-pointer border-2 border-dashed flex items-center justify-center overflow-hidden">
-      <img v-if="fileData && fileData.type.includes('image')" class="w-full object-cover stroke-0" :src="getBlobObjectUrl(fileData.data as Blob)" alt="">
+      <!-- <img v-if="fileData && fileData.type.includes('image')" class="w-full object-cover stroke-0" :src="getBlobObjectUrl(fileData.data as Blob)" alt=""> -->
+      <FilePreview v-if="fileData && fileData.type.includes('image')" :file-data="fileData" />
       <ListMusic v-else-if="fileData && fileData.type.includes('audio')" class="w-2/3 h-2/3 stroke-1 text-gray-500/50" />
       <div v-else class="w-full h-full flex justify-center items-center flex-col gap-4">
         <StreamlineUltimateColorCommonFileUpload class="w-2/3 h-2/3 stroke-1 text-gray-500/50" />
