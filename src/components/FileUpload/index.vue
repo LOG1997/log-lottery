@@ -15,7 +15,7 @@ const props = withDefaults(defineProps<IFileProps>(), {
 const emits = defineEmits<{
     uploadFile: [fileData: IFileData | null]
 }>()
-const { originFileName, fileData, handleFileChange, removeFile } = useUploadFile(props, emits)
+const { fileData, handleFileChange, removeFile, resetUpload } = useUploadFile(props, emits)
 </script>
 
 <template>
@@ -27,22 +27,13 @@ const { originFileName, fileData, handleFileChange, removeFile } = useUploadFile
       @change="handleFileChange"
     >
     <label for="file-upload" :class="fileData ? 'cursor-not-allowed' : null" class="w-full h-52 cursor-pointer border-2 border-dashed flex items-center justify-center overflow-hidden">
-      <!-- <img v-if="fileData && fileData.type.includes('image')" class="w-full object-cover stroke-0" :src="getBlobObjectUrl(fileData.data as Blob)" alt=""> -->
-      <FilePreview v-if="fileData && fileData.type.includes('image')" :file-data="fileData" />
-      <ListMusic v-else-if="fileData && fileData.type.includes('audio')" class="w-2/3 h-2/3 stroke-1 text-gray-500/50" />
-      <div v-else class="w-full h-full flex justify-center items-center flex-col gap-4">
-        <StreamlineUltimateColorCommonFileUpload class="w-2/3 h-2/3 stroke-1 text-gray-500/50" />
-        <span class="btn btn-neutral">点击上传</span>
+      <FilePreview v-if="fileData" :file-data="fileData" :remove="removeFile" :reset="resetUpload" />
+      <!-- <ListMusic v-else-if="fileData && fileData.type.includes('audio')" class="w-2/3 h-2/3 stroke-1 text-gray-500/50" /> -->
+      <div v-else class="w-full h-full flex justify-center items-center flex-col gap-4 text-gray-500/50 hover:text-gray-300/60">
+        <Upload class="w-2/3 h-2/3 stroke-1 " />
+        <span>点击上传</span>
       </div>
     </label>
-    <div v-if="fileData" class="w-full flex items-center justify-between mt-2">
-      <p class="max-w-[3/4] truncate text-sm">
-        {{ originFileName }}
-      </p>
-      <button class="btn btn-xs btn-square btn-ghost" @click="removeFile">
-        <X />
-      </button>
-    </div>
   </div>
 </template>
 
