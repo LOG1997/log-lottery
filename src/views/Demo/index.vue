@@ -4,7 +4,7 @@ import FileUpload from '@/components/FileUpload/index.vue'
 
 <template>
   <div class="flex flex-col gap-3">
-    <FileUpload mode="file" limit-type="audio/*" />
+    <FileUpload mode="file" limit-type=".xlsx,.xls" />
   </div>
 </template>
 

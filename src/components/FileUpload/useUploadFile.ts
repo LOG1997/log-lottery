@@ -21,7 +21,8 @@ export function useUploadFile(props: IFileProps, emits: ReturnType<typeof define
         }
         const { data: blobData, fileName } = await readFileDataAsBlob(file)
         fileData.value = { data: blobData, fileName, type }
-        console.log('fileData.value', fileData.value)
+        // 清空输入框的值，允许上传同一个文件
+        ;(e.target as HTMLInputElement).value = ''
         emits('uploadFile', fileData.value)
     }
     function removeFile(e: Event) {

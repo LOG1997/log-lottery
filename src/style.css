@@ -11,6 +11,12 @@
     max-width: calc(var(--container-xs) - 90px);
 }
 
+@utility flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 @utility hide-scrollbar {
     /* 隐藏 IE/旧 Edge 滚动条 */
     -ms-overflow-style: none;

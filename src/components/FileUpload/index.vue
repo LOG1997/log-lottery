@@ -23,7 +23,10 @@ const { fileData, handleFileChange, removeFile, resetUpload } = useUploadFile(pr
     <input
       id="file-upload"
       :disabled="fileData !== null"
-      type="file" class="w-full bg-red-400/50 max-h-52 cursor-pointer absolute" style="display: none;" :accept="limitType"
+      type="file"
+      class="w-full bg-red-400/50 max-h-52 cursor-pointer absolute"
+      style="display: none;"
+      :accept="limitType"
       @change="handleFileChange"
     >
     <label for="file-upload" :class="fileData ? 'cursor-not-allowed' : null" class="w-full h-52 cursor-pointer border-2 border-dashed flex items-center justify-center overflow-hidden">
