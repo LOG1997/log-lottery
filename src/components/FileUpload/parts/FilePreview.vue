@@ -5,6 +5,7 @@ import { ref, watch } from 'vue'
 import MaterialIconThemeZip from '~icons/material-icon-theme/zip'
 import MaterialSymbolsFileJsonOutline from '~icons/material-symbols/file-json-outline'
 import StreamlineColorNewFileFlat from '~icons/streamline-color/new-file-flat'
+import VscodeIconsDefaultFolder from '~icons/vscode-icons/default-folder'
 import VscodeIconsFileTypeExcel from '~icons/vscode-icons/file-type-excel'
 import { getBlobObjectUrl } from '@/utils/file'
 
@@ -12,17 +13,25 @@ interface Props {
     fileData: IFileData
     remove?: (e: Event) => void
     reset?: () => void
+    isDirectory?: boolean
 }
 const props = withDefaults(defineProps<Props>(), {
+    isDirectory: false,
 })
-const fileTypeList: Record<string, any> = {
+const fileIconList: Record<string, any> = {
     zip: MaterialIconThemeZip,
     file: StreamlineColorNewFileFlat,
     excel: VscodeIconsFileTypeExcel,
     json: MaterialSymbolsFileJsonOutline,
+    folder: VscodeIconsDefaultFolder,
 }
+
 const fileType = ref<string>('')
 watch(() => props.fileData, (val) => {
+    if (props.isDirectory) {
+        fileType.value = 'folder'
+        return
+    }
     if (val.type.includes('image')) {
         fileType.value = 'image'
     }
@@ -73,7 +82,7 @@ watch(() => props.fileData, (val) => {
       <video controls :src="getBlobObjectUrl(fileData.data as Blob)" class="size-full object-contain block stroke-0" />
     </div>
     <div v-else class="size-full flex-center p-4">
-      <component :is="fileTypeList[fileType]" class="size-full object-contain" />
+      <component :is="fileIconList[fileType]" class="size-full object-contain" />
     </div>
   </div>
 </template>

@@ -27,7 +27,6 @@ const {
     luckyCardColorValue,
     textColorValue,
     patternColorValue,
-    imageList,
     rowCount,
     cardColor,
     patternColor,
@@ -38,6 +37,7 @@ const {
     importAllConfigData,
     definiteTimeValue,
     isWinMusicValue,
+    prizeImageList,
 } = useViewModel()
 </script>
 
@@ -76,7 +76,7 @@ const {
         v-model:lucky-card-color-value="luckyCardColorValue"
         v-model:text-color-value="textColorValue"
         v-model:pattern-color-value="patternColorValue"
-        :image-list="imageList"
+        :image-list="prizeImageList"
       />
       <!-- 图案设置 -->
       <PatternSetting

@@ -11,9 +11,9 @@ export function usePlayMusic() {
     })
 
     const globalConfig = useStore().globalConfig
-    const { getMusicList: localMusicList, getCurrentMusic: currentMusic } = storeToRefs(globalConfig)
+    const { getCurrentMusic: currentMusic } = storeToRefs(globalConfig)
     const audio = ref(new Audio())
-
+    const localMusicList = ref<IMusic[]>([])
     async function play(item: IMusic) {
         if (!item) {
             return

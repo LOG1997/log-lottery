@@ -11,6 +11,8 @@ export function useViewModel() {
     const globalConfig = useStore().globalConfig
     const personConfig = useStore().personConfig
     const prizeConfig = useStore().prizeConfig
+    const sourceConfig = useStore().sourceConfig
+    const { getPrizeImageSource: prizeImageList } = storeToRefs(sourceConfig)
     const {
         getGlobalConfig: globalConfigData,
         getTopTitle: topTitle,
@@ -29,7 +31,6 @@ export function useViewModel() {
         getFont: currentFont,
         getTitleFont: currentTitleFont,
         getTitleFontSyncGlobal: titleFontSyncGlobal,
-        getImageList: imageList,
         getIsShowAvatar: isShowAvatar,
         getDefiniteTime: definiteTime,
         getWinMusic: isWinMusic,
@@ -109,6 +110,7 @@ export function useViewModel() {
         globalConfig.reset()
         personConfig.reset()
         prizeConfig.resetDefault()
+        sourceConfig.resetDefault()
         //   删除所有indexDb
         clearAllDbStore()
         // 刷新页面
@@ -226,7 +228,6 @@ export function useViewModel() {
         luckyCardColorValue,
         textColorValue,
         patternColorValue,
-        imageList,
         rowCount,
         cardColor,
         patternColor,
@@ -237,5 +238,6 @@ export function useViewModel() {
         importAllConfigData,
         definiteTimeValue,
         isWinMusicValue,
+        prizeImageList,
     }
 }

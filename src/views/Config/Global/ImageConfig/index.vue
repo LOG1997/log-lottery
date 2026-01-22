@@ -19,7 +19,7 @@ const uploadVisible = ref(false)
 </script>
 
 <template>
-  <UploadDialog v-model:visible="uploadVisible" />
+  <UploadDialog v-model:visible="uploadVisible" :active-tab-key="activeTabKey" />
 
   <div>
     <PageHeader :title="t('sidebar.imagesManagement')">

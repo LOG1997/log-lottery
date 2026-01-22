@@ -1,3 +1,5 @@
+import type { FILE_TYPE } from '@/constant/config'
+
 export interface IFileData {
     data: string | Blob | ArrayBuffer
     fileName: string
@@ -9,6 +11,7 @@ export interface IFileData {
  * @param {'file' | 'json' | 'folder' | 'zip'} mode - 上传模式，用作处理文件
  */
 export interface IFileProps {
-    limitType?: string
+    limitType?: keyof typeof FILE_TYPE
+    isDirectory?: boolean
     mode?: 'file' | 'json' | 'folder' | 'zip'
 }

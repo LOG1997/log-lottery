@@ -3,7 +3,6 @@ import type { DbData } from './type'
 import dayjs from 'dayjs'
 import Dexie from 'dexie'
 import { v4 as uuidv4 } from 'uuid'
-import { da } from 'zod/v4/locales'
 
 class IndexDb {
     name: string
@@ -77,6 +76,11 @@ class IndexDb {
      */
     deleteData(tableName: string, data: Partial<DbData>) {
         this.dbStore[tableName].delete(data.id)
+    }
+
+    // 获取单个数据
+    getItem(tableName: string, id: string) {
+        return this.dbStore[tableName].get(id)
     }
 
     /**

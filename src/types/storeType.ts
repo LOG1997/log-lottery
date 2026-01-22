@@ -46,6 +46,7 @@ export type IMusicType = 'background' | 'process' | 'other'
 export interface IMusic {
     id: string
     name: string
+    type: string
     url: string | Blob | ArrayBuffer
     createTime?: string
 }
@@ -55,8 +56,11 @@ export type IImageType = 'prize' | 'avatar' | 'other'
 export interface IImage {
     id: string
     name: string
+    type: string
+    data?: string | Blob | ArrayBuffer
     url: string | Blob | ArrayBuffer
     createTime?: string
+    db?: string
 }
 
 export interface WsMsgData { data: string, id: string, dateTime: string }

@@ -1,24 +1,22 @@
 <script setup lang='ts'>
-import type { IFileData } from '../FileUpload/type'
 import type { IImage } from '@/types/storeType'
-import localforage from 'localforage'
 import { onMounted, ref } from 'vue'
+import { IndexDb } from '@/utils/dexie'
 
 interface IProps {
     imgItem: IImage
 }
 const props = defineProps<IProps>()
-const imageDbStore = localforage.createInstance({
-    name: 'imgStore',
-})
+
+const imageDbStore = new IndexDb('imgStore', ['prize', 'avatar', 'other'], 1, ['createTime'])
 
 const imgUrl = ref('')
 
 async function getImageStoreItem(item: IImage): Promise<string> {
     let image = ''
-    if (item.url === 'Storage') {
-        const key = item.id
-        const imageData = await imageDbStore.getItem<IFileData>(key)
+    if (item.type === 'user') {
+        const { id, db: dbName } = item
+        const imageData = await imageDbStore.getItem(dbName as string, id as string)
         image = URL.createObjectURL(imageData?.data as Blob)
     }
     else {

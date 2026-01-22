@@ -1,7 +1,7 @@
 import type { IImage, IMusic } from '@/types/storeType'
 import { defineStore } from 'pinia'
 import i18n, { browserLanguage } from '@/locales/i18n'
-import { defaultBackMusicList, defaultPatternList, defaultPrizeImageList } from './data'
+import { defaultBackMusicList, defaultPatternList } from './data'
 // import { IPrizeConfig } from '@/types/storeType';
 export const useGlobalConfig = defineStore('global', {
     state() {
@@ -30,8 +30,6 @@ export const useGlobalConfig = defineStore('global', {
                     titleFont: '微软雅黑',
                     titleFontSyncGlobal: true,
                 },
-                musicList: defaultBackMusicList as IMusic[],
-                imageList: defaultPrizeImageList as IImage[],
             },
             currentMusic: {
                 item: defaultBackMusicList[0] as IMusic,
@@ -87,17 +85,9 @@ export const useGlobalConfig = defineStore('global', {
         getPatternList(state) {
             return state.globalConfig.theme.patternList
         },
-        // 获取音乐列表
-        getMusicList(state) {
-            return state.globalConfig.musicList
-        },
         // 获取当前音乐
         getCurrentMusic(state) {
             return state.currentMusic
-        },
-        // 获取图片列表
-        getImageList(state) {
-            return state.globalConfig.imageList
         },
         // 获取是否显示奖品列表
         getIsShowPrizeList(state) {
@@ -187,65 +177,13 @@ export const useGlobalConfig = defineStore('global', {
         resetPatternList() {
             this.globalConfig.theme.patternList = defaultPatternList
         },
-        // 添加音乐
-        addMusic(music: IMusic) {
-            // 验证音乐是否已存在，看name字段
-            for (let i = 0; i < this.globalConfig.musicList.length; i++) {
-                if (this.globalConfig.musicList[i].name === music.name) {
-                    return
-                }
-            }
-            this.globalConfig.musicList.push(music)
-        },
-        // 删除音乐
-        removeMusic(musicId: string) {
-            for (let i = 0; i < this.globalConfig.musicList.length; i++) {
-                if (this.globalConfig.musicList[i].id === musicId) {
-                    this.globalConfig.musicList.splice(i, 1)
-                    break
-                }
-            }
-        },
+
         // 设置当前播放音乐
         setCurrentMusic(musicItem: IMusic, paused: boolean = true) {
             this.currentMusic = {
                 item: musicItem,
                 paused,
             }
-        },
-        // 重置音乐列表
-        resetMusicList() {
-            this.globalConfig.musicList = JSON.parse(JSON.stringify(defaultBackMusicList)) as IMusic[]
-        },
-        // 清空音乐列表
-        clearMusicList() {
-            this.globalConfig.musicList = [] as IMusic[]
-        },
-        // 添加图片
-        addImage(image: IImage) {
-            for (let i = 0; i < this.globalConfig.imageList.length; i++) {
-                if (this.globalConfig.imageList[i].name === image.name) {
-                    return
-                }
-            }
-            this.globalConfig.imageList.push(image)
-        },
-        // 删除图片
-        removeImage(imageId: string) {
-            for (let i = 0; i < this.globalConfig.imageList.length; i++) {
-                if (this.globalConfig.imageList[i].id === imageId) {
-                    this.globalConfig.imageList.splice(i, 1)
-                    break
-                }
-            }
-        },
-        // 重置图片列表
-        resetImageList() {
-            this.globalConfig.imageList = defaultPrizeImageList as IImage[]
-        },
-        // 清空图片列表
-        clearImageList() {
-            this.globalConfig.imageList = [] as IImage[]
         },
         // 设置是否显示奖品列表
         setIsShowPrizeList(isShowPrizeList: boolean) {
@@ -310,8 +248,6 @@ export const useGlobalConfig = defineStore('global', {
                     titleFont: '微软雅黑',
                     titleFontSyncGlobal: true,
                 },
-                musicList: defaultBackMusicList as IMusic[],
-                imageList: defaultPrizeImageList as IImage[],
             }
             this.currentMusic = {
                 item: defaultBackMusicList[0],

@@ -8,19 +8,9 @@ import { defaultBackMusicList, defaultPrizeImageList } from './data'
 export const useSourceConfig = defineStore('source', () => {
     const imageDbStore = new IndexDb('imgStore', ['prize', 'avatar', 'other'], 1, ['createTime'])
     const musicDbStore = new IndexDb('musicStore', ['background', 'process', 'other'], 1, ['createTime'])
-    // 默认数据写入indexdb
-    // defaultPrizeImageList.forEach((item) => {
-    //     item.createTime = dayjs().format('YYYY-MM-DD HH:mm:ss:SSS')
-    // })
-    // defaultBackMusicList.forEach((item) => {
-    //     item.createTime = dayjs().format('YYYY-MM-DD HH:mm:ss:SSS')
-    // })
-    // imageDbStore.setAllData('prize', defaultPrizeImageList)
-    // musicDbStore.setAllData('background', defaultBackMusicList)
     // NOTE:state
     const defaultImageList = ref<IImage[]>(defaultPrizeImageList)
     const defaultMusicList = ref<IMusic[]>(defaultBackMusicList)
-
     const sourceConfig = ref({
         imageSource: {
             prize: [] as IImage[],
@@ -34,6 +24,9 @@ export const useSourceConfig = defineStore('source', () => {
         },
     })
     imageDbStore.getDataSortedByDateTime('prize', 'createTime').then((data) => {
+        data.forEach((item: any) => {
+            delete item.data
+        })
         sourceConfig.value.imageSource.prize = data
     })
     imageDbStore.getDataSortedByDateTime('avatar', 'createTime').then((data) => {
@@ -69,12 +62,22 @@ export const useSourceConfig = defineStore('source', () => {
     // NOTE:action
     function addImageSource(imageList: IImage[], type: IImageType) {
         if (imageList.length <= 0) {
-            return
+            return false
         }
-        imageList.forEach((item: IImage) => {
-            sourceConfig.value.imageSource[type].push(item)
-            imageDbStore.setData(type, item)
-        })
+        try {
+            imageList.forEach((item: IImage) => {
+            // 查询id是否重复
+                if (sourceConfig.value.imageSource[type].some((img: IImage) => img.id === item.id)) {
+                    return
+                }
+                sourceConfig.value.imageSource[type].push(item)
+                imageDbStore.setData(type, item)
+            })
+            return true
+        }
+        catch {
+            return false
+        }
     }
     function addMusicSource(musicList: IMusic[], type: IMusicType) {
         if (musicList.length <= 0) {
@@ -85,8 +88,8 @@ export const useSourceConfig = defineStore('source', () => {
             musicDbStore.setData(type, item)
         })
     }
-    function removeImageSource(item: IImage, type: IImageType | 'default' = 'default') {
-        if (type === 'default') {
+    function removeImageSource(item: IImage, type: IImageType) {
+        if (item.type === 'default') {
             defaultImageList.value = defaultImageList.value.filter(img => img.id !== item.id)
             return
         }
@@ -96,8 +99,8 @@ export const useSourceConfig = defineStore('source', () => {
             sourceConfig.value.imageSource[type] = data
         })
     }
-    function removeMusicSource(item: IMusic, type: IMusicType | 'default' = 'default') {
-        if (type === 'default') {
+    function removeMusicSource(item: IMusic, type: IMusicType) {
+        if (item.type === 'default') {
             defaultMusicList.value = defaultMusicList.value.filter(music => music.id !== item.id)
             return
         }
@@ -106,6 +109,10 @@ export const useSourceConfig = defineStore('source', () => {
         musicDbStore.getDataSortedByDateTime(type, 'createTime').then((data) => {
             sourceConfig.value.musicSource[type] = data
         })
+    }
+    function resetDefault() {
+        defaultImageList.value = defaultPrizeImageList
+        defaultMusicList.value = defaultBackMusicList
     }
     return {
         defaultImageList,
@@ -122,6 +129,7 @@ export const useSourceConfig = defineStore('source', () => {
         addMusicSource,
         removeImageSource,
         removeMusicSource,
+        resetDefault,
     }
 }, {
     persist: {
