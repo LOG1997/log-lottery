@@ -2,10 +2,17 @@ export const SINGLE_TIME_MAX_PERSON_COUNT = 30
 
 export const FILE_TYPE = {
     '': '*',
-    'image': 'image/*',
-    'audio': 'audio/*',
-    'video': 'video/*',
-    'zip': 'application/zip,application/x-rar-compressed,application/x-7z-compressed,application/x-tar,application/gzip',
-    'json': 'text/json',
-    'excel': 'application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-}
+    'folder': 'folder',
+    'image': '.png,.jpg,.jpeg,.gif,.bmp,.webp,.tiff,.svg,.avif',
+    // 'image': 'image/*',
+    // 'audio': 'audio/*',
+    'audio': '.flac,.webm,.weba,.wav,.m4a,.mp3,.oga,.mid,.amr,.wma,.au,.aac',
+    // 'video': 'video/*',
+    'video': '.mpe,.mpeg,.ogm,.wmv,.mpg,.webm,.ogv,.mov,.m4v,.asx,.mp4,.avi',
+    // 'zip': 'application/zip,application/x-rar-compressed,application/x-7z-compressed,application/x-tar,application/gzip',
+    'zip': '.zip,.rar,.7z,.tar,.gz,.tgz',
+    // 'json': 'text/json',
+    'json': '.json',
+    // 'excel': 'application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'excel': '.xls,.xlsx',
+} as const

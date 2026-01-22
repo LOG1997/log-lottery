@@ -23,6 +23,7 @@ export const errorEn = {
     deleteFail: '删除失败',
     success: 'Success',
     fail: 'Failed',
+    notType: 'file type error',
 }
 
 export const errorZhCn = {
@@ -50,6 +51,7 @@ export const errorZhCn = {
     deleteFail: '删除失败',
     success: '成功',
     fail: '失败',
+    notType: '文件类型不符',
 }
 
 export const error = {

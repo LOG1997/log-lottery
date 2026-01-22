@@ -54,3 +54,8 @@ export async function readFileAsJsonData(file: File | Blob): Promise<any> {
 export function getBlobObjectUrl(blob: Blob): string {
     return URL.createObjectURL(blob)
 }
+
+export function getFileExtension(fileName: string): string {
+    const dotIndex = fileName.lastIndexOf('.')
+    return dotIndex > 0 ? fileName.substring(dotIndex).toLowerCase() : ''
+}

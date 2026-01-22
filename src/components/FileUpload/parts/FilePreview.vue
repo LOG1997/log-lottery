@@ -7,17 +7,16 @@ import MaterialSymbolsFileJsonOutline from '~icons/material-symbols/file-json-ou
 import StreamlineColorNewFileFlat from '~icons/streamline-color/new-file-flat'
 import VscodeIconsDefaultFolder from '~icons/vscode-icons/default-folder'
 import VscodeIconsFileTypeExcel from '~icons/vscode-icons/file-type-excel'
+import { FILE_TYPE } from '@/constant/config'
 import { getBlobObjectUrl } from '@/utils/file'
 
 interface Props {
+    limitType?: keyof typeof FILE_TYPE
     fileData: IFileData
     remove?: (e: Event) => void
     reset?: () => void
-    isDirectory?: boolean
 }
-const props = withDefaults(defineProps<Props>(), {
-    isDirectory: false,
-})
+const props = withDefaults(defineProps<Props>(), {})
 const fileIconList: Record<string, any> = {
     zip: MaterialIconThemeZip,
     file: StreamlineColorNewFileFlat,
@@ -28,30 +27,26 @@ const fileIconList: Record<string, any> = {
 
 const fileType = ref<string>('')
 watch(() => props.fileData, (val) => {
-    if (props.isDirectory) {
+    console.log('FILE_TYPE.image', FILE_TYPE.image, val.type)
+    if (props.limitType === 'folder') {
         fileType.value = 'folder'
-        return
     }
-    if (val.type.includes('image')) {
+    else if (FILE_TYPE.image.includes(val.type)) {
         fileType.value = 'image'
     }
-    else if (val.type.includes('audio')) {
+    else if (FILE_TYPE.audio.includes(val.type)) {
         fileType.value = 'audio'
     }
-    else if (val.type.includes('video')) {
+    else if (FILE_TYPE.video.includes(val.type)) {
         fileType.value = 'video'
     }
-    else if (
-        val.type.includes('zip')
-        || val.type.includes('rar')
-        || val.type.includes('7z')
-    ) {
+    else if (FILE_TYPE.zip.includes(val.type)) {
         fileType.value = 'zip'
     }
-    else if (val.type.includes('sheet') || val.type.includes('excel')) {
+    else if (FILE_TYPE.excel.includes(val.type)) {
         fileType.value = 'excel'
     }
-    else if (val.type.includes('json')) {
+    else if (FILE_TYPE.json.includes(val.type)) {
         fileType.value = 'json'
     }
     else {

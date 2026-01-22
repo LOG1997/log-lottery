@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import type { IFileData } from '@/components/FileUpload/type'
-import type { FILE_TYPE } from '@/constant/config'
 import type { IImage, IImageType } from '@/types/storeType'
+import JSZip from 'jszip'
 import { cloneDeep } from 'lodash-es'
 import { v4 as uuidv4 } from 'uuid'
 import { computed, ref, watch } from 'vue'
@@ -9,14 +9,19 @@ import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toast-notification'
 import CustomDialog from '@/components/Dialog/index.vue'
 import FileUpload from '@/components/FileUpload/index.vue'
+import { FILE_TYPE } from '@/constant/config'
 import useStore from '@/store'
+import { getFileExtension } from '@/utils/file'
 
+type LimitTYpe = 'image' | 'zip' | 'folder' | ''
+type InnerLimitType = 'image' | ''
 const props = withDefaults(defineProps<{ activeTabKey?: IImageType }>(), {
     activeTabKey: 'other',
 })
 const toast = useToast()
 const { t } = useI18n()
-const limitType = ref<keyof typeof FILE_TYPE>('image')
+const limitType = ref<LimitTYpe>('image')
+const innerLimitType = ref<InnerLimitType>('image')
 const visible = defineModel('visible', {
     type: Boolean,
     required: true,
@@ -41,21 +46,23 @@ async function uploadFile(fileData: IFileData[] | null) {
         imageData.value = []
         return
     }
-    if (fileData.length === 1) {
-        const isImage = /image*/.test(fileData[0]?.type || '')
-        if (!isImage) {
+
+    if (limitType.value === 'image') {
+        const isRightType = FILE_TYPE[limitType.value].includes(fileData[0]?.type || '')
+        if (!isRightType) {
             toast.open({
-                message: t('error.notImage'),
+                message: t('error.notType'),
                 type: 'error',
                 position: 'top-right',
             })
             return
         }
+        imageData.value = fileData
     }
-    else {
+    else if (limitType.value === 'folder') {
         // 判断是否有图片
-        const isImage = fileData.some(file => /image*/.test(file.type))
-        if (!isImage) {
+        const isRightType = FILE_TYPE[innerLimitType.value].includes(fileData[0]?.type || '')
+        if (!isRightType) {
             toast.open({
                 message: t('error.notImage'),
                 type: 'error',
@@ -63,8 +70,32 @@ async function uploadFile(fileData: IFileData[] | null) {
             })
             return
         }
+        imageData.value = fileData
     }
-    imageData.value = fileData
+    else if (limitType.value === 'zip') {
+        console.log('zip', fileData)
+        const zipFiles = await JSZip.loadAsync(fileData[0].data)
+        zipFiles.forEach(async (relativePath, zipFile) => {
+            console.log('file', relativePath, zipFile)
+            if (zipFile.dir) {
+                return
+            }
+            const fileBlob = await zipFile.async('blob')
+            const fileName = zipFile.name
+            const fileType = getFileExtension(fileName)
+            const isRightType = FILE_TYPE[innerLimitType.value].includes(fileType)
+            if (isRightType) {
+                imageData.value.push({
+                    data: fileBlob,
+                    fileName,
+                    type: fileType,
+                })
+            }
+            // const fileName = file.name
+            // const fileType = getFileExtension(fileName)
+            // const isRightType = FILE_TYPE[innerLimitType.value].includes(fileType)
+        })
+    }
 }
 
 function submitUpload() {
@@ -73,7 +104,7 @@ function submitUpload() {
             item.name = item.fileName
             item.url = 'Storage'
             item.db = props.activeTabKey
-            item.id = item.fileName
+            item.id = limitType.value === 'image' ? uuidv4() : item.fileName
             item.createTime = new Date().toISOString()
             item.type = 'user'
             return item
@@ -104,6 +135,16 @@ watch(visible, (newVal) => {
         fileName.value = ''
     }
 })
+watch(() => props.activeTabKey, (newVal) => {
+    if (newVal === 'avatar') {
+        limitType.value = 'zip'
+        innerLimitType.value = 'image'
+    }
+    else {
+        limitType.value = 'image'
+        innerLimitType.value = ''
+    }
+})
 </script>
 
 <template>
@@ -116,7 +157,7 @@ watch(visible, (newVal) => {
   >
     <template #content>
       <div class="flex flex-col items-center gap-6 w-full px-12">
-        <FileUpload v-if="visible" :limit-type="limitType" :is-directory="activeTabKey === 'avatar'" @upload-file="uploadFile" />
+        <FileUpload v-if="visible" :limit-type="limitType" :inner-limit-type="innerLimitType" @upload-file="uploadFile" />
         <input v-model="fileName" :disabled="imageData === null" type="text" :placeholder="t('placeHolder.imageName')" class="input w-full">
       </div>
     </template>

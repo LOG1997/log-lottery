@@ -12,6 +12,6 @@ export interface IFileData {
  */
 export interface IFileProps {
     limitType?: keyof typeof FILE_TYPE
-    isDirectory?: boolean
-    mode?: 'file' | 'json' | 'folder' | 'zip'
+    innerLimitType?: keyof typeof FILE_TYPE
+    mode?: keyof typeof FILE_TYPE
 }
