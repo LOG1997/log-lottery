@@ -1,4 +1,4 @@
-import type { IPersonConfig } from '@/types/storeType'
+import type { IImage, IPersonConfig } from '@/types/storeType'
 import i18n from '@/locales/i18n'
 
 interface IColumnsProps {
@@ -21,8 +21,18 @@ export function tableColumns(props: IColumnsProps) {
         {
             label: i18n.global.t('data.avatar'),
             props: 'avatar',
-            formatValue(row: any) {
-                return row.avatar ? `<img src="${row.avatar}" alt="avatar" style="width: 50px; height: 50px;"/>` : '-'
+            buildImageItem(row: any) {
+                const imgItem: IImage = {
+                    id: row.avatar,
+                    name: row.avatar,
+                    type: 'user',
+                    db: 'avatar',
+                    url: row.avatar,
+                }
+                if (row.avatar.startsWith('http')) {
+                    imgItem.type = 'url'
+                }
+                return imgItem
             },
         },
         {
