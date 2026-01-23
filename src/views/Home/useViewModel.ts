@@ -135,7 +135,7 @@ export function useViewModel() {
             if (isShowAvatar.value) {
                 const avatar = document.createElement('img')
                 avatar.className = 'card-avatar'
-                avatar.src = tableData.value[i].avatar
+                avatar.src = tableData.value[i].avatarUrl || tableData.value[i].avatar
                 avatar.alt = 'avatar'
                 avatar.style.width = '140px'
                 avatar.style.height = '140px'

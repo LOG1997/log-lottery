@@ -21,18 +21,9 @@ export function tableColumns(props: IColumnsProps) {
         {
             label: i18n.global.t('data.avatar'),
             props: 'avatar',
-            buildImageItem(row: any) {
-                const imgItem: IImage = {
-                    id: row.avatar,
-                    name: row.avatar,
-                    type: 'user',
-                    db: 'avatar',
-                    url: row.avatar,
-                }
-                if (row.avatar.startsWith('http')) {
-                    imgItem.type = 'url'
-                }
-                return imgItem
+            img: true,
+            buildImgUrl: (row: any) => {
+                return row.avatarUrl || row.avatar || ''
             },
         },
         {

@@ -122,6 +122,10 @@ export const usePersonConfig = defineStore('person', () => {
         }
         personDb.deleteData('alreadyPersonList', person)
     }
+    // 更新某项数据
+    function updatePersonItem(person: IPersonConfig) {
+        personDb.updateData('allPersonList', toRaw(person))
+    }
     // 删除指定人员
     function deletePerson(person: IPersonConfig) {
         if (person.id !== undefined || person.id != null) {
@@ -193,6 +197,7 @@ export const usePersonConfig = defineStore('person', () => {
         addOnePerson,
         addAlreadyPersonList,
         moveAlreadyToNot,
+        updatePersonItem,
         deletePerson,
         deleteAllPerson,
         resetPerson,

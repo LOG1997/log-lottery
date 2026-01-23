@@ -1,6 +1,5 @@
 <script setup lang='ts'>
-import type { IImage } from '@/types/storeType'
-import { computed, defineAsyncComponent } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
@@ -13,7 +12,6 @@ const props = defineProps({
         default: [] as any[],
     },
 })
-const ImageAsync = defineAsyncComponent(() => import('../ImageSync/index.vue'))
 const { t } = useI18n()
 const dataColumns = computed<any[]>(() => {
     // 不带有actions的列
@@ -50,8 +48,8 @@ const actionsColumns = computed<any[]>(() => {
         <tr v-for="item in data" :key="item.id" class="hover">
           <!-- <th>{{ item.id }}</th> -->
           <td v-for="(column, index) in dataColumns" :key="index">
-            <span v-if="column.buildImageItem" class="w-12 h-12">
-              <ImageAsync class="h-12 w-12" :img-item="column.buildImageItem(item)" alt="accccc" />
+            <span v-if="column.img">
+              <img :src="column.buildImgUrl(item)" alt="avatar" class="w-12 h-12">
             </span>
             <span v-else-if="column.formatValue" v-html="column.formatValue(item)" />
             <span v-else>{{ item[column.props] }}</span>

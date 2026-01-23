@@ -6,6 +6,7 @@ export interface IPersonConfig {
     department: string
     identity: string
     avatar: string
+    avatarUrl?: string
     isWin: boolean
     x: number
     y: number
