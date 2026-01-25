@@ -11,7 +11,7 @@ import CustomDialog from '@/components/Dialog/index.vue'
 import FileUpload from '@/components/FileUpload/index.vue'
 import { FILE_TYPE } from '@/constant/config'
 import useStore from '@/store'
-import { getFileExtension } from '@/utils/file'
+import { compressorImage, getFileExtension } from '@/utils/file'
 
 type LimitTYpe = 'image' | 'zip' | 'folder' | ''
 type InnerLimitType = 'image' | ''
@@ -46,7 +46,6 @@ async function uploadFile(fileData: IFileData[] | null) {
         imageData.value = []
         return
     }
-
     if (limitType.value === 'image') {
         const isRightType = FILE_TYPE[limitType.value].includes(fileData[0]?.type || '')
         if (!isRightType) {
@@ -73,20 +72,24 @@ async function uploadFile(fileData: IFileData[] | null) {
         imageData.value = fileData
     }
     else if (limitType.value === 'zip') {
-        console.log('zip', fileData)
         const zipFiles = await JSZip.loadAsync(fileData[0].data)
         zipFiles.forEach(async (relativePath, zipFile) => {
-            console.log('file', relativePath, zipFile)
             if (zipFile.dir) {
                 return
             }
             const fileBlob = await zipFile.async('blob')
+            const fileObject = new File([fileBlob], zipFile.name, { type: 'image/jpeg' })
+            const compressorFileBlob = await compressorImage(fileObject, {
+                quality: 0.1,
+                maxWidth: 1024,
+                mimeType: 'image/webp',
+            })
             const fileName = zipFile.name
             const fileType = getFileExtension(fileName)
             const isRightType = FILE_TYPE[innerLimitType.value].includes(fileType)
             if (isRightType) {
                 imageData.value.push({
-                    data: fileBlob,
+                    data: compressorFileBlob,
                     fileName,
                     type: fileType,
                 })

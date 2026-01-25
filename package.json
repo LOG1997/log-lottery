@@ -28,6 +28,7 @@
     "canvas-confetti": "^1.9.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "compressorjs": "^1.2.1",
     "dayjs": "^1.11.19",
     "dexie": "^4.2.1",
     "github-markdown-css": "^5.8.1",

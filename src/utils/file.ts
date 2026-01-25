@@ -1,3 +1,5 @@
+import Compressor from 'compressorjs'
+
 export function readFileBinary(file: File | Blob): Promise<string> {
     return new Promise((resolve) => {
         const reader = new FileReader()
@@ -58,4 +60,25 @@ export function getBlobObjectUrl(blob: Blob): string {
 export function getFileExtension(fileName: string): string {
     const dotIndex = fileName.lastIndexOf('.')
     return dotIndex > 0 ? fileName.substring(dotIndex).toLowerCase() : ''
+}
+
+export function compressorImage(file: Blob | File, option: {
+    quality: number
+    maxWidth: number
+    mimeType: string
+} = { quality: 0.1, maxWidth: 1024, mimeType: 'image/webp' }): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+        return new Compressor(file, {
+            quality: option.quality,
+            mimeType: option.mimeType,
+            maxWidth: option.maxWidth,
+            success(result) {
+                resolve(result)
+            },
+            error(err) {
+                console.error(err.message)
+                reject(err)
+            },
+        })
+    })
 }
