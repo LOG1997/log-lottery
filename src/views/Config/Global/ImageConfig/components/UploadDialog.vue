@@ -78,18 +78,24 @@ async function uploadFile(fileData: IFileData[] | null) {
                 return
             }
             const fileBlob = await zipFile.async('blob')
-            const fileObject = new File([fileBlob], zipFile.name, { type: 'image/jpeg' })
-            const compressorFileBlob = await compressorImage(fileObject, {
-                quality: 0.1,
-                maxWidth: 1024,
-                mimeType: 'image/webp',
-            })
+            let resFile = fileBlob
+            const fileSize = fileBlob.size
+            if (fileSize > 1024 * 20) {
+                const fileObject = new File([fileBlob], zipFile.name, { type: 'image/jpeg' })
+                const compressorFileBlob = await compressorImage(fileObject, {
+                    quality: 0.1,
+                    maxWidth: 1024,
+                    mimeType: 'image/webp',
+                })
+                resFile = compressorFileBlob
+            }
+
             const fileName = zipFile.name
             const fileType = getFileExtension(fileName)
             const isRightType = FILE_TYPE[innerLimitType.value].includes(fileType)
             if (isRightType) {
                 imageData.value.push({
-                    data: compressorFileBlob,
+                    data: resFile,
                     fileName,
                     type: fileType,
                 })
