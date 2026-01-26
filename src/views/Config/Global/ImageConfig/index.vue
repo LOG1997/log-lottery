@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import ImageSync from '@/components/ImageSync/index.vue'
 import PageHeader from '@/components/PageHeader/index.vue'
-import UploadDialog from './components/UploadDialog.vue'
+import UploadDialog from './components/UploadDialog/index.vue'
 import { useViewModel } from './useViewModel'
 
 const { t } = useI18n()

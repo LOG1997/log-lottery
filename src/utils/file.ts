@@ -62,6 +62,11 @@ export function getFileExtension(fileName: string): string {
     return dotIndex > 0 ? fileName.substring(dotIndex).toLowerCase() : ''
 }
 
+export function getFileName(fileName: string): string {
+    const dotIndex = fileName.lastIndexOf('.')
+    return dotIndex > 0 ? fileName.substring(0, dotIndex) : fileName
+}
+
 export function compressorImage(file: Blob | File, option: {
     quality: number
     maxWidth: number
