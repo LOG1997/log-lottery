@@ -1,6 +1,7 @@
 import type { Ref } from 'vue'
+import type { IPersonConfig } from '@/types/storeType'
 import { storeToRefs } from 'pinia'
-import { nextTick, onMounted, provide, ref, toRaw, watch } from 'vue'
+import { onMounted, provide, ref, toRaw, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { loadingKey, loadingState } from '@/components/Loading'
@@ -18,7 +19,7 @@ export function useMounted(tipDialog: Ref<any>) {
     const system = useStore().system
     const { getTheme: localTheme } = storeToRefs(globalConfig)
     const { getPrizeConfig: prizeList, getTemporaryPrize: temporaryPrize } = storeToRefs(prizeConfig)
-    const { getAllPersonList: allPersonList, getLoadStatus: personDataLoadStatus } = storeToRefs(personConfig)
+    const { getAllPersonList: allPersonList, getUpdateFlag: personUpdateFlag } = storeToRefs(personConfig)
     const tipDesc = ref('')
     const { t } = useI18n()
     const route = useRoute()
@@ -74,7 +75,10 @@ export function useMounted(tipDialog: Ref<any>) {
     }
 
     function syncAvatarImage() {
-        allPersonList.value.map(async (person) => {
+        if (allPersonList.value.length <= 0) {
+            return
+        }
+        allPersonList.value.map(async (person: IPersonConfig) => {
             person.avatarUrl = person.avatar
             if (person.avatar && !person.avatar.startsWith('http')) {
                 const imageData = await imageDbStore.getItem('avatar', person.avatar)
@@ -83,7 +87,7 @@ export function useMounted(tipDialog: Ref<any>) {
             personConfig.updatePersonItem(person)
         })
     }
-    watch(personDataLoadStatus, (val) => {
+    watch(personUpdateFlag, (val) => {
         if (val === 'on') {
             syncAvatarImage()
         }

@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 import { defineStore } from 'pinia'
 import { v4 as uuidv4 } from 'uuid'
 import { computed, ref, toRaw } from 'vue'
+import { uuid } from 'zod'
 import { IndexDb } from '@/utils/dexie'
 import { defaultPersonList } from './data'
 import { usePrizeConfig } from './prizeConfig'
@@ -13,13 +14,13 @@ export const usePersonConfig = defineStore('person', () => {
     const personDb = new IndexDb('person', ['allPersonList', 'alreadyPersonList'], 1, ['createTime'])
     // NOTE: state
     const personConfig = ref({
-        loadStatus: 'off',
+        updateFlag: 'off',
         allPersonList: [] as IPersonConfig[],
         alreadyPersonList: [] as IPersonConfig[],
     })
     personDb.getDataSortedByDateTime('allPersonList', 'createTime').then((data) => {
-        personConfig.value.loadStatus = 'on'
         personConfig.value.allPersonList = data
+        personConfig.value.updateFlag = 'on'
     })
     personDb.getAllData('alreadyPersonList').then((data) => {
         personConfig.value.alreadyPersonList = data
@@ -53,17 +54,19 @@ export const usePersonConfig = defineStore('person', () => {
         return item.isWin === false
     }))
     // 获取加载状态
-    const getLoadStatus = computed(() => personConfig.value.loadStatus)
+    const getUpdateFlag = computed(() => personConfig.value.updateFlag)
     // NOTE: action
     // 添加全部未中奖人员
     function addNotPersonList(personList: IPersonConfig[]) {
         if (personList.length <= 0) {
             return
         }
+        personConfig.value.updateFlag = 'off'
         personList.forEach((item: IPersonConfig) => {
             personConfig.value.allPersonList.push(item)
         })
         personDb.setAllData('allPersonList', personList)
+        personConfig.value.updateFlag = 'on'
     }
     // 添加数据
     function addOnePerson(person: IPersonConfig[]) {
@@ -74,10 +77,12 @@ export const usePersonConfig = defineStore('person', () => {
             console.warn('只支持添加单个用户')
             return
         }
+        personConfig.value.updateFlag = 'off'
         person.forEach((item: IPersonConfig) => {
             personConfig.value.allPersonList.push(item)
             personDb.setData('allPersonList', item)
         })
+        personConfig.value.updateFlag = 'on'
     }
     // 添加已中奖人员
     function addAlreadyPersonList(personList: IPersonConfig[], prize: IPrizeConfig | null) {
@@ -128,7 +133,9 @@ export const usePersonConfig = defineStore('person', () => {
     }
     // 更新某项数据
     function updatePersonItem(person: IPersonConfig) {
+        personConfig.value.updateFlag = 'off'
         personDb.updateData('allPersonList', toRaw(person))
+        personConfig.value.updateFlag = 'on'
     }
     // 删除指定人员
     function deletePerson(person: IPersonConfig) {
@@ -183,7 +190,7 @@ export const usePersonConfig = defineStore('person', () => {
     // 重置所有配置
     function reset() {
         personConfig.value = {
-            loadStatus: 'off',
+            updateFlag: 'off',
             allPersonList: [] as IPersonConfig[],
             alreadyPersonList: [] as IPersonConfig[],
         }
@@ -198,8 +205,8 @@ export const usePersonConfig = defineStore('person', () => {
         getAlreadyPersonList,
         getAlreadyPersonDetail,
         getNotPersonList,
-        getLoadStatus,
         addNotPersonList,
+        getUpdateFlag,
         addOnePerson,
         addAlreadyPersonList,
         moveAlreadyToNot,

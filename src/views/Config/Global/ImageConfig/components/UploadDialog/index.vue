@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import type { IFileData } from '@/components/FileUpload/type'
-import type { IImage, IImageType } from '@/types/storeType'
+import type { IImage, IImageType, IPersonConfig } from '@/types/storeType'
 import JSZip from 'jszip'
 import { cloneDeep } from 'lodash-es'
 import { v4 as uuidv4 } from 'uuid'
@@ -12,6 +12,7 @@ import FileUpload from '@/components/FileUpload/index.vue'
 import { Loading, loadingKey } from '@/components/Loading'
 import { FILE_TYPE } from '@/constant/config'
 import useStore from '@/store'
+import { IndexDb } from '@/utils/dexie'
 import { compressorImage, getFileExtension, getFileName } from '@/utils/file'
 
 type LimitTYpe = 'image' | 'zip' | 'folder' | ''
@@ -20,6 +21,7 @@ const props = withDefaults(defineProps<{ activeTabKey?: IImageType }>(), {
     activeTabKey: 'other',
 })
 
+const imageDbStore = new IndexDb('imgStore', ['prize', 'avatar', 'other'], 1, ['createTime'])
 const loading = inject(loadingKey)
 const toast = useToast()
 const { t } = useI18n()
@@ -30,6 +32,8 @@ const visible = defineModel('visible', {
     required: true,
 })
 const sourceConfig = useStore().sourceConfig
+const personConfig = useStore().personConfig
+const { getAllPersonList: allPersonList } = personConfig
 const imageData = ref<IFileData[]>([])
 const fileName = computed({
     get() {
@@ -42,7 +46,19 @@ const fileName = computed({
     },
 })
 const uploadDialogRef = ref()
-
+function syncAvatarImage() {
+    if (allPersonList.length <= 0) {
+        return
+    }
+    allPersonList.map(async (person: IPersonConfig) => {
+        person.avatarUrl = person.avatar
+        if (person.avatar && !person.avatar.startsWith('http')) {
+            const imageData = await imageDbStore.getItem('avatar', person.avatar)
+            person.avatarUrl = URL.createObjectURL(imageData?.data as Blob)
+        }
+        personConfig.updatePersonItem(person)
+    })
+}
 async function uploadFile(fileData: IFileData[] | null) {
     if (!fileData || fileData.length === 0) {
         imageData.value = []
@@ -131,6 +147,9 @@ function submitUpload() {
             })
         }
         else {
+            if (limitType.value === 'zip') {
+                syncAvatarImage()
+            }
             toast.open({
                 message: t('error.uploadSuccess'),
                 type: 'success',
