@@ -10,7 +10,6 @@ import { loadingKey } from '@/components/Loading'
 import i18n from '@/locales/i18n'
 import useStore from '@/store'
 import { addOtherInfo } from '@/utils'
-import { IndexDb } from '@/utils/dexie'
 import { readFileBinary, readLocalFileAsArraybuffer } from '@/utils/file'
 import { tableColumns } from './columns'
 import ImportExcelWorker from './importExcel.worker?worker'
@@ -20,7 +19,6 @@ type IBasePersonConfig = Pick<IPersonConfig, 'uid' | 'name' | 'department' | 'id
 export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<HTMLInputElement> }) {
     const { t } = useI18n()
     const baseUrl = import.meta.env.BASE_URL.replace('./', '/')
-    const imageDbStore = new IndexDb('imgStore', ['prize', 'avatar', 'other'], 1, ['createTime'])
     const toast = useToast()
     const worker: Worker | null = new ImportExcelWorker()
     const loading = inject(loadingKey)
@@ -193,16 +191,6 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
         singlePersonData.value = {} as IBasePersonConfig
     }
 
-    function syncAvatarImage() {
-        allPersonList.value.map(async (person) => {
-            person.avatarUrl = person.avatar
-            if (person.avatar && !person.avatar.startsWith('http')) {
-                const imageData = await imageDbStore.getItem('avatar', person.avatar)
-                person.avatarUrl = URL.createObjectURL(imageData?.data as Blob)
-            }
-            personConfig.updatePersonItem(person)
-        })
-    }
     return {
         resetData,
         deleteAll,
@@ -215,6 +203,5 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
         addPersonModalVisible,
         singlePersonData,
         downloadTemplate,
-        syncAvatarImage,
     }
 }

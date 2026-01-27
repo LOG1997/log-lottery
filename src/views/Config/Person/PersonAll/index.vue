@@ -24,7 +24,6 @@ const {
     allPersonList,
     tableColumnList,
     downloadTemplate,
-    syncAvatarImage,
 } = useViewModel({ exportInputFileRef })
 const { t } = useI18n()
 const limitType = '.xlsx,.xls'
@@ -86,9 +85,6 @@ const limitType = '.xlsx,.xls'
           </button>
           <button class="btn btn-accent btn-sm" @click="exportData">
             {{ t('button.exportResult') }}
-          </button>
-          <button class="btn btn-neutral btn-sm" @click="syncAvatarImage">
-            同步头像
           </button>
           <button class="btn btn-neutral btn-sm" @click="addOnePersonDrawerRef.showDrawer()">
             {{ t('button.add') }}

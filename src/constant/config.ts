@@ -10,7 +10,7 @@ export const FILE_TYPE = {
     // 'video': 'video/*',
     'video': '.mpe,.mpeg,.ogm,.wmv,.mpg,.webm,.ogv,.mov,.m4v,.asx,.mp4,.avi',
     // 'zip': 'application/zip,application/x-rar-compressed,application/x-7z-compressed,application/x-tar,application/gzip',
-    'zip': '.zip,.rar,.7z,.tar,.gz,.tgz',
+    'zip': '.zip',
     // 'json': 'text/json',
     'json': '.json',
     // 'excel': 'application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

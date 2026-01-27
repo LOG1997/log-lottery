@@ -31,7 +31,6 @@ const visible = defineModel('visible', {
 })
 const sourceConfig = useStore().sourceConfig
 const imageData = ref<IFileData[]>([])
-
 const fileName = computed({
     get() {
         return imageData.value[0]?.fileName || null
@@ -49,7 +48,7 @@ async function uploadFile(fileData: IFileData[] | null) {
         imageData.value = []
         return
     }
-    // loading?.show()
+    loading?.show()
     if (limitType.value === 'image') {
         const isRightType = FILE_TYPE[limitType.value].includes(fileData[0]?.type || '')
         if (!isRightType) {
@@ -103,12 +102,13 @@ async function uploadFile(fileData: IFileData[] | null) {
                 fileName,
                 type: fileExtension,
             })
-            // loading?.hide()
             // const fileName = file.name
             // const fileType = getFileExtension(fileName)
             // const isRightType = FILE_TYPE[innerLimitType.value].includes(fileType)
         })
     }
+
+    loading?.hide()
 }
 
 function submitUpload() {
@@ -171,7 +171,7 @@ watch(() => props.activeTabKey, (newVal) => {
     <template #content>
       <div class="flex flex-col items-center gap-6 w-full px-12">
         <FileUpload v-if="visible" :limit-type="limitType" :inner-limit-type="innerLimitType" @upload-file="uploadFile" />
-        <input v-model="fileName" :disabled="imageData === null" type="text" :placeholder="t('placeHolder.imageName')" class="input w-full">
+        <input v-if="limitType === 'image'" v-model="fileName" :disabled="imageData === null" type="text" :placeholder="t('placeHolder.imageName')" class="input w-full">
       </div>
     </template>
   </CustomDialog>

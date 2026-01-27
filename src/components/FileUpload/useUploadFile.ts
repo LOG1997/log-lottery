@@ -15,6 +15,11 @@ export function useUploadFile(props: IFileProps, emits: ReturnType<typeof define
             toast.warning('请选择文件或文件夹')
             return
         }
+        // 验证文件类型
+        if (limitType && !FILE_TYPE[limitType].includes(getFileExtension(files[0].name))) {
+            toast.warning('请选择正确的文件类型')
+            return
+        }
         // 文件夹上传
         if (limitType === 'folder') {
             for (const file of files) {

@@ -29,10 +29,11 @@ const { fileData, handleFileChange, removeFile, resetUpload } = useUploadFile(pr
       @change="handleFileChange"
     >
     <label for="file-upload" :class="fileData ? 'cursor-not-allowed' : null" class="w-full h-52 cursor-pointer border-2 border-dashed flex items-center justify-center overflow-hidden">
-      <FilePreview v-if="fileData && fileData.length" :limit-type="limitType" :file-data="fileData[0]" :remove="removeFile" :reset="resetUpload" />
-      <div v-else class="w-full h-full flex justify-center items-center flex-col gap-4 text-gray-500/50 hover:text-gray-300/60">
+      <FilePreview v-if="fileData && fileData.length" :title="fileData[0].fileName" :limit-type="limitType" :file-data="fileData[0]" :remove="removeFile" :reset="resetUpload" />
+      <div v-else class="w-full h-full flex justify-between py-3 items-center flex-col text-gray-500/50 hover:text-gray-300/60">
         <Upload class="w-2/3 h-2/3 stroke-1 " />
         <span>点击上传</span>
+        <span class="text-xs">文件类型：{{ FILE_TYPE[limitType] }}</span>
       </div>
     </label>
   </div>

@@ -13,10 +13,12 @@ export const usePersonConfig = defineStore('person', () => {
     const personDb = new IndexDb('person', ['allPersonList', 'alreadyPersonList'], 1, ['createTime'])
     // NOTE: state
     const personConfig = ref({
+        loadStatus: 'off',
         allPersonList: [] as IPersonConfig[],
         alreadyPersonList: [] as IPersonConfig[],
     })
     personDb.getDataSortedByDateTime('allPersonList', 'createTime').then((data) => {
+        personConfig.value.loadStatus = 'on'
         personConfig.value.allPersonList = data
     })
     personDb.getAllData('alreadyPersonList').then((data) => {
@@ -50,6 +52,8 @@ export const usePersonConfig = defineStore('person', () => {
     const getNotPersonList = computed(() => personConfig.value.allPersonList.filter((item: IPersonConfig) => {
         return item.isWin === false
     }))
+    // 获取加载状态
+    const getLoadStatus = computed(() => personConfig.value.loadStatus)
     // NOTE: action
     // 添加全部未中奖人员
     function addNotPersonList(personList: IPersonConfig[]) {
@@ -179,6 +183,7 @@ export const usePersonConfig = defineStore('person', () => {
     // 重置所有配置
     function reset() {
         personConfig.value = {
+            loadStatus: 'off',
             allPersonList: [] as IPersonConfig[],
             alreadyPersonList: [] as IPersonConfig[],
         }
@@ -193,6 +198,7 @@ export const usePersonConfig = defineStore('person', () => {
         getAlreadyPersonList,
         getAlreadyPersonDetail,
         getNotPersonList,
+        getLoadStatus,
         addNotPersonList,
         addOnePerson,
         addAlreadyPersonList,
