@@ -11,8 +11,8 @@ import CustomDialog from '@/components/Dialog/index.vue'
 import FileUpload from '@/components/FileUpload/index.vue'
 import { Loading, loadingKey } from '@/components/Loading'
 import { FILE_TYPE } from '@/constant/config'
+import { useIndexDb } from '@/hooks/useIndexDb'
 import useStore from '@/store'
-import { IndexDb } from '@/utils/dexie'
 import { compressorImage, getFileExtension, getFileName } from '@/utils/file'
 
 type LimitTYpe = 'image' | 'zip' | 'folder' | ''
@@ -20,8 +20,7 @@ type InnerLimitType = 'image' | ''
 const props = withDefaults(defineProps<{ activeTabKey?: IImageType }>(), {
     activeTabKey: 'other',
 })
-
-const imageDbStore = new IndexDb('imgStore', ['prize', 'avatar', 'other'], 1, ['createTime'])
+const { imageDbStore } = useIndexDb()
 const loading = inject(loadingKey)
 const toast = useToast()
 const { t } = useI18n()

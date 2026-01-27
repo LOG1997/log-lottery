@@ -1,14 +1,13 @@
 <script setup lang='ts'>
 import type { IImage } from '@/types/storeType'
 import { onMounted, ref } from 'vue'
-import { IndexDb } from '@/utils/dexie'
+import { useIndexDb } from '@/hooks/useIndexDb'
 
 interface IProps {
     imgItem: IImage
 }
 const props = defineProps<IProps>()
-
-const imageDbStore = new IndexDb('imgStore', ['prize', 'avatar', 'other'], 1, ['createTime'])
+const { imageDbStore } = useIndexDb()
 
 const imgUrl = ref('')
 

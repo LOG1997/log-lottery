@@ -12,7 +12,7 @@ export function useViewModel() {
     const personConfig = useStore().personConfig
     const prizeConfig = useStore().prizeConfig
     const sourceConfig = useStore().sourceConfig
-    const { getPrizeImageSource: prizeImageList } = storeToRefs(sourceConfig)
+    const { getOtherImageSource: otherImageList } = storeToRefs(sourceConfig)
     const {
         getGlobalConfig: globalConfigData,
         getTopTitle: topTitle,
@@ -238,6 +238,6 @@ export function useViewModel() {
         importAllConfigData,
         definiteTimeValue,
         isWinMusicValue,
-        prizeImageList,
+        otherImageList,
     }
 }

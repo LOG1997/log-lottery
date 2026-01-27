@@ -1,13 +1,11 @@
 import type { IImage, IImageType, IMusic, IMusicType } from '@/types/storeType'
-import { ImagesIcon } from 'lucide-vue-next'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { IndexDb } from '@/utils/dexie'
+import { useIndexDb } from '@/hooks/useIndexDb'
 import { defaultBackMusicList, defaultPrizeImageList } from './data'
 
 export const useSourceConfig = defineStore('source', () => {
-    const imageDbStore = new IndexDb('imgStore', ['prize', 'avatar', 'other'], 1, ['createTime'])
-    const musicDbStore = new IndexDb('musicStore', ['background', 'process', 'other'], 1, ['createTime'])
+    const { imageDbStore, musicDbStore } = useIndexDb()
     // NOTE:state
     const defaultImageList = ref<IImage[]>(defaultPrizeImageList)
     const defaultMusicList = ref<IMusic[]>(defaultBackMusicList)

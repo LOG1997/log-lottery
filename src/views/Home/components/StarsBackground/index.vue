@@ -1,8 +1,8 @@
 <script setup lang='ts'>
 import { useElementSize } from '@vueuse/core'
-import localforage from 'localforage'
 import Sparticles from 'sparticles'
 import { onMounted, onUnmounted, ref } from 'vue'
+import { useIndexDb } from '@/hooks/useIndexDb'
 
 const props = defineProps({
     homeBackground: {
@@ -14,9 +14,10 @@ const props = defineProps({
         }),
     },
 })
-const imageDbStore = localforage.createInstance({
-    name: 'imgStore',
-})
+const { imageDbStore } = useIndexDb()
+// const imageDbStore = localforage.createInstance({
+//     name: 'imgStore',
+// })
 const imgUrl = ref('')
 const starRef = ref()
 
@@ -39,7 +40,7 @@ async function getImageStoreItem(item: any): Promise<string> {
     let image = ''
     if (item.url === 'Storage') {
         const key = item.id
-        const imageData = await imageDbStore.getItem(key) as any
+        const imageData = await imageDbStore.getItem('other', key)
         image = URL.createObjectURL(imageData.data)
     }
     else {

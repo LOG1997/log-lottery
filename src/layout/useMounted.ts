@@ -5,14 +5,14 @@ import { onMounted, provide, ref, toRaw, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { loadingKey, loadingState } from '@/components/Loading'
+import { useIndexDb } from '@/hooks/useIndexDb'
 import { useWebsocket } from '@/hooks/useWebsocket'
 import useStore from '@/store'
 import { themeChange } from '@/utils'
-import { IndexDb } from '@/utils/dexie'
 
 export function useMounted(tipDialog: Ref<any>) {
     provide(loadingKey, loadingState)
-    const imageDbStore = new IndexDb('imgStore', ['prize', 'avatar', 'other'], 1, ['createTime'])
+    const { imageDbStore, msgListDbStore } = useIndexDb()
     const globalConfig = useStore().globalConfig
     const prizeConfig = useStore().prizeConfig
     const personConfig = useStore().personConfig
@@ -23,7 +23,7 @@ export function useMounted(tipDialog: Ref<any>) {
     const tipDesc = ref('')
     const { t } = useI18n()
     const route = useRoute()
-    const msgListDb = new IndexDb('msgList', ['msgList'], 1, ['createTime'])
+    // const msgListDb = new IndexDb('msgList', ['msgList'], 1, ['createTime'])
     const enableWebsocket = import.meta.env.VITE_ENABLE_WEBSOCKET
     const websocketData = enableWebsocket === 'true' ? useWebsocket() : { data: ref(null) }
     const { data } = websocketData
@@ -96,7 +96,7 @@ export function useMounted(tipDialog: Ref<any>) {
         if (!newValue) {
             return
         }
-        msgListDb.setData('msgList', toRaw(newValue))
+        msgListDbStore.setData('msgList', toRaw(newValue))
     }, { immediate: true, deep: true })
     onMounted(() => {
         themeChange(localTheme.value.name)

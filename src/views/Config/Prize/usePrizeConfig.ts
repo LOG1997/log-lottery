@@ -1,5 +1,4 @@
 import type { IPrizeConfig } from '@/types/storeType'
-import localforage from 'localforage'
 import { cloneDeep } from 'lodash-es'
 import { storeToRefs } from 'pinia'
 import { onMounted, ref, watch } from 'vue'
@@ -9,15 +8,14 @@ import useStore from '@/store'
 
 export function usePrizeConfig() {
     const toast = useToast()
-    const imageDbStore = localforage.createInstance({
-        name: 'imgStore',
-    })
+    // const imageDbStore = localforage.createInstance({
+    //     name: 'imgStore',
+    // })
     const prizeConfig = useStore().prizeConfig
-    const globalConfig = useStore().globalConfig
+    const sourceConfig = useStore().sourceConfig
     const { getPrizeConfig: localPrizeList, getCurrentPrize: currentPrize } = storeToRefs(prizeConfig)
 
-    const { getImageList: localImageList } = storeToRefs(globalConfig)
-    const imgList = ref<any[]>([])
+    const { getPrizeImageSource: localImageList } = storeToRefs(sourceConfig)
 
     const prizeList = ref(cloneDeep(localPrizeList.value))
     const selectedPrize = ref<IPrizeConfig | null>()
@@ -66,18 +64,6 @@ export function usePrizeConfig() {
         selectedPrize.value = null
     }
 
-    async function getImageDbStore() {
-        const keys = await imageDbStore.keys()
-        if (keys.length > 0) {
-            imageDbStore.iterate((value, key) => {
-                imgList.value.push({
-                    key,
-                    value,
-                })
-            })
-        }
-    }
-
     function delItem(item: IPrizeConfig) {
         prizeConfig.deletePrizeConfig(item.id)
         toast.success(i18n.global.t('error.deleteSuccess'))
@@ -116,9 +102,6 @@ export function usePrizeConfig() {
         prizeList.value = []
         toast.success(i18n.global.t('error.success'))
     }
-    onMounted(() => {
-        getImageDbStore()
-    })
     watch(() => prizeList.value, (val: IPrizeConfig[]) => {
         prizeConfig.setPrizeConfig(val)
     }, { deep: true })
