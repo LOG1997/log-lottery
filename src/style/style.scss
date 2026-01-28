@@ -1,95 +1,114 @@
+.element-card {
+    cursor: default;
+    text-align: center;
+    user-select: none;
+
+    .card-id {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        z-index: 2;
+    }
+
+    .card-name {
+        position: absolute;
+        top: 40px;
+        left: 0px;
+        right: 0;
+        font-weight: bold;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        z-index: 2;
+    }
+
+    .card-avatar-name {
+        top: auto;
+        bottom: 0;
+        left: 0px;
+        right: 0;
+        line-height: 2 !important;
+    }
+
+    .card-detail {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 15px;
+        z-index: 2;
+    }
+
+    .card-avatar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+        width: 140px !important;
+        height: 120px !important;
+        object-fit: cover;
+    }
+}
+
 .lucky-element-card {
     cursor: default;
     user-select: none;
-    position: relative;
-    z-index: 0;
 
-    /* 主体背景颜色（可自行调整） */
-    background: #1a0000; 
-    border-radius: 14px;
-    padding: 0;
+    &::before {
+        background-color: linear-gradient(-45deg, #e81cff 0%, #40c9ff 100%);
+        border: 1px solid linear-gradient(-45deg, #e81cff 0%, #40c9ff 100%);
+    }
 
-    /* —— 金色描边（真实边框） —— */
-    border: 3px solid #d4a017;
-    box-shadow: 
-        0 0 8px rgba(255, 215, 0, 0.6),    /* 金色发光 */
-        0 0 15px rgba(255, 100, 100, 0.4); /* 红色柔光辅助 */
-}
+    .card-id {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 2;
+    }
 
-/* —— 红色渐变发光外边缘 —— */
-.lucky-element-card::before {
-    content: "";
-    position: absolute;
-    inset: -8px; /* 调整外光范围 */
-    border-radius: inherit;
-    z-index: -1;
+    .card-name {
+        text-align: center;
+        z-index: 2;
+        position: absolute;
+        top: 40px;
+        left: 0px;
+        right: 0;
+        font-weight: bold;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        // -webkit-animation: tracking-in-expand-fwd 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both;
+        // animation: tracking-in-expand-fwd 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both;
+        // animation-delay: 0.6s;
+    }
 
-    background: linear-gradient(
-        -45deg, 
-        #ff2d2d,
-        #ff7b00,
-        #ff2d2d
-    );
-    filter: blur(12px); /* 发光强度 */
-    opacity: 0.85;
-}
+    .card-avatar-name {
+        top: auto;
+        bottom: 0;
+        left: 0px;
+        right: 0;
+        line-height: 2 !important;
+    }
 
-/* —— 内部遮罩层，让发光只在外部 —— */
-.lucky-element-card::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: #1a0000;
-    z-index: -1;
-}
+    .card-detail {
+        position: absolute;
+        left: 0;
+        right: 0;
+        text-align: center;
+        z-index: 2;
+        bottom: 15px;
+    }
 
-/* 你的原始布局保持不变 ↓ */
-.lucky-element-card .card-id {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 2;
-}
-
-.lucky-element-card .card-name {
-    text-align: center;
-    z-index: 2;
-    position: absolute;
-    top: 40px;
-    left: 0px;
-    right: 0;
-    font-weight: bold;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.lucky-element-card .card-avatar-name {
-    top: auto;
-    bottom: 0;
-    left: 0px;
-    right: 0;
-    line-height: 2 !important;
-}
-
-.lucky-element-card .card-detail {
-    position: absolute;
-    left: 0;
-    right: 0;
-    text-align: center;
-    z-index: 2;
-    bottom: 15px;
-}
-
-.lucky-element-card .card-avatar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1;
-    width: 280px !important;
-    height: 240px !important;
-    object-fit: cover;
+    .card-avatar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+        width: 280px !important;
+        height: 240px !important;
+        object-fit: cover;
+    }
 }
