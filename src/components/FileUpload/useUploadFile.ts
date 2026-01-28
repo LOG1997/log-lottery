@@ -3,11 +3,11 @@ import type { IFileData, IFileProps } from './type'
 import { ref } from 'vue'
 import { useToast } from 'vue-toast-notification'
 import { FILE_TYPE } from '@/constant/config'
-import { getFileExtension, readFileAsJsonData, readFileDataAsBlob } from '@/utils/file'
+import { getFileExtension, readFileDataAsBlob } from '@/utils/file'
 
 export function useUploadFile(props: IFileProps, emits: ReturnType<typeof defineEmits>) {
     const fileData = ref<IFileData[]>([])
-    const { limitType = '', mode, innerLimitType = '' } = props
+    const { limitType = '', innerLimitType = '' } = props
     const toast = useToast()
     async function handleFileChange(e: Event) {
         const files = (e.target as HTMLInputElement).files
@@ -16,7 +16,10 @@ export function useUploadFile(props: IFileProps, emits: ReturnType<typeof define
             return
         }
         // 验证文件类型
-        if (limitType && !FILE_TYPE[limitType].includes(getFileExtension(files[0].name))) {
+        if (
+            (limitType && !FILE_TYPE[limitType].includes(getFileExtension(files[0].name)))
+            && (innerLimitType && !FILE_TYPE[innerLimitType].includes(getFileExtension(files[0].name)))
+        ) {
             toast.warning('请选择正确的文件类型')
             return
         }

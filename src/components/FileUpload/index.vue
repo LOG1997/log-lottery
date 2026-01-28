@@ -25,7 +25,7 @@ const { fileData, handleFileChange, removeFile, resetUpload } = useUploadFile(pr
       :webkitdirectory="limitType === 'folder'"
       class="w-full bg-red-400/50 max-h-52 cursor-pointer absolute"
       style="display: none;"
-      :accept="FILE_TYPE[limitType]"
+      :accept="`${FILE_TYPE[limitType]},${FILE_TYPE[innerLimitType]}`"
       @change="handleFileChange"
     >
     <label for="file-upload" :class="fileData ? 'cursor-not-allowed' : null" class="w-full h-52 cursor-pointer border-2 border-dashed flex items-center justify-center overflow-hidden">

@@ -56,21 +56,8 @@ export function useViewModel(props: { activeTabKey: IImageType }, visible: Ref<b
         }
         loading?.show()
         let imageFileList: IFileData[] = []
-        // 上传类型为图片
-        if (limitType.value === 'image') {
-            const isRightType = FILE_TYPE[limitType.value].includes(fileData[0]?.type || '')
-            if (!isRightType) {
-                toast.open({
-                    message: t('error.notType'),
-                    type: 'error',
-                    position: 'top-right',
-                })
-                return
-            }
-            imageFileList = fileData
-        }
-        // 上传文件夹，但是限制文件夹内容innerLimitType
-        else if (limitType.value === 'folder') {
+        // 上传类型为文件夹
+        if (limitType.value === 'folder') {
             const isRightType = FILE_TYPE[innerLimitType.value].includes(fileData[0]?.type || '')
             if (!isRightType) {
                 toast.open({
@@ -82,7 +69,11 @@ export function useViewModel(props: { activeTabKey: IImageType }, visible: Ref<b
             }
             imageFileList = fileData
         }
-        // 上传zip文件，限制zip文件内容innerLimitType
+        else if (fileData.length === 1
+          && FILE_TYPE.image.includes(fileData[0]?.type)
+        ) {
+            imageFileList = fileData
+        }
         else if (limitType.value === 'zip') {
             const zipFiles = await JSZip.loadAsync(fileData[0].data)
             const zipFileArray = Object.values(zipFiles.files)
