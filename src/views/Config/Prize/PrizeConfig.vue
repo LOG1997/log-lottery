@@ -2,11 +2,13 @@
 import { Grip } from 'lucide-vue-next'
 import { VueDraggable } from 'vue-draggable-plus'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { HoverTip } from '@/components/index'
 import EditSeparateDialog from '@/components/NumberSeparate/EditSeparateDialog.vue'
 import PageHeader from '@/components/PageHeader/index.vue'
 import { usePrizeConfig } from './usePrizeConfig'
 
+const router = useRouter()
 const { addPrize, resetDefault, delAll, delItem, prizeList, currentPrize, selectedPrize, submitData, changePrizePerson, changePrizeStatus, selectPrize, localImageList } = usePrizeConfig()
 const { t } = useI18n()
 </script>
@@ -94,6 +96,13 @@ const { t } = useI18n()
         <label class="w-full max-w-xs form-control">
           <div class="label">
             <span class="label-text">{{ t('table.image') }}</span>
+            <span class="label text-xs">
+              {{ t('tooltip.pleaseGoto') }}
+              <a class="link link-info" @click="() => { router.push({ path: 'global/image', query: { tab: 'prize' } }) }">
+                {{ t('sidebar.imagesManagement') }}
+              </a>
+              {{ t('tooltip.uploadImage') }}
+            </span>
           </div>
           <select v-model="item.picture" class="truncate select select-warning select-sm">
             <option v-if="item.picture.id" :value="{ id: '', name: '', url: '' }">❌</option>

@@ -10,7 +10,6 @@ const { t } = useI18n()
 const {
     tabsList,
     localImageList,
-    // uploadVisible,
     handleChangeTab,
     activeTabKey,
     removeImage,

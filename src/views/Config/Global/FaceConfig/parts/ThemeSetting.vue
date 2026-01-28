@@ -64,10 +64,11 @@ const patternColorValue = defineModel<string>('patternColorValue')
       </select>
       <span class="label">
         {{ t('tooltip.pleaseGoto') }}
-        <a class="link link-info" @click="() => { router.push('image') }">
+        <a class="link link-info" @click="() => { router.push({ path: 'image', query: { tab: 'other' } }) }">
           {{ t('sidebar.imagesManagement') }}
         </a>
-        {{ t('tooltip.uploadImage') }}</span>
+        {{ t('tooltip.uploadImage') }}
+      </span>
     </div>
     <div class="grid w-full grid-cols-2 gap-4">
       <div class="flex flex-col items-center max-w-xs gap-1 form-control">

@@ -1,6 +1,7 @@
 import type { IImage, IImageType } from '@/types/storeType'
 import { storeToRefs } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import useStore from '@/store'
 
 export function useViewModel() {
@@ -10,6 +11,8 @@ export function useViewModel() {
         getAvatarImageSource: avatarImageList,
         getOtherImageSource: otherImageList,
     } = storeToRefs(sourceConfig)
+    const route = useRoute()
+    const router = useRouter()
     const tabsList: { key: IImageType, label: string }[] = [{
         key: 'prize',
         label: '奖品',
@@ -37,14 +40,29 @@ export function useViewModel() {
     function removeImage(item: IImage) {
         sourceConfig.removeImageSource(item, activeTabKey.value)
     }
-
     function handleUpload() {
 
     }
 
-    function handleChangeTab(key: IImageType) {
+    function handleChangeTab(key: IImageType = 'prize') {
         activeTabKey.value = key
+        // router.push({
+        //     path: route.path,
+        //     query: { tab: key },
+        // })
+        router.replace({
+            path: route.path,
+            query: { tab: key },
+        })
     }
+    onMounted(() => {
+        if (route.query.tab) {
+            handleChangeTab(route.query.tab as IImageType)
+        }
+        else {
+            handleChangeTab('prize')
+        }
+    })
     return {
         tabsList,
         localImageList,
