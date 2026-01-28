@@ -6,10 +6,17 @@ export function useIndexDb() {
     const msgListDbStore = new IndexDb('msgList', ['msgList'], 1, ['createTime'])
     const musicDbStore = new IndexDb('musicStore', ['background', 'process', 'other'], 1, ['createTime'])
 
+    function clearAllDbStore() {
+        imageDbStore.clearDb()
+        personDbStore.clearDb()
+        msgListDbStore.clearDb()
+        musicDbStore.clearDb()
+    }
     return {
         imageDbStore,
         personDbStore,
         msgListDbStore,
         musicDbStore,
+        clearAllDbStore,
     }
 }

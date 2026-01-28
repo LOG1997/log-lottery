@@ -40,6 +40,10 @@ class IndexDb {
         this.dbStore[tableName].bulkAdd(data)
     }
 
+    clearDb() {
+        return this.dbStore.delete()
+    }
+
     /**
      * @param data
      * @description 添加单条数据，并为数据添加dataTime和type属性

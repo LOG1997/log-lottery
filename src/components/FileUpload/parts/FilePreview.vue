@@ -27,7 +27,6 @@ const fileIconList: Record<string, any> = {
 
 const fileType = ref<string>('')
 watch(() => props.fileData, (val) => {
-    console.log('FILE_TYPE.image', FILE_TYPE.image, val.type)
     if (props.limitType === 'folder') {
         fileType.value = 'folder'
     }

@@ -81,10 +81,16 @@ export const useSourceConfig = defineStore('source', () => {
         if (musicList.length <= 0) {
             return
         }
-        musicList.forEach((item: IMusic) => {
-            sourceConfig.value.musicSource[type].push(item)
-            musicDbStore.setData(type, item)
-        })
+        try {
+            musicList.forEach((item: IMusic) => {
+                sourceConfig.value.musicSource[type].push(item)
+                musicDbStore.setData(type, item)
+            })
+            return true
+        }
+        catch {
+            return false
+        }
     }
     function removeImageSource(item: IImage, type: IImageType) {
         if (item.type === 'default') {
@@ -108,6 +114,13 @@ export const useSourceConfig = defineStore('source', () => {
             sourceConfig.value.musicSource[type] = data
         })
     }
+    function removeAllMusicSource(type: IMusicType) {
+        musicDbStore.deleteAll(type)
+    }
+    function resetMusicSource(type: IMusicType) {
+        musicDbStore.deleteAll(type)
+        defaultMusicList.value = defaultBackMusicList
+    }
     function resetDefault() {
         defaultImageList.value = defaultPrizeImageList
         defaultMusicList.value = defaultBackMusicList
@@ -127,6 +140,8 @@ export const useSourceConfig = defineStore('source', () => {
         addMusicSource,
         removeImageSource,
         removeMusicSource,
+        removeAllMusicSource,
+        resetMusicSource,
         resetDefault,
     }
 }, {

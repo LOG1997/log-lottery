@@ -40,10 +40,6 @@ export function useViewModel() {
     function removeImage(item: IImage) {
         sourceConfig.removeImageSource(item, activeTabKey.value)
     }
-    function handleUpload() {
-
-    }
-
     function handleChangeTab(key: IImageType = 'prize') {
         activeTabKey.value = key
         // router.push({

@@ -50,6 +50,7 @@ export interface IMusic {
     type: string
     url: string | Blob | ArrayBuffer
     createTime?: string
+    db?: string
 }
 
 export type IImageType = 'prize' | 'avatar' | 'other'

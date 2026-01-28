@@ -1,15 +1,11 @@
-import type { IFileData } from '@/components/FileUpload/type'
 import type { IMusic } from '@/types/storeType'
-import localforage from 'localforage'
 import { storeToRefs } from 'pinia'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { useIndexDb } from '@/hooks/useIndexDb'
 import useStore from '@/store'
 
 export function usePlayMusic() {
-    const audioDbStore = localforage.createInstance({
-        name: 'audioStore',
-    })
-
+    const { musicDbStore } = useIndexDb()
     const globalConfig = useStore().globalConfig
     const { getCurrentMusic: currentMusic } = storeToRefs(globalConfig)
     const audio = ref(new Audio())
@@ -29,7 +25,7 @@ export function usePlayMusic() {
         }
         if (item.url === 'Storage') {
             const key = item.id
-            const audioData = await audioDbStore.getItem<IFileData>(key)
+            const audioData = await musicDbStore.getItem(item.db as string, key)
             audioUrl = URL.createObjectURL(audioData?.data as Blob)
         }
         else {

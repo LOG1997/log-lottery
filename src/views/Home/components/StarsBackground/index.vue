@@ -15,9 +15,6 @@ const props = defineProps({
     },
 })
 const { imageDbStore } = useIndexDb()
-// const imageDbStore = localforage.createInstance({
-//     name: 'imgStore',
-// })
 const imgUrl = ref('')
 const starRef = ref()
 

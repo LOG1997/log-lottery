@@ -1,16 +1,13 @@
 import type { IPrizeConfig } from '@/types/storeType'
 import { cloneDeep } from 'lodash-es'
 import { storeToRefs } from 'pinia'
-import { onMounted, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useToast } from 'vue-toast-notification'
 import i18n from '@/locales/i18n'
 import useStore from '@/store'
 
 export function usePrizeConfig() {
     const toast = useToast()
-    // const imageDbStore = localforage.createInstance({
-    //     name: 'imgStore',
-    // })
     const prizeConfig = useStore().prizeConfig
     const sourceConfig = useStore().sourceConfig
     const { getPrizeConfig: localPrizeList, getCurrentPrize: currentPrize } = storeToRefs(prizeConfig)

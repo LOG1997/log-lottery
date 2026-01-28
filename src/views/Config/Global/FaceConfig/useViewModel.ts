@@ -1,10 +1,10 @@
 import { storeToRefs } from 'pinia'
 import { onMounted, ref, watch } from 'vue'
 import { z as zod } from 'zod'
+import { useIndexDb } from '@/hooks/useIndexDb'
 import i18n, { languageList } from '@/locales/i18n'
 import useStore from '@/store'
 import { themeChange } from '@/utils'
-import { clearAllDbStore } from '@/utils/localforage'
 
 export function useViewModel() {
     type ValidatePayload = zod.infer<typeof schema>
@@ -12,6 +12,7 @@ export function useViewModel() {
     const personConfig = useStore().personConfig
     const prizeConfig = useStore().prizeConfig
     const sourceConfig = useStore().sourceConfig
+    const { clearAllDbStore } = useIndexDb()
     const { getOtherImageSource: otherImageList } = storeToRefs(sourceConfig)
     const {
         getGlobalConfig: globalConfigData,
