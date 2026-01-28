@@ -23,17 +23,17 @@ export function useUploadFile(props: IFileProps, emits: ReturnType<typeof define
         // 文件夹上传
         if (limitType === 'folder') {
             for (const file of files) {
-                const { data: blobData, fileName } = await readFileDataAsBlob(file)
+                const { data: blobData, fileName, size } = await readFileDataAsBlob(file)
                 const fileExtension = getFileExtension(fileName)
                 if (FILE_TYPE[innerLimitType].includes(fileExtension)) {
-                    fileData.value?.push({ data: blobData, fileName, type: fileExtension })
+                    fileData.value?.push({ data: blobData, fileName, type: fileExtension, size })
                 }
             }
         }
         else {
-            const { data: blobData, fileName } = await readFileDataAsBlob(files[0])
+            const { data: blobData, fileName, size } = await readFileDataAsBlob(files[0])
             const fileExtension = getFileExtension(fileName)
-            fileData.value = [{ data: blobData, fileName, type: fileExtension }]
+            fileData.value = [{ data: blobData, fileName, type: fileExtension, size }]
         }
         if (fileData.value === null || fileData.value.length === 0) {
             toast.warning('没有符合要求的文件，请重新选择')

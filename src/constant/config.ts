@@ -16,3 +16,5 @@ export const FILE_TYPE = {
     // 'excel': 'application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     'excel': '.xls,.xlsx',
 } as const
+
+export const AVATAR_MAX_SIZE = 1024 * 40

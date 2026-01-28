@@ -4,6 +4,7 @@ export interface IFileData {
     data: string | Blob | ArrayBuffer
     fileName: string
     type: string
+    size: number
 }
 /**
  * @description 文件上传组件传参数

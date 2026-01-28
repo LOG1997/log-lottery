@@ -1,3 +1,4 @@
+import type { IFileData } from '@/components/FileUpload/type'
 import Compressor from 'compressorjs'
 
 export function readFileBinary(file: File | Blob): Promise<string> {
@@ -20,13 +21,13 @@ export function readFileData(file: File): Promise<{ data: string, fileName: stri
     })
 }
 
-export function readFileDataAsBlob(file: File): Promise<{ data: Blob, fileName: string }> {
+export function readFileDataAsBlob(file: File): Promise<{ data: Blob, fileName: string, size: number }> {
     return new Promise((resolve, reject) => {
         const reader = new FileReader()
 
         reader.onload = () => {
             // 直接使用原始文件作为 Blob
-            resolve({ data: file, fileName: file.name })
+            resolve({ data: file, fileName: file.name, size: file.size })
         }
 
         reader.onerror = () => {
