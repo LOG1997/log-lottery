@@ -1,25 +1,27 @@
-# Operation Guide
+# Operation Instructions
 
 ## Steps
 
-1. Upon first entry, no data will be displayed. You can choose to use default data to view the overall display effect. It is recommended to import your own data for operation. The steps are as follows:
+1. When entering for the first time, there will be no data displayed. You can choose to use default data to see the overall display effect. It is recommended to import your own data for operation. The steps are as follows:
 
-    a. Personnel Configuration - Personnel List - Download Template, download the data template and modify it with your data (please note that the header cannot be modified).
+    a. Personnel Configuration - Personnel List - Download Template, download the data template and modify it by filling in the data (please note that the header cannot be modified).
 
-    b. After modification, click 'Upload File' on the same page to upload the modified Excel table.
+    b. After modification, click 'Upload File' on the same page to upload the modified Excel spreadsheet.
 
-2. Enter the Prize Configuration to modify your prize information. Try to keep the name short for better display; "All Participants" indicates whether this award will be drawn from all participants (those who have already won can still participate); "Winners" refers to the number of people to be drawn for this award; "Already Won" cannot be edited; "Selected" means this award has been used, unselecting it will reset the award but not the winners; "Image" is the prize image displayed on the home page (you can upload images in the image list); "Left Icon" is used to adjust the order of prizes.
+    Tip: If you need to display picture avatars, you can fill in URL links (https://) in the Excel table. If using URL links is inconvenient, you can fill in the avatar image name in the Excel sheet, then compress all images into a zip file and upload it. Upload the avatar zip package in Image Management, after which you'll be able to see avatars displayed normally in the personnel list. If you turn on "Show Avatar" in Interface Settings, avatars will also be displayed on the home page.
 
-Completing the above two steps allows normal use.
+2. Go to Prize Configuration to modify your prize information. Keep the names short for better display; "Participate All" means whether this prize will be drawn from all participants (previously winners can still participate); Number of Winners refers to how many people will be drawn for this prize; Number of Awarded People cannot be edited; when "Drawn" is selected, it indicates the prize has been used, unchecking will reset the prize but won't reset already awarded people; the image is shown on the homepage as the prize picture (can be uploaded in the image list); the left icon adjusts the prize order.
 
-## Function Description
+After completing the above two items, normal usage is possible.
 
-1. Add Temporary Draw: There is a '+' button in the prize list on the draw page. Clicking it allows you to add a temporary draw. Note: Only one temporary draw can be added at a time. After adding successfully, the current prize will be set to the temporary prize, and after drawing, it will return to the normal prize list.
-2. Music and Image List: You can upload files yourself for use. After uploading images successfully, you can select them in the prize configuration for display. After uploading music successfully, it will be added to the play list.
-3. Music Playback: Left-click with the mouse to play/pause, right-click to play the next song.
-4. Interface Configuration - Pattern Settings: You can use the mouse to click and customize the highlighted patterns on the home page.
-5. If you do not want to display the prize list on the home page, uncheck 'Always Show Prize List' in the interface configuration.
-6. When clicking buttons on the home page, the button value will not update immediately but will only update after the animation ends. This is a normal phenomenon.
+## Feature Description
+
+1. Add Temporary Draw: There's a '+' button in the prize list on the draw page. Clicking it allows adding a temporary draw. Note: Only one temporary draw can be added at a time, and once successfully added, the current prize will be set to this temporary prize. After successful drawing, it returns to the normal prize list.
+2. Music and Image Lists: You can upload files yourself for use. After images are successfully uploaded, they can be selected for display in prize configuration. After music is successfully uploaded, it is added to the playlist.
+3. Music Playback: Left mouse click plays/pauses, right mouse click plays next track.
+4. In Interface Configuration - Pattern Settings, you can customize highlight patterns on the home page with mouse clicks.
+5. If you don't want to show the prize list on the home page, select 'Always Show Prize List' in Interface Configuration.
+6. When clicking buttons on the home page, button values don't update immediately. They wait until the animation ends before updating to target value, which is normal behavior.
 
 ## Shortcuts
 
@@ -27,5 +29,5 @@ Shortcuts are set up on the draw page.
 
 | Shortcut | Description |
 | --- | --- |
-| Space | Enter Draw / Start / Draw Lucky Winner / Continue |
+| Space | Enter draw/Start/Draw lucky person/Continue |
 | Esc | Cancel |
