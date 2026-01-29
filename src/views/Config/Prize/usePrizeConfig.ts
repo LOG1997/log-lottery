@@ -80,6 +80,7 @@ export function usePrizeConfig() {
 
     function delItem(item: IPrizeConfig) {
         prizeConfig.deletePrizeConfig(item.id)
+        prizeList.value = prizeList.value.filter(i => i.id !== item.id)
         toast.success(i18n.global.t('error.deleteSuccess'))
     }
     function addPrize() {
