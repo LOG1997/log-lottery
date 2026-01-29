@@ -128,7 +128,11 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
             })
     }
     // 导出数据
-    function exportData() {
+    async function exportData() {
+        let downloadDir = ''
+        if (IS_TAURI) {
+            downloadDir = await invoke('get_download_dir')
+        }
         let data = JSON.parse(JSON.stringify(allPersonList.value))
         // 排除一些字段
         for (let i = 0; i < data.length; i++) {
@@ -167,7 +171,7 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
             XLSX.utils.book_append_sheet(dataBinaryBinary, dataBinary, 'Sheet1')
             XLSX.writeFile(dataBinaryBinary, 'data.xlsx')
             toast.open({
-                message: t('error.exportSuccess'),
+                message: `${t('error.exportSuccess')} ${downloadDir}`,
                 type: 'success',
                 position: 'top-right',
             })
