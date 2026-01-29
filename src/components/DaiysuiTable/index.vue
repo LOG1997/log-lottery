@@ -48,7 +48,10 @@ const actionsColumns = computed<any[]>(() => {
         <tr v-for="item in data" :key="item.id" class="hover">
           <!-- <th>{{ item.id }}</th> -->
           <td v-for="(column, index) in dataColumns" :key="index">
-            <span v-if="column.formatValue" v-html="column.formatValue(item)" />
+            <span v-if="column.img">
+              <img :src="column.buildImgUrl(item)" alt="avatar" class="w-12 h-12">
+            </span>
+            <span v-else-if="column.formatValue" v-html="column.formatValue(item)" />
             <span v-else>{{ item[column.props] }}</span>
           </td>
           <!-- action -->

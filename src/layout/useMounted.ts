@@ -1,25 +1,29 @@
 import type { Ref } from 'vue'
+import type { IPersonConfig } from '@/types/storeType'
 import { storeToRefs } from 'pinia'
 import { onMounted, provide, ref, toRaw, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { loadingKey, loadingState } from '@/components/Loading'
+import { useIndexDb } from '@/hooks/useIndexDb'
 import { useWebsocket } from '@/hooks/useWebsocket'
 import useStore from '@/store'
 import { themeChange } from '@/utils'
-import { IndexDb } from '@/utils/dexie'
 
 export function useMounted(tipDialog: Ref<any>) {
     provide(loadingKey, loadingState)
+    const { imageDbStore, msgListDbStore } = useIndexDb()
     const globalConfig = useStore().globalConfig
     const prizeConfig = useStore().prizeConfig
+    const personConfig = useStore().personConfig
     const system = useStore().system
     const { getTheme: localTheme } = storeToRefs(globalConfig)
     const { getPrizeConfig: prizeList, getTemporaryPrize: temporaryPrize } = storeToRefs(prizeConfig)
+    const { getAllPersonList: allPersonList, getUpdateFlag: personUpdateFlag } = storeToRefs(personConfig)
     const tipDesc = ref('')
     const { t } = useI18n()
     const route = useRoute()
-    const msgListDb = new IndexDb('msgList', ['msgList'], 1, ['createTime'])
+    // const msgListDb = new IndexDb('msgList', ['msgList'], 1, ['createTime'])
     const enableWebsocket = import.meta.env.VITE_ENABLE_WEBSOCKET
     const websocketData = enableWebsocket === 'true' ? useWebsocket() : { data: ref(null) }
     const { data } = websocketData
@@ -70,11 +74,29 @@ export function useMounted(tipDialog: Ref<any>) {
         return !allowMobile && isMobilePage
     }
 
+    function syncAvatarImage() {
+        if (allPersonList.value.length <= 0) {
+            return
+        }
+        allPersonList.value.map(async (person: IPersonConfig) => {
+            person.avatarUrl = person.avatar
+            if (person.avatar && !person.avatar.startsWith('http')) {
+                const imageData = await imageDbStore.getItem('avatar', person.avatar)
+                person.avatarUrl = URL.createObjectURL(imageData?.data as Blob)
+            }
+            personConfig.updatePersonItem(person)
+        })
+    }
+    watch(personUpdateFlag, (val) => {
+        if (val === 'on') {
+            syncAvatarImage()
+        }
+    })
     watch(() => data.value, (newValue) => {
         if (!newValue) {
             return
         }
-        msgListDb.setData('msgList', toRaw(newValue))
+        msgListDbStore.setData('msgList', toRaw(newValue))
     }, { immediate: true, deep: true })
     onMounted(() => {
         themeChange(localTheme.value.name)

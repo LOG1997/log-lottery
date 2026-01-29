@@ -31,6 +31,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  {{ imgItem.name }}
   <img :src="imgUrl" alt="Image" class="object-cover h-full rounded-xl">
 </template>
 

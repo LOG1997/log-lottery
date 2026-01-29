@@ -190,6 +190,7 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
         addOnePersonDrawerRef.closeDrawer()
         singlePersonData.value = {} as IBasePersonConfig
     }
+
     return {
         resetData,
         deleteAll,

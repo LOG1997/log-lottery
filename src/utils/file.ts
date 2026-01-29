@@ -1,3 +1,6 @@
+import type { IFileData } from '@/components/FileUpload/type'
+import Compressor from 'compressorjs'
+
 export function readFileBinary(file: File | Blob): Promise<string> {
     return new Promise((resolve) => {
         const reader = new FileReader()
@@ -18,13 +21,13 @@ export function readFileData(file: File): Promise<{ data: string, fileName: stri
     })
 }
 
-export function readFileDataAsBlob(file: File): Promise<{ data: Blob, fileName: string }> {
+export function readFileDataAsBlob(file: File): Promise<{ data: Blob, fileName: string, size: number }> {
     return new Promise((resolve, reject) => {
         const reader = new FileReader()
 
         reader.onload = () => {
             // 直接使用原始文件作为 Blob
-            resolve({ data: file, fileName: file.name })
+            resolve({ data: file, fileName: file.name, size: file.size })
         }
 
         reader.onerror = () => {
@@ -53,4 +56,35 @@ export async function readFileAsJsonData(file: File | Blob): Promise<any> {
 
 export function getBlobObjectUrl(blob: Blob): string {
     return URL.createObjectURL(blob)
+}
+
+export function getFileExtension(fileName: string): string {
+    const dotIndex = fileName.lastIndexOf('.')
+    return dotIndex > 0 ? fileName.substring(dotIndex).toLowerCase() : ''
+}
+
+export function getFileName(fileName: string): string {
+    const dotIndex = fileName.lastIndexOf('.')
+    return dotIndex > 0 ? fileName.substring(0, dotIndex) : fileName
+}
+
+export function compressorImage(file: Blob | File, option: {
+    quality: number
+    maxWidth: number
+    mimeType: string
+} = { quality: 0.1, maxWidth: 1024, mimeType: 'image/webp' }): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+        return new Compressor(file, {
+            quality: option.quality,
+            mimeType: option.mimeType,
+            maxWidth: option.maxWidth,
+            success(result) {
+                resolve(result)
+            },
+            error(err) {
+                console.error(err.message)
+                reject(err)
+            },
+        })
+    })
 }

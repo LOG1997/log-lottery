@@ -1,62 +1,51 @@
 <script setup lang='ts'>
-import type { IMusic } from '@/types/storeType'
-import localforage from 'localforage'
-import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import PageHeader from '@/components/PageHeader/index.vue'
-import useStore from '@/store'
-import UploadDialog from './components/UploadDialog.vue'
+import UploadDialog from './components/UploadDialog/index.vue'
+import { useViewModel } from './useViewModel'
 
 const { t } = useI18n()
-const audioDbStore = localforage.createInstance({
-    name: 'audioStore',
-})
-const globalConfig = useStore().globalConfig
 
-const { getMusicList: localMusicList } = storeToRefs(globalConfig)
-const localMusicListValue = ref(localMusicList)
 const uploadVisible = ref(false)
-async function play(item: IMusic) {
-    globalConfig.setCurrentMusic(item, false)
-}
-
-function deleteMusic(item: IMusic) {
-    globalConfig.removeMusic(item.id)
-    audioDbStore.removeItem(item.name)
-    // setTimeout(()=>{
-    //     localMusicListValue.value=localMusicList
-    // },100)
-}
-function resetMusic() {
-    globalConfig.resetMusicList()
-    audioDbStore.clear()
-}
-function deleteAll() {
-    globalConfig.clearMusicList()
-    audioDbStore.clear()
-}
+const {
+    tabsList,
+    localMusicList,
+    removeMusic,
+    handleChangeTab,
+    resetMusic,
+    deleteAll,
+    activeTabKey,
+    playMusic,
+} = useViewModel()
+// const globalConfig = useStore().globalConfig
+const localMusicListValue = ref(localMusicList)
+// async function play(item: IMusic) {
+//     globalConfig.setCurrentMusic(item, false)
+// }
 </script>
 
 <template>
-  <UploadDialog v-model:visible="uploadVisible" />
+  <UploadDialog v-model:visible="uploadVisible" :active-tab-key="activeTabKey" />
   <div>
     <PageHeader :title="t('sidebar.musicManagement')">
       <template #buttons>
-        <div class="flex gap-3">
-          <button class="btn btn-primary btn-sm" @click="resetMusic">
-            {{ t('button.reset') }}
-          </button>
-          <label for="explore">
-            <span class="btn btn-primary btn-sm" @click="uploadVisible = true">{{ t('button.upload') }}</span>
-          </label>
-          <button class="btn btn-error btn-sm" @click="deleteAll">
-            {{ t('button.allDelete') }}
-          </button>
+        <div role="tablist" class="tabs tabs-lift">
+          <a v-for="item in tabsList" :key="item.key" role="tab" class="tab" :class="{ 'tab-active': activeTabKey === item.key }" @click="handleChangeTab(item.key)">{{ item.label }}</a>
         </div>
       </template>
     </PageHeader>
-
+    <div class="flex gap-3">
+      <button class="btn btn-primary btn-sm" @click="resetMusic">
+        {{ t('button.reset') }}
+      </button>
+      <label for="explore">
+        <span class="btn btn-primary btn-sm" @click="uploadVisible = true">{{ t('button.upload') }}</span>
+      </label>
+      <button class="btn btn-error btn-sm" @click="deleteAll">
+        {{ t('button.allDelete') }}
+      </button>
+    </div>
     <div>
       <ul class="p-0">
         <li v-for="item in localMusicListValue" :key="item.id" class="flex items-center gap-6 pb-2 mb-3">
@@ -64,10 +53,10 @@ function deleteAll() {
             <a class="link hover:text-primary">{{ item.name }}</a>
           </div>
           <div class="flex gap-3">
-            <button class="btn btn-primary btn-xs" @click="play(item)">
+            <button class="btn btn-primary btn-xs" @click="playMusic(item)">
               {{ t('button.play') }}
             </button>
-            <button class="btn btn-error btn-xs" @click="deleteMusic(item)">
+            <button class="btn btn-error btn-xs" @click="removeMusic(item)">
               {{ t('button.delete') }}
             </button>
           </div>

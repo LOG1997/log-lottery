@@ -6,6 +6,7 @@ export interface IPersonConfig {
     department: string
     identity: string
     avatar: string
+    avatarUrl?: string
     isWin: boolean
     x: number
     y: number
@@ -41,16 +42,27 @@ export interface IPrizeConfig {
     isUsed: boolean
     frequency: number
 }
+
+export type IMusicType = 'background' | 'process' | 'other'
 export interface IMusic {
     id: string
     name: string
+    type: string
     url: string | Blob | ArrayBuffer
+    createTime?: string
+    db?: string
 }
+
+export type IImageType = 'prize' | 'avatar' | 'other'
 
 export interface IImage {
     id: string
     name: string
+    type: string
+    data?: string | Blob | ArrayBuffer
     url: string | Blob | ArrayBuffer
+    createTime?: string
+    db?: string
 }
 
 export interface WsMsgData { data: string, id: string, dateTime: string }

@@ -66,7 +66,7 @@ export function useElementStyle(props: IUseElementStyle) {
     if (person.department || person.identity) {
         element.children[2].innerHTML = `${person.department ? person.department : ''}<br/>${person.identity ? person.identity : ''}`
     }
-    element.children[3].src = person.avatar
+    element.children[3].src = person.avatarUrl || person.avatar
     return element
 }
 interface CardRule {

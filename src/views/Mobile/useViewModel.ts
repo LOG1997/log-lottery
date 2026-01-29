@@ -11,6 +11,7 @@ export function useViewModel() {
     const routeSignature = ref<string>('')
     const userInputMsg = ref('')
     const userMsgArray = ref<any[]>([])
+    // userMsgDb单独处理，因为这个页面是在手机端
     const userMsgDb = new IndexDb('userMsg', ['userMsg'], 1, ['createTime'])
     const getRouteSignature = async () => {
         routeSignature.value = route.query.userSignature as string

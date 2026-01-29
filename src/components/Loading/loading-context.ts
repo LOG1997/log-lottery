@@ -32,7 +32,7 @@ function show(options?: Partial<{ text: string, fullscreen: boolean, zIndex: num
     if (options) {
         text.value = options.text || ''
         fullscreen.value = options.fullscreen ?? true
-        zIndex.value = options.zIndex || 9999
+        zIndex.value = options.zIndex || 0
     }
 }
 
@@ -45,7 +45,7 @@ function hide() {
         visible.value = false
         text.value = ''
         fullscreen.value = true
-        zIndex.value = 9999
+        zIndex.value = 0
     }
 }
 

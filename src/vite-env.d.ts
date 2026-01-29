@@ -10,3 +10,10 @@ declare module '*.vue' {
 declare module 'sparticles'
 declare module 'three-trackballcontrols'
 declare module 'virtual:svg-icons-register'
+
+declare module '~icons/*' {
+    import type { DefineComponent } from 'vue'
+
+    const component: DefineComponent<object, object, any>
+    export default component
+}

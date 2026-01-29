@@ -67,13 +67,15 @@ export default defineConfig(({ mode }) => {
                 resolvers: [
                     // 自动注册图标组件
                     IconsResolver({
-                        enabledCollections: ['ep'],
+                        prefix: 'icon',
+                        enabledCollections: ['ep', 'streamline-color'],
                     }),
                 ],
                 dts: path.resolve(path.resolve(__dirname, 'src'), 'components.d.ts'),
             }),
             Icons({
                 autoInstall: true,
+                compiler: 'vue3',
             }),
         ],
         css: {

@@ -25,7 +25,23 @@ class IndexDb {
     }
 
     setAllData(tableName: string, data: DbData[]) {
+        // 添加默认数据
+        data.forEach((item) => {
+            if (!item.dateTime) {
+                item.dateTime = dayjs().format('YYYY-MM-DD HH:mm:ss:SSS')
+            }
+            if (!item.type) {
+                item.type = 'info'
+            }
+            if (!item.id) {
+                item.id = uuidv4()
+            }
+        })
         this.dbStore[tableName].bulkAdd(data)
+    }
+
+    clearDb() {
+        return this.dbStore.delete()
     }
 
     /**
@@ -42,7 +58,6 @@ class IndexDb {
         if (!data.id) {
             data.id = uuidv4()
         }
-
         this.dbStore[tableName].add(data)
     }
 
@@ -65,6 +80,11 @@ class IndexDb {
      */
     deleteData(tableName: string, data: Partial<DbData>) {
         this.dbStore[tableName].delete(data.id)
+    }
+
+    // 获取单个数据
+    getItem(tableName: string, id: string) {
+        return this.dbStore[tableName].get(id)
     }
 
     /**
