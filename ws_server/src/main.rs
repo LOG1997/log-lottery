@@ -25,6 +25,7 @@ async fn main() -> std::io::Result<()> {
                     .supports_credentials(),
             )
             .service(web::scope("/api").service(api::user::user_msg))
+            .service(web::scope("/api").service(api::auth::auth))
             .route("/echo", web::get().to(api::websocket::echo))
     })
     .bind((SERVER_ADDRESS, SERVER_PORT))?
