@@ -1,5 +1,6 @@
 import type { Ref } from 'vue'
 import type { IPersonConfig } from '@/types/storeType'
+import { cloneDeep } from 'lodash-es'
 import { storeToRefs } from 'pinia'
 import { v4 as uuidv4 } from 'uuid'
 import { inject, ref, toRaw } from 'vue'
@@ -121,40 +122,35 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
                 })
             })
     }
+
     // 导出数据
     function exportData() {
-        let data = JSON.parse(JSON.stringify(allPersonList.value))
-        // 排除一些字段
-        for (let i = 0; i < data.length; i++) {
-            delete data[i].x
-            delete data[i].y
-            delete data[i].id
-            delete data[i].createTime
-            delete data[i].updateTime
-            delete data[i].prizeId
-            // 修改字段名称
-            if (data[i].isWin) {
-                data[i].isWin = i18n.global.t('data.yes')
-            }
-            else {
-                data[i].isWin = i18n.global.t('data.no')
-            }
-            // 格式化数组为
-            data[i].prizeTime = data[i].prizeTime.join(',')
-            data[i].prizeName = data[i].prizeName.join(',')
-        }
-        let dataString = JSON.stringify(data)
-        dataString = dataString
-            .replaceAll(/uid/g, i18n.global.t('data.number'))
-            .replaceAll(/isWin/g, i18n.global.t('data.isWin'))
-            .replaceAll(/department/g, i18n.global.t('data.department'))
-            .replaceAll(/name/g, i18n.global.t('data.name'))
-            .replaceAll(/identity/g, i18n.global.t('data.identity'))
-            .replaceAll(/prizeName/g, i18n.global.t('data.prizeName'))
-            .replaceAll(/prizeTime/g, i18n.global.t('data.prizeTime'))
+        const fieldConfig = [
+            { originKey: 'uid', newKey: i18n.global.t('data.number') },
+            { originKey: 'isWin', newKey: i18n.global.t('data.isWin'), handler: (obj: any) => obj.isWin ? i18n.global.t('data.yes') : i18n.global.t('data.no') },
+            { originKey: 'department', newKey: i18n.global.t('data.department') },
+            { originKey: 'avatar', newKey: i18n.global.t('data.avatar') },
+            { originKey: 'name', newKey: i18n.global.t('data.name') },
+            { originKey: 'identity', newKey: i18n.global.t('data.identity') },
+            { originKey: 'prizeName', newKey: i18n.global.t('data.prizeName'), handler: (obj: any) => obj.prizeName.join(',') },
+            { originKey: 'prizeTime', newKey: i18n.global.t('data.prizeTime'), handler: (obj: any) => obj.prizeTime.join(',') },
+        ]
+        const allowFieldKeys = fieldConfig.map(item => item.originKey)
+        const originPersonData = cloneDeep(allPersonList.value)
 
-        data = JSON.parse(dataString)
-
+        const data = originPersonData.map((item: any) => {
+            const newItem = Object.fromEntries(
+                Object.entries(item).filter(([key]) => allowFieldKeys.includes(key)),
+            )
+            fieldConfig.forEach(({ originKey, newKey, handler }) => {
+                if (handler) {
+                    newItem[originKey] = handler(item)
+                }
+                newItem[newKey] = newItem[originKey]
+                delete newItem[originKey]
+            })
+            return newItem
+        })
         if (data.length > 0) {
             const dataBinary = XLSX.utils.json_to_sheet(data)
             const dataBinaryBinary = XLSX.utils.book_new()
