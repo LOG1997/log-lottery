@@ -37,7 +37,7 @@ function enterHome() {
 async function openMobileQrCode() {
     const originUrl = getOriginUrl()
     const userSignature = await getUniqueSignature()
-    mobileUrl.value = `${originUrl}/log-lottery/mobile?userSignature=${userSignature}`
+    mobileUrl.value = `${originUrl}/log-lottery/mobile?user_signature=${userSignature}`
     customDialogRef.value.showDialog()
 }
 function handleSubmit() {

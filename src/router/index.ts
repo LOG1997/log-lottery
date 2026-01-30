@@ -143,6 +143,11 @@ const routes = [
                 component: () => import('@/views/Demo/index.vue'),
             },
             {
+                path: '/log-lottery/ws',
+                name: 'WsView',
+                component: () => import('@/views/Demo/WsView.vue'),
+            },
+            {
                 path: '/log-lottery/mobile',
                 name: 'Mobile',
                 meta: {
