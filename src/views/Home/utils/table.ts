@@ -74,7 +74,10 @@ export function createSphereVertices({ objectsLength }: { objectsLength: number 
     return resObjects
 }
 
-export function confettiFire() {
+export function confettiFire(index: number, maxLimit: number) {
+    if (index > maxLimit) {
+        return
+    }
     const duration = 3 * 1000
     const end = Date.now() + duration;
     (function frame() {
@@ -92,7 +95,7 @@ export function confettiFire() {
             spread: 55,
             origin: { x: 1 },
         })
-
+        console.log('requestAnimationFrame')
         // keep going until we are out of time
         if (Date.now() < end) {
             requestAnimationFrame(frame)

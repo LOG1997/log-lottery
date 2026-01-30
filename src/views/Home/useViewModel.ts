@@ -11,7 +11,7 @@ import { useToast } from 'vue-toast-notification'
 import dongSound from '@/assets/audio/end.mp3'
 import enterAudio from '@/assets/audio/enter.wav'
 import worldCupAudio from '@/assets/audio/worldcup.mp3'
-import { SINGLE_TIME_MAX_PERSON_COUNT } from '@/constant/config'
+import { CONFETTI_FIRE_MAX_COUNT, SINGLE_TIME_MAX_PERSON_COUNT } from '@/constant/config'
 import { useElementPosition, useElementStyle } from '@/hooks/useElement'
 import i18n from '@/locales/i18n'
 import useStore from '@/store'
@@ -623,8 +623,7 @@ export function useViewModel() {
                 .start()
                 .onComplete(() => {
                     playWinMusic()
-
-                    confettiFire()
+                    confettiFire(index, CONFETTI_FIRE_MAX_COUNT)
                     resetCamera()
                 })
         })
