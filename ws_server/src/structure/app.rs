@@ -1,6 +1,8 @@
 use actix_web::web;
+use serde::Deserialize;
 use std::collections::HashMap;
 use tokio::sync::{RwLock, broadcast};
+
 // 统一响应结构体
 #[derive(serde::Serialize)]
 pub struct ApiResponse<T> {
@@ -35,4 +37,9 @@ pub type WsMessage = String;
 pub struct AppState {
     // 使用 HashMap 存储不同 user_signature 的广播通道
     pub tx_map: web::Data<RwLock<HashMap<String, broadcast::Sender<WsMessage>>>>,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct AuthInfo {
+    pub api_key: String,
 }

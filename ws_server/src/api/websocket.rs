@@ -14,14 +14,14 @@ pub async fn echo(
     println!("query_str_arr: {:?}", query_str_arr);
     let user_signature = query_str_arr
         .clone()
-        .find(|s| s.starts_with("userSignature"))
+        .find(|s| s.starts_with("user_signature"))
         .unwrap()
         .split("=")
         .nth(1)
         .unwrap();
     let api_key = query_str_arr
         .clone()
-        .find(|s| s.starts_with("apiKey"))
+        .find(|s| s.starts_with("api_key"))
         .unwrap()
         .split("=")
         .nth(1)

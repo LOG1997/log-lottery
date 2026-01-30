@@ -1,4 +1,5 @@
 use crate::structure::app::{ApiResponse, AppState};
+use crate::structure::demo_data::api_key_array;
 use actix_web::{HttpRequest, HttpResponse, Responder, post, web};
 
 impl<T> ApiResponse<T> {}
@@ -12,10 +13,18 @@ pub async fn user_msg(
     // 获取usersignature参数
     let target_user_signature = req
         .headers()
-        .get("userSignature")
+        .get("user_signature")
         .unwrap()
         .to_str()
         .unwrap();
+    let api_key = req.headers().get("api_key").unwrap().to_str().unwrap();
+    if !api_key_array.contains(&api_key) {
+        println!("api_key错误{}", api_key);
+        return HttpResponse::Unauthorized().json(ApiResponse::<()>::error(
+            401,
+            format!("认证失败: api_key错误"),
+        ));
+    }
     // 打印接收到的消息
     println!("Received /user-msg: {}", req_body);
     // 获取对应 user_signature 的发送端
