@@ -5,7 +5,7 @@ export function api_sendMsg(userSignature: string, data: any) {
         url: '/user-msg',
         method: 'POST',
         headers: {
-            userSignature,
+            user_signature: userSignature,
         },
         data,
     })

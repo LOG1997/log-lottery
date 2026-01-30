@@ -20,7 +20,7 @@ export function useViewModel() {
     const { msgListDbStore } = useIndexDb()
     const handleConnectWs = async () => {
         const userSignature = await getUniqueSignature()
-        wsUrl.value = `ws://localhost:8080/echo?userSignature=${userSignature}`
+        wsUrl.value = `ws://localhost:8080/echo?user_signature=${userSignature}`
         openWs(wsUrl.value)
     }
     const getAllMsg = async () => {

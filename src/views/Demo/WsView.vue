@@ -3,7 +3,7 @@ import { api_auth } from '@/api/auth'
 import { useWebsocket } from '@/hooks/useWebsocket'
 
 const { open, close, send, status, data } = useWebsocket()
-const url = 'http://127.0.0.1:8080/echo?userSignature=123456&apiKey=api_key_mao'
+const url = 'http://127.0.0.1:8080/echo?user_signature=123456&api_key=api_key_mao'
 const auth_url = 'http://127.0.0.1:8080/api/auth'
 
 async function handleAuth() {
