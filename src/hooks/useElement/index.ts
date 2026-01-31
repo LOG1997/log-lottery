@@ -262,6 +262,16 @@ const cardRule: CardRule = {
 /**
  * @description 设置抽中卡片的位置
  */
+function createRuleForCount(count: number) {
+    // 动态生成规则：行数在 3-5 之间，尽可能均匀分配
+    const len = Math.min(5, Math.max(3, Math.ceil(count / 10)))
+    const base = Math.floor(count / len)
+    let rem = count % len
+    const rule = new Array(len).fill(0).map(() => base + (rem > 0 ? (rem--, 1) : 0))
+    const scale = Math.max(0.9, 1.2 - (len - 3) * 0.1)
+    return { maxLine: Math.min(10, Math.ceil(count / len)), scale, rule, length: len }
+}
+
 export function useElementPosition(
     element: any,
     count: number,
@@ -280,7 +290,8 @@ export function useElementPosition(
         x: 0,
         y: windowSize.height / 2,
     }
-    const { scale, rule, length } = cardRule[totalCount]
+    const ruleObj = cardRule[totalCount] ?? createRuleForCount(totalCount)
+    const { scale, rule, length } = ruleObj
     // 计算缩放后的卡片尺寸
     const scaledCardWidth = cardSize.width * scale
     const scaledCardHeight = cardSize.height * scale
