@@ -267,7 +267,7 @@ function createRuleForCount(count: number) {
     const len = Math.min(5, Math.max(3, Math.ceil(count / 10)))
     const base = Math.floor(count / len)
     let rem = count % len
-    const rule = new Array(len).fill(0).map(() => base + (rem > 0 ? (rem--, 1) : 0))
+    const rule = Array.from({ length: len }).fill(0).map(() => base + (rem > 0 ? (rem--, 1) : 0))
     const scale = Math.max(0.9, 1.2 - (len - 3) * 0.1)
     return { maxLine: Math.min(10, Math.ceil(count / len)), scale, rule, length: len }
 }
