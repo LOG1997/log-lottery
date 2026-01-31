@@ -1,1 +1,1 @@
-export const SINGLE_TIME_MAX_PERSON_COUNT = 30
+export const SINGLE_TIME_MAX_PERSON_COUNT = 40
