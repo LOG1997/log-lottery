@@ -1,7 +1,7 @@
 {
   "name": "log-lottery",
   "private": true,
-  "version": "0.6.0-2",
+  "version": "0.6.0-3",
   "type": "module",
   "license": "MIT",
   "scripts": {
