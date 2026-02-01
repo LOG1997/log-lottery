@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "log-lottery",
-  "version": "0.6.0-2",
+  "version": "0.6.0-3",
   "identifier": "to2026.xyz",
   "build": {
     "frontendDist": "../dist",
