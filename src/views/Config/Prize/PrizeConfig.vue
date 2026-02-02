@@ -7,7 +7,7 @@ import EditSeparateDialog from '@/components/NumberSeparate/EditSeparateDialog.v
 import PageHeader from '@/components/PageHeader/index.vue'
 import { usePrizeConfig } from './usePrizeConfig'
 
-const { addPrize, resetDefault, delAll, delItem, prizeList, currentPrize, selectedPrize, submitData, changePrizePerson, changePrizeStatus, selectPrize, localImageList } = usePrizeConfig()
+const { addPrize, resetDefault, delAll, delItem, prizeList, currentPrize, selectedPrize, submitData, changePrizePerson, changePrizeStatus, selectPrize, localImageList, exportExcel, importExcel, downloadTemplate } = usePrizeConfig()
 const { t } = useI18n()
 </script>
 
@@ -18,6 +18,15 @@ const { t } = useI18n()
         <div class="flex w-full gap-3">
           <button class="btn btn-info btn-sm" @click="addPrize">
             {{ t('button.add') }}
+          </button>
+          <button class="btn btn-info btn-sm" @click="downloadTemplate">
+            {{ t('button.downloadTemplate') }}
+          </button>
+          <button class="btn btn-info btn-sm" @click="importExcel">
+            {{ t('button.import') }}
+          </button>
+          <button class="btn btn-info btn-sm" @click="exportExcel">
+            {{ t('button.export') }}
           </button>
           <button class="btn btn-info btn-sm" @click="resetDefault">
             {{ t('button.resetDefault') }}

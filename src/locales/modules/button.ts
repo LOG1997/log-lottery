@@ -25,6 +25,11 @@ export const buttonEn = {
     noInfoAndImport: 'No Info and import it',
     useDefault: 'Use Default Data',
     loading: 'Loading...',
+    import: 'Import',
+    export: 'Export',
+    prizeTemplateFileName: 'Prize Template.xlsx',
+    prizeTemplateExample: 'First Prize',
+    prizeExportFileName: 'Prize Config',
 }
 
 export const buttonZhCn = {
@@ -54,6 +59,11 @@ export const buttonZhCn = {
     noInfoAndImport: '暂无人员信息，前往导入',
     useDefault: '使用默认数据',
     loading: '加载中...',
+    import: '导入',
+    export: '导出',
+    prizeTemplateFileName: '奖项配置模板.xlsx',
+    prizeTemplateExample: '一等奖',
+    prizeExportFileName: '奖项配置',
 }
 
 // 导出一个值

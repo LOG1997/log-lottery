@@ -9,7 +9,7 @@ export const tableEn = {
     // person configuration
     number: 'Number',
     name: 'Name',
-    prizeName: 'Name',
+    prizeName: 'Prize Name',
     department: 'Department',
     avatar: 'Avatar',
     identity: 'Identity',
@@ -61,7 +61,7 @@ export const tableZhCn = {
     // person configuration
     number: '编号',
     name: '姓名',
-    prizeName: '名称',
+    prizeName: '奖项名称',
     department: '部门',
     avatar: '头像',
     identity: '身份',
