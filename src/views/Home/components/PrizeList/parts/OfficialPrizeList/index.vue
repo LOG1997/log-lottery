@@ -24,6 +24,11 @@ const {
     handleScroll,
 } = useGsap(scrollContainerRef, liRefs, isScroll, prizeShow, props.temporaryPrizeShow)
 
+// 超过 6 个字符就滚动
+function shouldScroll(name: string) {
+    return (name || '').length > 6
+}
+
 // 获取ulContainerRef的高度
 function getUlContainerHeight() {
     if (ulContainerRef.value) {
@@ -90,10 +95,14 @@ watch ([prizeShow, () => props.temporaryPrizeShow], (val) => {
                 >
               </figure>
               <div class="items-center p-0 card-body">
-                <div class="tooltip tooltip-left w-full pl-1" :data-tip="item.name">
+                <div class="w-24 overflow-hidden" :data-tip="item.name">
                   <h2
-                    class="w-24 p-0 m-0 overflow-hidden card-title whitespace-nowrap text-ellipsis"
+                    v-if="shouldScroll(item.name)"
+                    class="p-0 m-0 card-title whitespace-nowrap scroll-text"
                   >
+                    {{ item.name }}
+                  </h2>
+                  <h2 v-else class="p-0 m-0 card-title whitespace-nowrap text-ellipsis overflow-hidden">
                     {{ item.name }}
                   </h2>
                 </div>
