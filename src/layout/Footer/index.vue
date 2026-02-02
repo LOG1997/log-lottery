@@ -7,7 +7,7 @@ function skip(url: string) {
 </script>
 
 <template>
-  <div class="footer-container h-[280px]">
+  <div class="footer-container h-70">
     <ul class="flex justify-center">
       <li
         v-for="item in footerList.data"

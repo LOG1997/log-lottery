@@ -3,8 +3,10 @@ import dayjs from 'dayjs'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
+import { appVersion } from '@/constant/config'
 import { configRoutes } from '../../router'
 
+const GithubUrl = import.meta.env.VITE_GITHUB_URL
 const { t } = useI18n()
 const router = useRouter()
 const route = useRoute()
@@ -79,7 +81,7 @@ function skip(path: string) {
     </nav>
     <nav>
       <div class="grid grid-flow-col gap-4">
-        <a href="https://github.com/LOG1997/log-lottery" target="_blank" class="cursor-pointer text-inherit">
+        <a :href="GithubUrl" target="_blank" class="cursor-pointer text-inherit">
           <svg-icon name="github" />
         </a>
         <a href="https://twitter.com/TaborSwift" target="_blank" class="cursor-pointer "><svg-icon name="twitter" /></a>
@@ -89,6 +91,9 @@ function skip(path: string) {
       </div>
     </nav>
     <aside>
+      <a :href="`${GithubUrl}/releases/tag/v${appVersion}`" target="_blank" class="hover:text-primary">
+        {{ t('footer.version') }}: {{ appVersion }}
+      </a>
       <a class="p-0 m-0 hover:text-primary" href="https://beian.miit.gov.cn/" target="_blank">
         蜀ICP备2021028666号
       </a>

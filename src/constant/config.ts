@@ -19,3 +19,5 @@ export const FILE_TYPE = {
 } as const
 
 export const AVATAR_MAX_SIZE = 1024 * 40
+
+export { version as appVersion } from '../../package.json'
