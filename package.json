@@ -4,6 +4,16 @@
   "version": "0.6.0-3",
   "type": "module",
   "license": "MIT",
+  "author": {
+    "name":"log1997"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/log1997/log-lottery.git"
+  },
+  "bugs": {
+    "url": "https://github.com/LOG1997/log-lottery/issues"
+  },
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "vue-tsc --noEmit && vite build",
