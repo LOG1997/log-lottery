@@ -322,7 +322,7 @@ export function useElementPosition(
     // 修改此处逻辑，确保当length=2时，两行围绕中心点对称分布
     centerPosition.y = windowSize.height / 2 - totalHeight / 2
 
-    yTable = centerPosition.y + currentRow * verticalSpacing + centerYOffset + scaledCardHeight / 2 // 添加卡片高度的一半作为修正
+    yTable = centerPosition.y + currentRow * verticalSpacing + centerYOffset // 添加卡片高度的一半作为修正
     // 计算当前行的水平居中偏移
     const horizontalSpacing = scaledCardWidth * 1.2 // 水平间距基于缩放后的宽度
     const rowWidth = (cardsInCurrentRow - 1) * horizontalSpacing
