@@ -1,0 +1,1 @@
+!function(){"use strict";let e=null;self.addEventListener("message",t=>{const{interval:s}=t.data;if(!s)throw new Error("invalid params");e&&clearInterval(e),e=setInterval(()=>{self.postMessage(!0)},s)})}();
