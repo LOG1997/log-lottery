@@ -1,6 +1,6 @@
 export const SINGLE_TIME_MAX_PERSON_COUNT = 40
 export const CONFETTI_FIRE_MAX_COUNT = 12
-
+export const IS_TAURI = typeof window !== 'undefined' && !!window.__TAURI__
 export const FILE_TYPE = {
     '': '*',
     'folder': 'folder',

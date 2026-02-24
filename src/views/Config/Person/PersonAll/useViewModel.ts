@@ -1,5 +1,6 @@
 import type { Ref } from 'vue'
 import type { IPersonConfig } from '@/types/storeType'
+import { invoke } from '@tauri-apps/api/core'
 import { cloneDeep } from 'lodash-es'
 import { storeToRefs } from 'pinia'
 import { v4 as uuidv4 } from 'uuid'
@@ -8,6 +9,7 @@ import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toast-notification'
 import * as XLSX from 'xlsx'
 import { loadingKey } from '@/components/Loading'
+import { IS_TAURI } from '@/constant/config'
 import i18n from '@/locales/i18n'
 import useStore from '@/store'
 import { addOtherInfo } from '@/utils'
@@ -103,7 +105,11 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
             exportInputFileRef.value.value = ''
         }
     }
-    function downloadTemplate() {
+    async function downloadTemplate() {
+        let downloadDir = ''
+        if (IS_TAURI) {
+            downloadDir = await invoke('get_download_dir')
+        }
         // 下载
         const templateFileName = i18n.global.t('data.xlsxName')
         const fileUrl = `${baseUrl}${templateFileName}`
@@ -116,7 +122,7 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
                 a.download = templateFileName
                 a.click()
                 toast.open({
-                    message: t('error.downloadSuccess'),
+                    message: `${t('error.downloadSuccess')} ${downloadDir}`,
                     type: 'success',
                     position: 'top-right',
                 })
@@ -124,7 +130,11 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
     }
 
     // 导出数据
-    function exportData() {
+    async function exportData() {
+        let downloadDir = ''
+        if (IS_TAURI) {
+            downloadDir = await invoke('get_download_dir')
+        }
         const fieldConfig = [
             { originKey: 'uid', newKey: i18n.global.t('data.number') },
             { originKey: 'isWin', newKey: i18n.global.t('data.isWin'), handler: (obj: any) => obj.isWin ? i18n.global.t('data.yes') : i18n.global.t('data.no') },
@@ -157,7 +167,7 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
             XLSX.utils.book_append_sheet(dataBinaryBinary, dataBinary, 'Sheet1')
             XLSX.writeFile(dataBinaryBinary, 'data.xlsx')
             toast.open({
-                message: t('error.exportSuccess'),
+                message: `${t('error.exportSuccess')} ${downloadDir}`,
                 type: 'success',
                 position: 'top-right',
             })

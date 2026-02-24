@@ -31,6 +31,7 @@
   "dependencies": {
     "@fingerprintjs/fingerprintjs": "^5.0.1",
     "@headlessui/vue": "^1.7.23",
+    "@tauri-apps/api": "^2.9.1",
     "@tweenjs/tween.js": "23.1.2",
     "@vueuse/core": "^14.1.0",
     "@vueuse/integrations": "^14.1.0",

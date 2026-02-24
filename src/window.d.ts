@@ -9,4 +9,5 @@ interface FontData {
 
 interface Window {
     queryLocalFonts?: (options?) => Promise<FontData[]>
+    __TAURI__?: any
 }
