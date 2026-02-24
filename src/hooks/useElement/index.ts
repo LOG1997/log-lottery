@@ -176,13 +176,13 @@ const cardRule: CardRule = {
     },
     17: {
         maxLine: 6,
-        scale: 1.8,
+        scale: 1.6,
         rule: [5, 6, 6],
         length: 3,
     },
     18: {
         maxLine: 6,
-        scale: 1.8,
+        scale: 1.6,
         rule: [6, 6, 6],
         length: 3,
     },
