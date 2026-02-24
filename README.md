@@ -181,6 +181,12 @@ npm run build
 
 <br>
 
+## Contributors
+
+Thanks to all the people who have contributed to this project!
+
+[![Contributors](https://contrib.rocks/image?repo=log1997/log-lottery)](https://github.com/LOG1997/log-lottery/graphs/contributors)
+
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=LOG1997/log-lottery&type=Date)](https://star-history.com/#LOG1997/log-lottery&Date)
