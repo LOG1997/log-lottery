@@ -138,3 +138,18 @@
         transform: translateX(-25%);
     }
 }
+
+.scroll-text {
+    display: inline-block;
+    animation: scroll-left 3s ease-in-out infinite alternate;
+    will-change: transform;
+}
+
+@keyframes scroll-left {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(calc(-100% + 6rem));
+    }
+}

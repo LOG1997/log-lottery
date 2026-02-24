@@ -1,16 +1,23 @@
 <script setup lang='ts'>
 import type { IPrizeConfig } from '@/types/storeType'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import defaultPrizeImage from '@/assets/images/龙.png'
 
-defineProps<{
+const props = defineProps<{
     temporaryPrize: IPrizeConfig
     addTemporaryPrize: () => void
     deleteTemporaryPrize: () => void
 }>()
 
 const { t } = useI18n()
+
+// 超过 6 个字符就滚动
+const shouldScroll = computed(() => {
+    const name = props.temporaryPrize?.name || ''
+    return name.length > 6
+})
 </script>
 
 <template>
@@ -25,8 +32,11 @@ const { t } = useI18n()
         <img v-else :src="defaultPrizeImage" alt="Prize" class="object-cover h-full rounded-xl">
       </figure>
       <div class="items-center p-0 text-center card-body">
-        <div class="tooltip tooltip-left" :data-tip="temporaryPrize.name">
-          <h2 class="p-0 m-0 overflow-hidden w-28 card-title whitespace-nowrap text-ellipsis">
+        <div class="w-28 overflow-hidden" :data-tip="temporaryPrize.name">
+          <h2
+            class="p-0 m-0 card-title whitespace-nowrap"
+            :class="shouldScroll ? 'scroll-text' : 'text-ellipsis overflow-hidden'"
+          >
             {{ temporaryPrize.name }}
           </h2>
         </div>
@@ -55,5 +65,18 @@ const { t } = useI18n()
 </template>
 
 <style scoped>
+.scroll-text {
+    display: inline-block;
+    animation: scroll-left 3s ease-in-out infinite alternate;
+    will-change: transform;
+}
 
+@keyframes scroll-left {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(calc(-100% + 7rem));
+    }
+}
 </style>
