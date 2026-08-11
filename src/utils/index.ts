@@ -15,7 +15,7 @@ export function filterData(tableData: any[], localRowCount: number) {
         }
         tableData[i].x = i % localRowCount + 1
         tableData[i].y = j
-        tableData[i].id = i
+        // tableData[i].id = i
         // 是否中奖
     }
 
